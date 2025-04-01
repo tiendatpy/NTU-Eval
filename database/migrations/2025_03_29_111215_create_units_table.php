@@ -16,7 +16,6 @@ return new class extends Migration
             $table->id();
             $table->string('name')->unique();
             $table->foreignId('type_id')->constrained('meta_types');
-            $table->foreignId('parent_id')->nullable()->constrained('units');
             $table->timestamps();
         });
     }
