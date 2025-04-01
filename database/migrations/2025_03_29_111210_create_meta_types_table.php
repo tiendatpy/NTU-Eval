@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::create('meta_types', function (Blueprint $table) {
             $table->id();
             $table->string('category');
-            $table->string('name')->unique();
+            $table->string('name');
             $table->timestamps();
         });
     }
