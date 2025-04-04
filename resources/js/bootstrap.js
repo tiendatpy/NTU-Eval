@@ -1,5 +1,14 @@
-import _ from 'lodash';
+import * as _ from 'lodash';
 window._ = _;
+
+/**
+ * Import jQuery
+ */
+import $ from 'jquery';
+window.$ = window.jQuery = $;
+
+// Kiểm tra jQuery đã được import đúng cách
+console.log('jQuery version in bootstrap.js:', $.fn.jquery);
 
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests

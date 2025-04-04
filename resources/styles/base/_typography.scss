@@ -1,0 +1,53 @@
+@layer typography {
+  body {
+    @apply font-body text-base text-black xl:text-lg bg-primary-050;
+  }
+  html {
+    @apply m-0;
+  }
+  html,
+  body{
+    @apply overflow-x-hidden ;
+  }
+  img {
+    @apply inline-block
+  }
+  a {
+    @apply underline hover:no-underline;
+  }
+
+  blockquote, dl, dd, h1, h2, h3, h4, h5, h6, hr, figure, p, pre {
+    @apply mb-12;
+  }
+  
+  a,
+  button {
+    transition:
+      0.25s color,
+      0.25s background-color,
+      0.25s border;
+      -webkit-tap-highlight-color: transparent; 
+    &.mouse {
+      // force remove focus when user click
+      outline: none !important; // stylelint-disable-line declaration-no-important
+    }
+    &:focus,
+    &:focus-visible {
+      outline-offset: 3px;
+    }
+  }
+  
+  table {
+    th,
+    td {
+      @apply border p-2 border-primary-300;
+    }
+    th {
+      @apply font-bold;
+    }
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading font-bold;
+  }
+}

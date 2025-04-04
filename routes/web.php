@@ -14,11 +14,8 @@ use App\Http\Controllers\AwardController;
 |
 */
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
 Route::get('/', function () {
-    return view('modules/test');
+    return view(view: 'index');
 });
 
 

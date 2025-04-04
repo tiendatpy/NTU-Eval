@@ -2,11 +2,18 @@
 <html lang="vi">
 <head>
     <title>@yield('title', 'NTU Eval')</title>
-    @vite('resources/styles/app.css')
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    @vite(['resources/styles/app.scss', 'resources/js/app.js'])
 </head>
-<body class="bg-gray-100">
+<body>
     <div class="container mx-auto p-4">
         @yield('content')
     </div>
+    
+    @yield('scripts')
 </body>
 </html>
