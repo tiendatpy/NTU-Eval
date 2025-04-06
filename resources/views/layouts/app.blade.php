@@ -10,9 +10,7 @@
     @vite(['resources/styles/app.scss', 'resources/js/app.js'])
 </head>
 <body>
-    <div class="container mx-auto p-4">
-        @yield('content')
-    </div>
-    
+    @include('globals.header')
+    @yield('content')
 </body>
 </html>

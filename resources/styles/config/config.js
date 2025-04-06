@@ -1,4 +1,4 @@
-const Screes = require('./unility/screens.js').Screens
+const Screens = require('./unility/screens.js').Screens
 const backgroundPositions = require('./unility/backgroundPosition.js').backgroundPosition
 const backgroundSizes = require('./unility/backgroundSizes.js').backgroundSizes
 const radiusBorder = require('./unility/borderRadius.js').borderRadius
@@ -25,7 +25,7 @@ const maxHeights = require('./unility/maxHeight.js').maxHeight
 const insets = require('./unility/inset.js').inset
 
 module.exports = {
-  Screes,
+  Screens,
   backgroundPositions,
   backgroundSizes,
   radiusBorder,

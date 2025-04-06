@@ -10,6 +10,7 @@ module.exports = {
   theme: {
     fontFamily: themeConfig.fontFamily,
     extend: {
+      screens: configs.Screens,
       maxWidth: configs.maxWidths,
       maxHeight: configs.maxHeights,
       colors: themeConfig.colors,
