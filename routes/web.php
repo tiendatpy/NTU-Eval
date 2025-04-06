@@ -15,7 +15,7 @@ use App\Http\Controllers\AwardController;
 */
 
 Route::get('/', function () {
-    return view(view: 'index');
+    return view( 'pages/index');
 });
 
 

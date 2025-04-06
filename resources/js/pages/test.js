@@ -1,10 +1,10 @@
 export default class Test {
     constructor(el) {
-        this.$el = el;
+        this.$el = $(el);
     }
     init() {
-        console.log(123);
+        console.log(this.$el);
     }
 };
 
-new Test('mod-test').init()
+new Test('.mod-test').init()

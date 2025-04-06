@@ -3,15 +3,12 @@
 @tailwind utilities;
 
 // Base
-@import 'base/fonts';
+@import 'base/font-iconmoon';
 @import 'base/typography';
 @import 'base/variables';
 
 // Components
 @import 'components/buttons';
-
-// Modules
-// @import 'modules/*.scss';
 
 // Pages
 @import 'pages/**/*.scss';
