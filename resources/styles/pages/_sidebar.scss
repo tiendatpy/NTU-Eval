@@ -1,0 +1,28 @@
+.menu {
+    .has-menu-item {
+        @apply relative;
+        &::before {
+            @apply content-["\e90c"] absolute right-0 text-[22px];
+            font-family: 'icomoon', sans-serif;
+        }
+        &:hover {
+            @apply custom-transition;
+            &::before {
+                transform: rotate(180deg);
+            }
+        }
+    }
+    .menu-list:has(.has-menu-item) {
+        .has-menu-item:hover {
+            .sub-menu-list {
+                @apply h-auto;
+            }
+        }
+        .sub-menu-list {
+            @apply h-0 overflow-hidden transition-all duration-300 ease-in-out;
+        }
+    }
+    .menu-list:not(:last-child) {
+        @apply border-b-1 border-primary-200;
+    }
+}

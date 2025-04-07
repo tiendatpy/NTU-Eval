@@ -5,7 +5,7 @@ module.exports = {
   content: [
     "./resources/**/*.blade.php",
     "./resources/**/*.js",
-    "./resources/**/*.vue",
+    "./resources/**/*.scss",
   ],
   theme: {
     fontFamily: themeConfig.fontFamily,

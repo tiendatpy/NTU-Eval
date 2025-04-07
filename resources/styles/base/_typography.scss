@@ -1,4 +1,4 @@
-@layer typography {
+@layer base {
   body {
     @apply font-body text-base text-black xl:text-lg bg-primary-050;
   }
@@ -13,7 +13,7 @@
     @apply inline-block;
   }
   a {
-    @apply underline hover:no-underline;
+    @apply no-underline;
   }
 
   blockquote, dl, dd, h1, h2, h3, h4, h5, h6, hr, figure, p, pre {

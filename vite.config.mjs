@@ -1,7 +1,10 @@
+// vite.config.mjs
+
 import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
 import path from 'path';
-import sassGlobImporter from 'sass-glob-importer';
+import tailwindcss from 'tailwindcss';
+import autoprefixer from 'autoprefixer';
 
 export default defineConfig({
     plugins: [
@@ -22,17 +25,12 @@ export default defineConfig({
         },
     },
     css: {
-        preprocessorOptions: {
-            scss: {
-                importer: sassGlobImporter(),
-            },
-        },
         postcss: {
             plugins: [
-                require('tailwindcss')({
+                tailwindcss({
                     config: './resources/styles/config/tailwind.config.js',
                 }),
-                require('autoprefixer'),
+                autoprefixer,
             ],
         },
     },
