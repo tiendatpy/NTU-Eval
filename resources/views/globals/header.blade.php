@@ -1,5 +1,5 @@
-<header class="bg-white h-32">
-  <div class="container flex h-full justify-between items-center">
+<header class="bg-white h-32 fixed top-0 left-0 right-0 z-50">
+  <div class="px-10 flex h-full justify-between items-center">
     <div class="header-left md:flex md:items-center md:gap-10 xl:gap-16">
       <div class="logo down_md:hidden">
         <a class="text-[36px] flex" href="#">

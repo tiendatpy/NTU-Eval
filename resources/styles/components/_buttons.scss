@@ -1,0 +1,38 @@
+@layer base {
+    .btn {
+      @apply px-16 leading-13 text-lg -tracking-sp9 font-medium inline-block select-none align-middle rounded-4xl py-10 border-2 no-underline custom-transition border-none;
+      &.disabled {
+        @apply bg-neutral-600 text-gray-100 pointer-events-none cursor-none;
+      }
+      &-arrow {
+        @apply relative inline-flex items-start gap-x-4;
+        &:after {
+          content: '\e916';
+          font-family: 'icomoon', sans-serif;
+          @apply text-base self-center;
+        }
+      }
+    }
+  
+    .btn-primary {
+      @apply text-white bg-primary-300;
+      @apply hover:text-white hover:bg-primary-400;
+    }
+  
+    .btn-secondary {
+      @apply text-neutral-100 bg-secondary-300;
+      @apply hover:text-secondary-400;
+    }
+  
+    .btn-tertiary {
+      @apply text-white rounded-none;
+      @apply  hover:text-secondary-100;
+      &__v2 {
+        @apply hover:underline;
+      }
+      &.disabled {
+        @apply text-neutral-100 opacity-50 bg-transparent;
+      }
+    }
+  }
+  

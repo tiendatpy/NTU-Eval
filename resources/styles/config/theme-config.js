@@ -2,8 +2,9 @@ import { rem } from './utils.js'
 
 export const themeConfig = {
   'fontFamily': {
-    'body': 'Inter, sans-serif',
-    'heading': 'Inter, sans-serif',
+    body: 'Inter, sans-serif',
+    heading: 'Inter, sans-serif',
+    icomoon: 'icomoon, sans-serif',
   },
   'colors': {
     'primary': {

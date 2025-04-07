@@ -11,6 +11,10 @@
 </head>
 <body>
     @include('globals.header')
-    @yield('content')
+    @include('globals.sidebar')
+    <main class="pt-32">
+        @yield('content')
+    </main>
+    @include('globals.footer')
 </body>
 </html>
