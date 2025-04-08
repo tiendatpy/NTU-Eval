@@ -11,10 +11,12 @@
 </head>
 <body>
     @include('globals.header')
-    @include('globals.sidebar')
-    <main class="pt-32">
-        @yield('content')
-    </main>
-    @include('globals.footer')
+    <div class="dashboard-layout relative flex pt-32 overflow-y-hidden">
+        @include('globals.sidebar')
+        <main class=" bg-primary-200 w-80p p-8 relative">
+            @yield('content')
+            @include('globals.footer')
+        </main>
+    </div>
 </body>
 </html>

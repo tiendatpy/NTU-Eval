@@ -17,12 +17,18 @@
             .sub-menu-list {
                 @apply h-auto;
             }
+            &::before {
+                transition: transform 0.3s ease;
+            }
         }
         .sub-menu-list {
-            @apply h-0 overflow-hidden transition-all duration-300 ease-in-out;
+            @apply h-0 overflow-hidden;
         }
     }
     .menu-list:not(:last-child) {
         @apply border-b-1 border-primary-200;
     }
+}
+aside {
+    height: calc(100vh - 64px);
 }

@@ -1,4 +1,4 @@
-<aside class="pt-32 bg-white fixed z-10 top-0 left-0 min-w-[250px] h-full">
+<aside class="bg-white relative left-0 bottom-0 w-20p down_lg:hidden">
     <div class="menu px-6 py-8">
         <ul class="menu-list mb-11">
             <li class="px-4 mb-11 font-medium hover:text-neutral-500 cursor-pointer">

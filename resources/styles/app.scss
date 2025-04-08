@@ -1,15 +1,15 @@
+// Base
+@use 'base/custom';
+@use 'base/typography';
+@use 'base/variables';
+@use 'base/font-iconmoon';
+
+// Components
+@use 'components/buttons';
+
+// Pages    
+@use 'pages/sidebar';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-// Base
-@import 'base/custom';
-@import 'base/typography';
-@import 'base/variables';
-@import 'base/font-iconmoon';
-
-// Components
-@import 'components/buttons';
-
-// Pages
-@import 'pages/sidebar';
