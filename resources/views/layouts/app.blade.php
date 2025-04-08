@@ -13,7 +13,7 @@
     @include('globals.header')
     <div class="dashboard-layout relative flex pt-32 overflow-y-hidden">
         @include('globals.sidebar')
-        <main class=" bg-primary-200 w-80p p-8 relative">
+        <main class=" bg-primary-050 w-full lg:w-80p p-8 relative">
             @yield('content')
             @include('globals.footer')
         </main>
