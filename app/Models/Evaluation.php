@@ -40,4 +40,5 @@ class Evaluation extends Model
     {
         return $this->hasMany(EvaluationDetail::class);
     }
+
 } 

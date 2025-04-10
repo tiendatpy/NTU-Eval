@@ -14,9 +14,9 @@ use App\Http\Controllers\AwardController;
 |
 */
 
-Route::get('/', function () {
-    return view( 'pages/index');
-});
-
+// Route::get('/', function () {
+//     return view( 'pages/index');
+// });
+Route::get('/', [EvaluationController::class, 'index'])->name('home');
 
 

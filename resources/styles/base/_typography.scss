@@ -40,10 +40,25 @@
   table {
     th,
     td {
-      @apply border p-2 border-primary-300;
+      @apply text-left p-8 border-separate; 
     }
     th {
       @apply font-bold;
+    }
+    th:first-child:first-child {
+      @apply rounded-tl-xl;
+    }
+    th:last-child:last-child {
+      @apply rounded-tr-xl;
+    }
+    tr:last-child td:first-child {
+      @apply rounded-bl-xl;
+    }
+    tr:last-child td:last-child {
+      @apply rounded-br-xl;
+    }
+    tr:nth-child(even) {
+      @apply bg-primary-050;
     }
   }
 
