@@ -13,11 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('evaluation_criteria', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('category_id')->constrained('meta_types');
-            $table->string('name');
-            $table->timestamps();
+        Schema::table('evaluation_details', function (Blueprint $table) {
+            $table->timestamps(); // Thêm created_at và updated_at
         });
     }
 
@@ -28,6 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('evaluation_criteria');
+        Schema::table('evaluation_details', function (Blueprint $table) {
+            $table->dropTimestamps(); // Xóa created_at và updated_at
+        });
     }
 };

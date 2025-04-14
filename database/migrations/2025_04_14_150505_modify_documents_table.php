@@ -13,11 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('evaluation_criteria', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('category_id')->constrained('meta_types');
-            $table->string('name');
-            $table->timestamps();
+        Schema::table('documents', function (Blueprint $table) {
+            $table->foreignId('evaluation_detail_id')->nullable()->constrained('evaluation_details')->after('file_path')->onDelete('cascade');
         });
     }
 
@@ -28,6 +25,9 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('evaluation_criteria');
+        Schema::table('documents', function (Blueprint $table) {
+            $table->dropForeign(['evaluation_detail_id']);
+            $table->dropColumn('evaluation_detail_id');
+        });
     }
 };

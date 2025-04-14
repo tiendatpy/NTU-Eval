@@ -17,4 +17,9 @@ class EvaluationDetail extends Model
     {
         return $this->belongsTo(EvaluationCriteria::class, 'criteria_id');
     }
+
+    public function documents()
+    {
+        return $this->hasMany(Document::class, 'evaluation_detail_id');
+    }
 } 

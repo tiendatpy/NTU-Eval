@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class EvaluationCriteria extends Model
 {
+    protected $table = 'evaluation_criteria';
     protected $fillable = ['category_id', 'name', 'description', 'weight'];
 
     public function category()

@@ -1,2 +1,2 @@
 import './bootstrap';
-import './pages/test';
+import './pages/ModEvaluation';

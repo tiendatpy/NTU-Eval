@@ -2,7 +2,7 @@
   <div class="px-10 flex h-full justify-between items-center">
     <div class="header-left md:flex md:items-center md:gap-10 xl:gap-16">
       <div class="logo down_md:hidden">
-        <a class="text-[36px] flex" href="http://localhost:8000/">
+        <a class="text-[36px] flex" href="{{ route('home') }}">
           <span class="icomoon icon-logo"></span>
         </a>
       </div>

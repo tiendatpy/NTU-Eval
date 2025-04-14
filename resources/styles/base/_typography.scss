@@ -36,6 +36,9 @@
       outline-offset: 3px;
     }
   }
+  select, input:not([type='file']) {
+    @apply border-1 border-primary-500;
+  }
   
   table {
     th,
@@ -57,8 +60,8 @@
     tr:last-child td:last-child {
       @apply rounded-br-xl;
     }
-    tr:nth-child(even) {
-      @apply bg-primary-050;
+    tr:nth-child(2n) {
+      @apply bg-primary-100;
     }
   }
 

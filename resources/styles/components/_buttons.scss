@@ -1,6 +1,6 @@
 @layer base {
     .btn {
-      @apply px-16 leading-13 text-lg -tracking-sp9 font-medium inline-block select-none align-middle rounded-4xl py-10 border-2 no-underline custom-transition border-none;
+      @apply px-8 leading-13 text-sm -tracking-sp9 font-medium inline-block select-none align-middle rounded-xl py-5 border-2 no-underline custom-transition border-none;
       &.disabled {
         @apply bg-neutral-600 text-gray-100 pointer-events-none cursor-none;
       }
@@ -15,8 +15,8 @@
     }
   
     .btn-primary {
-      @apply text-white bg-primary-300;
-      @apply hover:text-white hover:bg-primary-400;
+      @apply text-white bg-states-600;
+      @apply hover:text-white hover:bg-states-600/80;
     }
   
     .btn-secondary {

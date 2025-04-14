@@ -37,7 +37,10 @@
     }
 
     table tbody tr {
-        @apply hover:bg-primary-050;
+        @apply hover:bg-primary-200;
+    }
+    table thead tr:first-child {
+        @apply border-b-1 border-b-primary-200;
     }
 
 }

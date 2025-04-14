@@ -1,4 +1,4 @@
-<footer class="footer lg:absolute lg:bottom-8 lg:left-8 lg:right-8 text-center rounded-2xl overflow-hidden">
+<footer class="footer mt-8 text-center rounded-2xl overflow-hidden">
     <div class="px-16 py-24 bg-white ">
         <div class="footer-content lg:flex lg:justify-between lg:items-center">
             <div class="footer-left down_lg:mb-16 text-primary-500 font-normal">
