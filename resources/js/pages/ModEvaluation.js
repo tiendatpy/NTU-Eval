@@ -1,8 +1,8 @@
 export default class ModEvaluation {
     constructor(el) {
         this.$el = $(el);
-        this.$scoreInputs = this.$el.find('.score-input'); // Lấy tất cả các input điểm
-        this.$averageScore = this.$el.find('.total-score'); // Phần hiển thị điểm trung bình
+        this.$scoreInputs = this.$el.find('.score-input'); 
+        this.$averageScore = this.$el.find('.total-score');
     }
 
     init() {
@@ -10,7 +10,6 @@ export default class ModEvaluation {
     }
 
     bindEvents() {
-        // Lắng nghe sự kiện thay đổi trên các input điểm
         this.$scoreInputs.on('input', () => this.calculateAverageScore());
     }
 
@@ -26,8 +25,8 @@ export default class ModEvaluation {
             }
         });
 
-        const average = count > 0 ? (total / count).toFixed(2) : 0; // Tính điểm trung bình
-        this.$averageScore.text(average); // Hiển thị điểm trung bình
+        const average = count > 0 ? (total / count).toFixed(2) : 0; 
+        this.$averageScore.text(average);
     }
 }
 
