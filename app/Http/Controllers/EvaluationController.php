@@ -99,7 +99,7 @@ class EvaluationController extends Controller
 
                     // Lưu minh chứng vào bảng documents
                     Document::create([
-                        'type_id' => MetaType::where('category', 'document_type')->where('name', 'Evaluation Evidence')->first()->id,
+                        'type_id' => MetaType::where('category', 'document_type')->where('name', 'Minh chứng')->first()->id,
                         'file_name' => $detail['evidence']->getClientOriginalName(),
                         'file_path' => $evidencePath,
                         'evaluation_detail_id' => $evaluationDetail->id,
