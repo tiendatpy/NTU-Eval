@@ -21,9 +21,11 @@ class EvaluationController extends Controller
 
     public function store(Request $request)
     {
+        $user = auth()->user();
+        if (!$user) {
+            return redirect()->route('login')->with('error', 'Bạn cần đăng nhập để thực hiện hành động này.');
+        }
         $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'unit_id' => 'required|exists:units,id',
             'period' => 'required|digits:4',
             'details' => 'required|array',
             'details.*.criteria_id' => 'required|exists:evaluation_criteria,id',
@@ -73,9 +75,9 @@ class EvaluationController extends Controller
 
             Log::info('Attempting to create Evaluation...');
             $evaluation = Evaluation::create([
-                'user_id' => $request->user_id,
-                'unit_id' => $request->unit_id,
-                'evaluator_id' => $request->user_id,
+                'user_id' => $user->id,
+                'unit_id' => $user->unit_id,
+                'evaluator_id' => $user->id,
                 'period' => $request->period,
                 'score' => $finalScore,
                 'classification_id' => $classification?->id,
@@ -103,7 +105,7 @@ class EvaluationController extends Controller
                         'file_name' => $detail['evidence']->getClientOriginalName(),
                         'file_path' => $evidencePath,
                         'evaluation_detail_id' => $evaluationDetail->id,
-                        'uploaded_by' => $request->user_id,
+                        'uploaded_by' => $user->id,
                     ]);
                 }
             }
