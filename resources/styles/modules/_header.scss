@@ -1,0 +1,23 @@
+.header {
+    .profile-details tr {
+        @apply bg-white;
+    }
+    .profile-details td {
+        @apply p-4;
+    }
+    .profile-popup {
+        animation: slideDown 0.3s ease-in-out;
+    }
+        
+}
+@keyframes slideDown {
+    0% {
+        opacity: 0;
+        margin-top: -100px;
+    }
+    100% {
+        opacity: 1;
+        margin-top: 0;
+    }
+    
+}

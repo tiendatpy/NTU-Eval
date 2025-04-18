@@ -7,9 +7,10 @@
 // Components
 @use 'components/buttons';
 
-// Pages    
-@use 'pages/sidebar';
-@use 'pages/self-eval';
+// Modules
+@use 'modules/header';
+@use 'modules/sidebar';
+@use 'modules/self-eval';
 
 @tailwind base;
 @tailwind components;

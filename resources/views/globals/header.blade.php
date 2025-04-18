@@ -24,43 +24,66 @@
 
       <!-- User Profile -->
       @auth
-        <div class="profile flex items-center gap-3">
-          <div class="profile-avt overflow-hidden">
-            <button class="flex">
-              <img class="rounded-full h-16 w-16" src="{{ asset('images/user.jpg') }}" alt="User Avatar">
-            </button>
-          </div>
+        <div class="profile text-sm flex items-center gap-3">
+          <span class="border-r-2 border-primary-600 pr-3" >Tài khoản</span>
           <div class="profile-info">
-            <button id="profile-button" class="block font-medium text-gray-800 focus:outline-none">
+            <button class="profile-button block hover:text-states-400 hover:underline font-medium text-gray-800 focus:outline-none">
               {{ Auth::user()->full_name }}
             </button>
           </div>
           <div class="logout-btn">
-            <form method="POST" action="{{ route('logout') }}" class="mt-2">
+            <form method="POST" action="{{ route('logout') }}">
               @csrf
-              <button class="block w-full text-center text-red-600 hover:underline" onclick="event.preventDefault(); this.closest('form').submit();">
-                Log Out
+              <button title="Đăng xuất" class="flex w-full text-2xl text-secondary-600 hover:text-secondary-600/50" onclick="event.preventDefault(); this.closest('form').submit();">
+                <span class="icomoon icon-external-link"></span>
               </button>
             </form>
           </div>
-
+        </div>
+        <div class="overlay js-popup fixed inset-0 bg-black/25 hidden">
           <!-- Popup -->
-          </div>
-          <div id="profile-popup" class="absolute top-0 left-0 bg-white shadow-lg rounded-lg w-64 p-4 z-50">
-            <div class="flex flex-col items-center">
-              <img class="rounded-full h-20 w-20 mb-3" src="{{ asset('images/user.jpg') }}" alt="User Avatar">
-              <h3 class="text-lg font-semibold">{{ Auth::user()->full_name }}</h3>
-              <p class="text-sm text-gray-500">{{ Auth::user()->email }}</p>
-              <p class="text-sm text-gray-500">{{ Auth::user()->phone ?? 'No phone number' }}</p>
-              <p class="text-sm text-gray-500">Role: {{ Auth::user()->role->name }}</p>
-              <p class="text-sm text-gray-500">Unit: {{ Auth::user()->unit->name ?? 'None' }}</p>
+          <div class="profile-popup absolute min-w-[400px] lg:w-[600px] transform-center-middle bg-states-400 shadow-slate-600 rounded-lg p-4 z-50">
+            <table class="w-full">
+              <tr class="hover:bg-states-400">
+                <td class="font-semibold p-5 text-white">Thông tin người dùng</td>
+                <td class="p-5 text-right text-2xl" >
+                  <button class="hover:text-white close-popup"><span class="icomoon icon-close"></span></button>
+                </td>
+              </tr>
+            </table>
+            <div class="bg-white p-4">
+              <fieldset class="border border-gray-300 p-4 rounded-md">
+                <legend class="text-lg">Thông tin cá nhân</legend>
+                <table class="mx-auto profile-details">
+                    <tr>
+                      <td class="font-semibold text-right">Họ và tên:</td>
+                      <td>{{ Auth::user()->full_name }}</td>
+                    </tr>
+                    <tr>
+                      <td class="font-semibold text-right">Email:</td>
+                      <td>{{ Auth::user()->email }}</td>
+                    </tr>
+                    <tr>
+                      <td class="font-semibold text-right">Số điện thoại:</td>
+                      <td>{{ Auth::user()->phone ?? 'No phone number' }}</td>
+                    </tr>
+                    <tr>
+                      <td class="font-semibold text-right">Đơn vị:</td>
+                      <td>{{ Auth::user()->unit->name ?? 'None' }}</td>
+                    </tr>
+                    <tr>
+                      <td class="font-semibold text-right">Vai trò:</td>
+                      <td>{{ Auth::user()->role->name }}</td>
+                </table>
+              </fieldset>
             </div>
-            <div class="mt-4">
-              <a href="{{ route('profile.edit') }}" class="block text-center text-blue-600 hover:underline">
-                Edit Profile
-              </a>
+              <div class="mt-4 text-center">
+                <a href="{{ route('profile.edit') }}" class="inline-block text-white font-medium hover:underline">
+                  Đổi mật khẩu
+                </a>
+              </div>
             </div>
-          </div>
+        </div>
         </div>
       @endauth
     </div>

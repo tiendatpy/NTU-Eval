@@ -26,6 +26,12 @@
     -moz-osx-font-smoothing: grayscale;
   }
   
+  .icon-popout:before {
+    content: "\e90d";
+  }
+  .icon-external-link:before {
+    content: "\e90e";
+  }
   .icon-logo:before {
     content: "\e905";
   }
