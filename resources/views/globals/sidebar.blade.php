@@ -13,7 +13,7 @@
                 </ul>
             </li>
             <li class="px-4 mb-11 font-medium hover:text-states-500 cursor-pointer">
-                <span>Sales</span>
+                <span>Khen thưởng</span>
             </li>
         </ul>
         <ul class="menu-list mb-11">

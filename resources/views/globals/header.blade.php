@@ -31,10 +31,10 @@
               {{ Auth::user()->full_name }}
             </button>
           </div>
-          <div class="logout-btn">
+          <div class="wrap-logout-btn">
             <form method="POST" action="{{ route('logout') }}">
               @csrf
-              <button title="Đăng xuất" class="flex w-full text-2xl text-secondary-600 hover:text-secondary-600/50" onclick="event.preventDefault(); this.closest('form').submit();">
+              <button type="submit" title="Đăng xuất" class="logout-btn flex w-full text-2xl text-secondary-600 hover:text-secondary-600/50">
                 <span class="icomoon icon-external-link"></span>
               </button>
             </form>

@@ -73,7 +73,6 @@ class EvaluationController extends Controller
                 ->where('name', 'Tự đánh giá') // Giá trị mặc định cho status_id
                 ->first();
 
-            Log::info('Attempting to create Evaluation...');
             $evaluation = Evaluation::create([
                 'user_id' => $user->id,
                 'unit_id' => $user->unit_id,

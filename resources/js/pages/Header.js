@@ -4,10 +4,12 @@ export default class Header {
         this.$profileButton = this.$el.find('.profile-button'); 
         this.$popup = this.$el.find('.js-popup');
         this.$closeButtons = this.$el.find('.close-popup');
+        this.$logoutButton = this.$el.find('.logout-btn');
     }
 
     init() {
         this.bindEvents(); 
+        this.logout();
     }
 
     bindEvents() {
@@ -21,7 +23,6 @@ export default class Header {
             }
         });
 
-        // Ẩn popup khi click nút đóng
         this.$closeButtons.on('click', () => this.hideProfilePopup());
     }
 
@@ -33,7 +34,19 @@ export default class Header {
     hideProfilePopup() {
         this.$popup.addClass('hidden');
     }
+
+    logout() {
+        this.$logoutButton.closest('form').on('submit', (e) => e.preventDefault());
+        
+        this.$logoutButton.on('click', (e) => {
+            e.preventDefault();
+            const form = this.$logoutButton.closest('form');
+            
+            if (window.confirm('Bạn có chắc chắn muốn đăng xuất không?')) {
+                form.off('submit').submit();
+            }
+        });
+    }
 }
 
-// Khởi tạo khi DOM sẵn sàng
 new Header('.header').init();
