@@ -91,7 +91,6 @@ class EvaluationController extends Controller
                     'evaluation_id' => $evaluation->id,
                     'criteria_id' => $detail['criteria_id'],
                     'score' => $detail['score'],
-                    'comments' => $detail['comments'] ?? null,
                 ]);
 
                 // Xử lý upload file minh chứng

@@ -1,6 +1,6 @@
 @layer base {
   body {
-    @apply font-body text-base text-black xl:text-lg bg-primary-050;
+    @apply font-body text-sm text-black bg-primary-050;
   }
   html {
     @apply m-0;

@@ -4,7 +4,9 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EvaluationController;
 use App\Http\Controllers\AwardController;
+use App\Http\Controllers\AwardNominationController;
 use App\Http\Controllers\EvaluationCriteriaController;
+use App\Http\Controllers\TitleNominationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,7 +19,6 @@ use App\Http\Controllers\EvaluationCriteriaController;
 |
 */
 
-// Route::get('/', [EvaluationCriteriaController::class, 'index'])->name('home');
 Route::get('/self-evaluation', [EvaluationController::class, 'index'])->name('evaluations.index');
 Route::post('/self-evaluation', [EvaluationController::class, 'store'])->name('evaluations.store');
 
@@ -34,6 +35,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/title-nominations', [TitleNominationController::class, 'index'])->name('title-nominations.index');
+    Route::post('/title-nominations', [TitleNominationController::class, 'store'])->name('title-nominations.store');
 });
 
 require __DIR__.'/auth.php';

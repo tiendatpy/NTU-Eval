@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('type_id')->constrained('meta_types');
             $table->string('file_name');
             $table->string('file_path');
+            $table->foreignId('evaluation_detail_id')->nullable()->constrained('evaluation_details');
             $table->foreignId('uploaded_by')->constrained('users');
             $table->timestamps();
         });

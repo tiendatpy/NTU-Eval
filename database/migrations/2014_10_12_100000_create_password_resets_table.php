@@ -13,8 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('documents', function (Blueprint $table) {
-            $table->foreignId('evaluation_detail_id')->nullable()->constrained('evaluation_details')->after('file_path')->onDelete('cascade');
+        Schema::create('password_resets', function (Blueprint $table) {
+            $table->string('email')->primary();
+            $table->string('token');
+            $table->timestamp('created_at')->nullable();
         });
     }
 
@@ -25,9 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('documents', function (Blueprint $table) {
-            $table->dropForeign(['evaluation_detail_id']);
-            $table->dropColumn('evaluation_detail_id');
-        });
+        Schema::dropIfExists('password_resets');
     }
 };

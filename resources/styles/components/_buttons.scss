@@ -20,13 +20,13 @@
     }
   
     .btn-secondary {
-      @apply text-neutral-100 bg-secondary-300;
-      @apply hover:text-secondary-400;
+      @apply text-white bg-neutral-500;
+      @apply  hover:bg-neutral-500/80;
     }
   
     .btn-tertiary {
-      @apply text-white rounded-none;
-      @apply  hover:text-secondary-100;
+      @apply text-white bg-secondary-500;
+      @apply  hover:bg-secondary-500/80;
       &__v2 {
         @apply hover:underline;
       }

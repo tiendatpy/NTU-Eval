@@ -18,7 +18,7 @@
             @endfor
           </select>
         </div>
-        <div class="self-table">
+        <div class="self-table mb-5">
           <table class="w-full text-sm overflow-hidden">
           <thead class="rounded-t-xl">
             <tr class=" bg-states-300">

@@ -13,8 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('evaluation_details', function (Blueprint $table) {
-            $table->timestamps(); // Thêm created_at và updated_at
+        Schema::create('titles', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->text('description')->nullable();
+            $table->foreignId('level_id')->constrained('meta_types');
+            $table->foreignId('reward_id')->constrained('rewards');
+            $table->timestamps();
         });
     }
 
@@ -25,8 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('evaluation_details', function (Blueprint $table) {
-            $table->dropTimestamps(); // Xóa created_at và updated_at
-        });
+        Schema::dropIfExists('titles');
     }
 };

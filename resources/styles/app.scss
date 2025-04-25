@@ -11,6 +11,7 @@
 @use 'modules/header';
 @use 'modules/sidebar';
 @use 'modules/self-eval';
+@use 'modules/mod-title-nomination';
 
 @tailwind base;
 @tailwind components;

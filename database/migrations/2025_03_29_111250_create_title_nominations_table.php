@@ -6,31 +6,23 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
-        Schema::create('award_nominations', function (Blueprint $table) {
+        Schema::create('title_nominations', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users');
             $table->foreignId('unit_id')->constrained('units');
-            $table->foreignId('award_id')->constrained('awards');
+            $table->foreignId('title_id')->constrained('titles');
             $table->year('period');
             $table->foreignId('status_id')->constrained('meta_types');
+            $table->foreignId('reward_id')->constrained('rewards');
+            $table->text('achievement')->nullable();
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
-        Schema::dropIfExists('award_nominations');
+        Schema::dropIfExists('title_nominations');
     }
 };

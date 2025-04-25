@@ -36,6 +36,10 @@
         box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.06), 0px 1px 3px 0px rgba(0, 0, 0, 0.10);
     }
 
+    section {
+        @apply rounded-2xl overflow-hidden;
+    }
+
     table tbody tr {
         @apply hover:bg-primary-200;
     }

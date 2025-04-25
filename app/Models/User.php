@@ -10,12 +10,24 @@ class User extends Authenticatable
     use Notifiable;
 
     protected $fillable = [
-        'username', 'password', 'full_name', 'email', 
-        'phone', 'role_id', 'unit_id'
+        'password', 
+        'full_name', 
+        'email',
+        'date_of_birth',
+        'phone', 
+        'role_id', 
+        'unit_id',
+        'email_verified_at'
     ];
 
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 
+        'remember_token',
+    ];
+
+    protected $casts = [
+        'date_of_birth' => 'date',
+        'email_verified_at' => 'datetime'
     ];
 
     public function role()
@@ -47,4 +59,4 @@ class User extends Authenticatable
     {
         return $this->hasMany(Document::class, 'uploaded_by');
     }
-} 
+}

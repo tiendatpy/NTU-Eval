@@ -4,9 +4,21 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class AwardNomination extends Model
+class TitleNomination extends Model
 {
-    protected $fillable = ['user_id', 'unit_id', 'award_id', 'period', 'status_id'];
+    protected $fillable = [
+        'user_id',
+        'unit_id',
+        'title_id',
+        'period',
+        'status_id',
+        'reward_id',
+        'achievement',
+    ];
+
+    protected $casts = [
+        'period' => 'integer'
+    ];
 
     public function user()
     {
@@ -18,13 +30,13 @@ class AwardNomination extends Model
         return $this->belongsTo(Unit::class);
     }
 
-    public function award()
+    public function title()
     {
-        return $this->belongsTo(Award::class);
+        return $this->belongsTo(Title::class);
     }
 
     public function status()
     {
         return $this->belongsTo(MetaType::class, 'status_id');
     }
-} 
+}

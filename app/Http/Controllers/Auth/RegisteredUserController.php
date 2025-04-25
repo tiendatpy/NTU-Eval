@@ -38,19 +38,19 @@ class RegisteredUserController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'username' => ['required', 'string', 'max:255', 'unique:users,username'],
             'full_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
-            'phone' => ['nullable', 'string', 'max:10'],
+            'date_of_birth' => ['required', 'date', 'before:today'],
+            'phone' => ['nullable', 'string', 'regex:/^[0-9]{10}$/'],
             'role_id' => ['required', 'exists:roles,id'], // Kiểm tra role_id tồn tại trong bảng roles
             'unit_id' => ['nullable', 'exists:units,id'], // Kiểm tra unit_id tồn tại trong bảng units
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
         $user = User::create([
-            'username' => $request->username,
             'full_name' => $request->full_name,
             'email' => $request->email,
+            'date_of_birth' => $request->date_of_birth,
             'phone' => $request->phone,
             'role_id' => $request->role_id,
             'unit_id' => $request->unit_id,

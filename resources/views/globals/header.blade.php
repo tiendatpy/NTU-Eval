@@ -60,6 +60,10 @@
                       <td>{{ Auth::user()->full_name }}</td>
                     </tr>
                     <tr>
+                      <td class="font-semibold text-right">Ngày sinh:</td>
+                      <td>{{ \Carbon\Carbon::parse(Auth::user()->date_of_birth)->format('d/m/Y') }}</td>
+                    </tr>
+                    <tr>
                       <td class="font-semibold text-right">Email:</td>
                       <td>{{ Auth::user()->email }}</td>
                     </tr>

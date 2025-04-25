@@ -6,7 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Document extends Model
 {
-    protected $fillable = ['type_id', 'file_name', 'file_path', 'uploaded_by', 'evaluation_detail_id'];
+    protected $fillable = [
+        'related_id',
+        'type_id', 
+        'file_name', 
+        'file_path', 
+        'evaluation_detail_id',
+        'uploaded_by'
+    ];
 
     public function type()
     {
@@ -21,4 +28,4 @@ class Document extends Model
     {
         return $this->belongsTo(EvaluationDetail::class, 'evaluation_detail_id');
     }
-} 
+}
