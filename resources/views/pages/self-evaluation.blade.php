@@ -53,6 +53,19 @@
                 <span class="total-score" >0</span>
               </td>
             </tr>
+            <tr>
+              <td colspan="2"></td>
+              <td>
+                <span class="font-bold">Tự xếp loại chất lượng:</span>
+              </td>
+              <td>
+                <select name="classification_id" class="border-primary-500 border-1 p-2 w-full rounded-lg" required>
+                  @foreach ($classifications as $classification)
+                    <option value="{{ $classification->id }}">{{ $classification->name }}</option>
+                  @endforeach
+                </select>
+              </td>
+            </tr>
           </tbody>
           </table>
         </div>

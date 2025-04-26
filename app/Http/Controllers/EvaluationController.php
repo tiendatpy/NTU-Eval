@@ -16,7 +16,8 @@ class EvaluationController extends Controller
     {
         $criteria = EvaluationCriteria::where('category_id', 30)->get();
         $evaluation = Evaluation::latest()->first();
-        return view('pages.self-evaluation', compact('criteria', 'evaluation'));
+        $classifications = MetaType::where('category', 'evaluation_classification')->get(); // Lấy danh sách xếp loại chất lượng
+        return view('pages.self-evaluation', compact('criteria', 'evaluation', 'classifications'));
     }
 
     public function store(Request $request)
@@ -27,6 +28,7 @@ class EvaluationController extends Controller
         }
         $request->validate([
             'period' => 'required|digits:4',
+            'classification_id' => 'required|exists:meta_types,id', // Kiểm tra classification_id hợp lệ
             'details' => 'required|array',
             'details.*.criteria_id' => 'required|exists:evaluation_criteria,id',
             'details.*.score' => 'required|numeric|min:1|max:4',
@@ -37,37 +39,16 @@ class EvaluationController extends Controller
 
         DB::beginTransaction();
 
-
         try {
             $sum = 0;
             $count = 0;
-            $scores = [];
 
             foreach ($request->details as $detail) {
-                $scores[] = $detail['score'];
                 $sum += $detail['score'];
                 $count++;
             }
 
             $finalScore = $count > 0 ? round($sum / $count, 2) : 0;
-
-            $classificationName = 'Không hoàn thành';
-
-            if (
-                isset($scores[0], $scores[1], $scores[2]) &&
-                $scores[0] == 4 && $scores[1] == 4 && $scores[2] == 4 &&
-                collect($scores)->every(fn($s) => $s >= 3)
-            ) {
-                $classificationName = 'Hoàn thành xuất sắc';
-            } elseif (collect($scores)->every(fn($s) => $s >= 3)) {
-                $classificationName = 'Hoàn thành tốt';
-            } elseif (collect($scores)->every(fn($s) => $s >= 2)) {
-                $classificationName = 'Hoàn thành';
-            }
-
-            $classification = MetaType::where('category', 'evaluation_classification')
-                ->where('name', $classificationName)
-                ->first();
 
             $status = MetaType::where('category', 'evaluation_status')
                 ->where('name', 'Tự đánh giá') // Giá trị mặc định cho status_id
@@ -79,7 +60,7 @@ class EvaluationController extends Controller
                 'evaluator_id' => $user->id,
                 'period' => $request->period,
                 'score' => $finalScore,
-                'classification_id' => $classification?->id,
+                'classification_id' => $request->classification_id, // Lưu classification_id từ form
                 'status_id' => $status?->id,
                 'created_at' => now(),
                 'updated_at' => now(),
