@@ -3,10 +3,15 @@ export default class ModTitleNominations {
         this.$el = $(el);
         this.$tableBody = this.$el.find('#nominations-table tbody');
         this.$addRowButton = this.$el.find('#add-row');
+
+        // Lưu trữ dữ liệu mẫu của các select
+        this.titleOptions = $('#nominations-table select[name="titles[]"]:first').html();
+        this.rewardOptions = $('#nominations-table select[name="rewards[]"]:first').html();
     }
 
     init() {
         this.bindEvents();
+        this.initializeCKEditor();
     }
 
     bindEvents() {
@@ -30,7 +35,7 @@ export default class ModTitleNominations {
                     </select>
                 </td>
                 <td>
-                    <textarea name="achievements[]" class="border-primary-500 border-1 p-2 w-full rounded-lg" required></textarea>
+                    <textarea name="achievements[${rowCount - 1}]" class="ckeditor border-primary-500 border-1 p-2 w-full rounded-lg" required></textarea>
                 </td>
                 <td>
                     <button type="button" class="btn btn-tertiary remove-row">Xóa</button>
@@ -38,10 +43,20 @@ export default class ModTitleNominations {
             </tr>
         `;
         this.$tableBody.append(newRow);
+
+        // Khởi tạo CKEditor cho các textarea mới
+        this.initializeCKEditor();
     }
 
     removeRow(e) {
-        $(e.target).closest('tr').remove();
+        const $row = $(e.target).closest('tr');
+        const $textarea = $row.find('textarea.ckeditor');
+
+        if ($textarea.length && CKEDITOR.instances[$textarea.attr('name')]) {
+            CKEDITOR.instances[$textarea.attr('name')].destroy();
+        }
+
+        $row.remove();
         this.updateRowNumbers();
     }
 
@@ -52,13 +67,19 @@ export default class ModTitleNominations {
     }
 
     getTitleOptions() {
-        // Lấy danh sách tùy chọn danh hiệu từ hàng đầu tiên
-        return $('#nominations-table select[name="titles[]"]:first').html();
+        return this.titleOptions; // Trả về dữ liệu mẫu đã lưu
     }
 
     getRewardOptions() {
-        // Lấy danh sách tùy chọn hình thức khen thưởng từ hàng đầu tiên
-        return $('#nominations-table select[name="rewards[]"]:first').html();
+        return this.rewardOptions; // Trả về dữ liệu mẫu đã lưu
+    }
+
+    initializeCKEditor() {
+        this.$tableBody.find('textarea.ckeditor').each(function() {
+            if (!CKEDITOR.instances[this.name]) {
+                CKEDITOR.replace(this);
+            }
+        });
     }
 }
 

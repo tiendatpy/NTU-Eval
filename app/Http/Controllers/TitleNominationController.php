@@ -46,7 +46,7 @@ class TitleNominationController extends Controller
                                        ->where('name', 'Đề xuất')
                                        ->first()->id,
                 'reward_id' => $request->rewards[$index],
-                'achievement' => $request->achievements[$index],
+                'achievement' => strip_tags($request->achievements[$index]),
             ]);
         }
 

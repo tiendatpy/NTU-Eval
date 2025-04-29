@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="{{ asset('js/ckeditor/ckeditor.js') }}"></script>
     @vite(['resources/styles/app.scss', 'resources/js/app.js'])
 </head>
 <body>
@@ -19,5 +20,16 @@
             @include('globals.footer')
         </main>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            if (typeof CKEDITOR !== 'undefined') {
+                document.querySelectorAll('textarea.ckeditor').forEach(function (textarea) {
+                    if (!CKEDITOR.instances[textarea.name]) {
+                        CKEDITOR.replace(textarea);
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>

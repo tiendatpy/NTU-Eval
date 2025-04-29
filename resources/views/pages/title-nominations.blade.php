@@ -20,11 +20,11 @@
           <table class="w-full text-sm overflow-hidden" id="nominations-table">
             <thead class="rounded-t-xl">
               <tr class="bg-states-300">
-                <th>STT</th>
-                <th>Đề xuất danh hiệu</th>
-                <th>Hình thức khen thưởng</th>
-                <th>Tóm tắt thành tích</th>
-                <th>Hành động</th>
+                <th class="w-5p">STT</th>
+                <th class="w-20p">Đề xuất danh hiệu</th>
+                <th class="w-20p">Hình thức khen thưởng</th>
+                <th class="w-50p">Tóm tắt thành tích</th>
+                <th class="w-10p">Hành động</th>
               </tr>
             </thead>
             <tbody>
@@ -45,7 +45,7 @@
                   </select>
                 </td>
                 <td>
-                  <textarea name="achievements[]" class="border-primary-500 border-1 p-2 w-full rounded-lg" required></textarea>
+                  <textarea name="achievements[]" class="ckeditor border-primary-500 border-1 p-2 w-full rounded-lg" required></textarea>
                 </td>
                 <td>
                   <button type="button" class="btn btn-tertiary remove-row">Xóa</button>
@@ -61,9 +61,4 @@
       </form>
     </div>
   </section>
-  @if (session('success'))
-    <div class="alert alert-success bg-green-100 text-green-800 p-4 rounded-md mb-4">
-        {{ session('success') }}
-    </div>
-  @endif
 @endsection
