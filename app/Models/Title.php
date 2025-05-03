@@ -10,7 +10,6 @@ class Title extends Model
         'name', 
         'description', 
         'level_id',
-        'reward_id'
     ];
 
     public function level()
@@ -18,10 +17,6 @@ class Title extends Model
         return $this->belongsTo(MetaType::class, 'level_id');
     }
 
-    public function reward()
-    {
-        return $this->belongsTo(Reward::class);
-    }
 
     public function nominations()
     {

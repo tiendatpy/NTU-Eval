@@ -50,11 +50,6 @@ class User extends Authenticatable
         return $this->hasMany(Evaluation::class, 'evaluator_id');
     }
 
-    public function awardNominations()
-    {
-        return $this->hasMany(AwardNomination::class);
-    }
-
     public function documents()
     {
         return $this->hasMany(Document::class, 'uploaded_by');

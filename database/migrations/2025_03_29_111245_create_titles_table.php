@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('name');
             $table->text('description')->nullable();
             $table->foreignId('level_id')->constrained('meta_types');
-            $table->foreignId('reward_id')->constrained('rewards');
             $table->timestamps();
         });
     }

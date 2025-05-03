@@ -25,12 +25,33 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
-  
+
+  .icon-external-link:before {
+    content: "\e915";
+  }
+  .icon-eye:before {
+    content: "\e90e";
+  }
+  .icon-eye-off:before {
+    content: "\e90f";
+  }
+  .icon-folder:before {
+    content: "\e910";
+  }
+  .icon-pencil-alt:before {
+    content: "\e911";
+  }
+  .icon-table:before {
+    content: "\e912";
+  }
+  .icon-users:before {
+    content: "\e913";
+  }
+  .icon-pencil:before {
+    content: "\e914";
+  }
   .icon-popout:before {
     content: "\e90d";
-  }
-  .icon-external-link:before {
-    content: "\e90e";
   }
   .icon-logo:before {
     content: "\e905";

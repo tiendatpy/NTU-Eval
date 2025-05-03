@@ -18,8 +18,4 @@ class MetaType extends Model
         return $this->hasMany(Evaluation::class, 'classification_id');
     }
 
-    public function awards()
-    {
-        return $this->hasMany(Award::class, 'level_id');
-    }
 } 

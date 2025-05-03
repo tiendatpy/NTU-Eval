@@ -61,7 +61,7 @@
                     </tr>
                     <tr>
                       <td class="font-semibold text-right">Ngày sinh:</td>
-                      <td>{{ \Carbon\Carbon::parse(Auth::user()->date_of_birth)->format('d/m/Y') }}</td>
+                      <td>{{ format_date(Auth::user()->date_of_birth) }}</td>
                     </tr>
                     <tr>
                       <td class="font-semibold text-right">Email:</td>

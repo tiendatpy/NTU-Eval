@@ -13,10 +13,12 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users');
             $table->foreignId('unit_id')->constrained('units');
             $table->foreignId('title_id')->constrained('titles');
-            $table->year('period');
+            $table->foreignId('approved_title_id')->nullable()->constrained('titles');
+            $table->foreignId('period_id')->constrained('periods');
             $table->foreignId('status_id')->constrained('meta_types');
             $table->foreignId('reward_id')->constrained('rewards');
             $table->text('achievement')->nullable();
+            $table->string('review')->nullable();
             $table->timestamps();
         });
     }

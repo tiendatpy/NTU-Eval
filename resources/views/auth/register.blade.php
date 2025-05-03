@@ -37,7 +37,7 @@
                         name="date_of_birth" 
                         :value="old('date_of_birth')" 
                         required 
-                        max="{{ date('Y-m-d') }}" />
+                        max="{{ date('d-m-Y') }}" />
                     <x-input-error :messages="$errors->get('date_of_birth')" class="mt-2" />
                 </div>
 

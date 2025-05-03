@@ -16,4 +16,12 @@ CKEDITOR.editorConfig = function( config ) {
 
     config.extraPlugins = 'youtube';
     config.youtube_responsive = true;
+    config.toolbar = [
+        { name: 'basicstyles', items: ['Bold', 'Italic', 'Underline'] },
+        { name: 'paragraph', items: ['NumberedList', 'BulletedList'] },
+        { name: 'insert', items: ['Image', 'Table'] },
+        { name: 'styles', items: ['Format', 'Font', 'FontSize'] },
+        { name: 'colors', items: ['TextColor', 'BGColor'] },
+        { name: 'tools', items: ['Maximize'] }
+    ];
 };

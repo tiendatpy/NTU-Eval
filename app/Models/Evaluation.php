@@ -7,14 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class Evaluation extends Model
 {
     protected $fillable = [
-        'user_id', 'unit_id', 'evaluator_id', 'period',
+        'evaluator_id', 'unit_id', 'period_id',
         'score', 'classification_id', 'status_id'
     ];
-
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
 
     public function unit()
     {
@@ -39,6 +34,11 @@ class Evaluation extends Model
     public function details()
     {
         return $this->hasMany(EvaluationDetail::class);
+    }
+
+    public function period()
+    {
+        return $this->belongsTo(Periods::class, 'period_id');
     }
 
 } 

@@ -10,12 +10,12 @@
         <div class="self-eval-heading mb-8 text-sm">
           <h2 class="mb-7 text-base">Tự đánh giá</h2>
           <label for="period">Năm đánh giá</label>
-          <select class="border-primary-500 border-1 p-2 w-100 rounded-lg" id="period" name="period" required>
-            @for ($year = 2022; $year <= now()->year; $year++)
-              <option value="{{ $year }}" {{ $evaluation->period == $year ? 'selected' : '' }}>
-                {{ $year }}-{{ $year + 1 }}
-              </option>
-            @endfor
+          <select class="border-primary-500 border-1 p-2 w-100 rounded-lg" id="period_id" name="period_id" required>
+            @foreach ($periods as $period)
+            <option value="{{ $period->id }}"{{ $period->year == now()->year - 1 ? 'selected' : '' }}>
+              {{ $period->year }} - {{ $period->year + 1 }}
+            </option>
+            @endforeach
           </select>
         </div>
         <div class="self-table mb-5">
@@ -23,9 +23,9 @@
           <thead class="rounded-t-xl">
             <tr class=" bg-states-300">
             <th class="w-5p">STT</th>
-            <th class="w-50p">Nội dung đánh giá</th>
-            <th class="w-20p">Kê khai, minh chứng (nếu có)</th>
-            <th class="w-25p">Mức đạt được (1-4)</th>
+            <th class="w-30p">Nội dung đánh giá</th>
+            <th class="w-60p">Kê khai, minh chứng (nếu có)</th>
+            <th class="w-5p">Mức đạt được (1-4)</th>
             </tr>
           </thead>
           <tbody>
@@ -37,7 +37,10 @@
               {{ $cri->name }}
             </td>
             <td>
-              <input type="file" name="details[{{ $loop->index }}][evidence]" accept=".jpg,.jpeg,.png,.pdf,.docx,.doc,.xls,.xlsx">
+                <textarea class="ckeditor" name="details[{{ $loop->index }}][evidence]" 
+                  class="border-primary-500 border-1 p-2 w-full rounded-lg" 
+                  placeholder="Nhập thông tin minh chứng (nếu có)">
+                </textarea>
             </td>
             <td>
               <div class="flex">
@@ -47,23 +50,26 @@
             </tr>
             @endforeach
             <tr>
-              <td colspan="3"></td>
-              <td>
-                <span class="font-bold">Điểm đánh giá: </span>
-                <span class="total-score" >0</span>
+              <td colspan="4">
+                <div class="text-right">
+                  <span class="font-bold">Điểm đánh giá:</span>
+                  <span class="total-score" >0</span>
+                </div>
               </td>
             </tr>
             <tr>
               <td colspan="2"></td>
-              <td>
-                <span class="font-bold">Tự xếp loại chất lượng:</span>
-              </td>
-              <td>
-                <select name="classification_id" class="border-primary-500 border-1 p-2 w-full rounded-lg" required>
-                  @foreach ($classifications as $classification)
-                    <option value="{{ $classification->id }}">{{ $classification->name }}</option>
-                  @endforeach
-                </select>
+              <td colspan="2">
+                <div class="flex justify-between">
+                  <span class="inline-block w-2/3 font-bold">Tự xếp loại chất lượng:</span>
+                  <div class="w-1/3">
+                    <select name="classification_id" class="border-primary-500 border-1 p-2 w-full rounded-lg" required>
+                      @foreach ($classifications as $classification)
+                        <option value="{{ $classification->id }}">{{ $classification->name }}</option>
+                      @endforeach
+                    </select>
+                  </div>
+                </div>
               </td>
             </tr>
           </tbody>

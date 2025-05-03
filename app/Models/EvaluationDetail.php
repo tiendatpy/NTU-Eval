@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class EvaluationDetail extends Model
 {
-    protected $fillable = ['evaluation_id', 'criteria_id', 'score', 'comments'];
+    protected $fillable = ['evaluation_id', 'criteria_id', 'score', 'evidence'];
 
     public function evaluation()
     {

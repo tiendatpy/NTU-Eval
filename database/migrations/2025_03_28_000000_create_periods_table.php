@@ -13,21 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('unit_heads', function (Blueprint $table) {
+        Schema::create('periods', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('unit_id')->unique()->constrained('units');
-            $table->foreignId('head_id')->unique()->constrained('users');
+            $table->year('year')->unique();
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
-        Schema::dropIfExists('unit_heads');
+        Schema::dropIfExists('periods');
     }
 };

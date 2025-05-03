@@ -18,9 +18,10 @@ use App\Http\Controllers\TitleNominationController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
-Route::get('/self-evaluation', [EvaluationController::class, 'index'])->name('evaluations.index');
-Route::post('/self-evaluation', [EvaluationController::class, 'store'])->name('evaluations.store');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/self-evaluation', [EvaluationController::class, 'index'])->name('evaluations.index');
+    Route::post('/self-evaluation', [EvaluationController::class, 'store'])->name('evaluations.store');
+});
 
 
 Route::get('/', function () {
@@ -40,6 +41,10 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth'])->group(function () {
     Route::get('/title-nominations', [TitleNominationController::class, 'index'])->name('title-nominations.index');
     Route::post('/title-nominations', [TitleNominationController::class, 'store'])->name('title-nominations.store');
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/list-title-nominations', [TitleNominationController::class, 'getList'])->name('title-nominations.list');
 });
 
 require __DIR__.'/auth.php';
