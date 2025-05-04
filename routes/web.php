@@ -45,6 +45,7 @@ Route::middleware(['auth'])->group(function () {
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/list-title-nominations', [TitleNominationController::class, 'getList'])->name('title-nominations.list');
+    Route::put('/title-nominations/{id}', [TitleNominationController::class, 'update'])->name('title-nominations.update');
 });
 
 require __DIR__.'/auth.php';

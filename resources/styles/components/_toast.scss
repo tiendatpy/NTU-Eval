@@ -1,0 +1,23 @@
+@use '../base/animation';
+
+.toast-container {
+  @apply flex flex-col gap-2;
+  &:before {
+    @apply content-['\e91f'] font-icomoon absolute text-white transform-middle right-5 text-xl;
+  }
+}
+
+/* Toast message */
+.toast {
+  @apply flex items-center gap-5 pl-5 pr-20 py-5 bg-white text-white rounded-tl-md rounded-tr-md custom-box-shadow; 
+  animation: fadeIn 0.3s ease; 
+}
+
+/* Success and Error styles */
+.toast.success {
+  @apply border-b-white border-b-1 bg-neutral-500;
+}
+
+.toast.error {
+  @apply bg-secondary-600; 
+}

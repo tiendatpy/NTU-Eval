@@ -12,6 +12,7 @@
     @vite(['resources/styles/app.scss', 'resources/js/app.js'])
 </head>
 <body>
+    <x-toast />
     @include('globals.header')
     <div class="dashboard-layout relative flex pt-32 overflow-y-hidden">
         @include('globals.sidebar')

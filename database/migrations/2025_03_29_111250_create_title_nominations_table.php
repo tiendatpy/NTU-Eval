@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('status_id')->constrained('meta_types');
             $table->foreignId('reward_id')->constrained('rewards');
             $table->text('achievement')->nullable();
-            $table->string('review')->nullable();
+            $table->text('review')->nullable();
             $table->timestamps();
         });
     }

@@ -2,10 +2,12 @@
 @use 'base/custom';
 @use 'base/typography';
 @use 'base/variables';
+@use 'base/animation';
 @use 'base/font-iconmoon';
 
 // Components
 @use 'components/buttons';
+@use 'components/toast';
 
 // Modules
 @use 'modules/header';

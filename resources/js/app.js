@@ -1,7 +1,9 @@
 import './bootstrap';
-import './pages/Header';
+import './global/Header';
+import './global/Toast';
 import './pages/ModEvaluation';
 import './pages/ModTitleNominations';
+import './pages/ModAllTitleNominations';
 
 import Alpine from 'alpinejs';
 

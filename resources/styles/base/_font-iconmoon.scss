@@ -26,6 +26,24 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
+  .icon-check-circle:before {
+    content: "\e916";
+  }
+  .icon-information-circle:before {
+    content: "\e917";
+  }
+  .icon-shield-check:before {
+    content: "\e918";
+  }
+  .icon-shield-exclamation:before {
+    content: "\e919";
+  }
+  .icon-speakerphone:before {
+    content: "\e91a";
+  }
+  .icon-x-circle:before {
+    content: "\e91b";
+  }
   .icon-external-link:before {
     content: "\e915";
   }

@@ -16,7 +16,7 @@ export default class Header {
         // Mở popup khi click vào nút profile
         this.$profileButton.on('click', (e) => this.toggleProfilePopup(e));
 
-        // Ẩn popup khi click vào popup
+        // Ẩn popup khi click vào overlay
         this.$popup.on('click', (e) => {
             if (!$(e.target).closest('.profile-popup').length && !$(e.target).closest('.profile-button').length) {
                 this.hideProfilePopup();
