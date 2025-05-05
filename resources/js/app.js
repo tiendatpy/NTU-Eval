@@ -1,6 +1,6 @@
 import './bootstrap';
 import './global/Header';
-import './global/Toast';
+import './global/toast';
 import './pages/ModEvaluation';
 import './pages/ModTitleNominations';
 import './pages/ModAllTitleNominations';
