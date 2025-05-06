@@ -1,4 +1,5 @@
 .menu {
+    min-height: calc(100vh - 64px);
     .has-menu-item {
         @apply relative;
         &::before {
