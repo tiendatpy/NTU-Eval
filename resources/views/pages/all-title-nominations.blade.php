@@ -26,13 +26,25 @@
           <td>{{ $nomination->title->name }}</td>
           <td>{{ $nomination->reward->name }}</td>
           <td>{{ $nomination->achievement }}</td>
-          <td>{{ $nomination->status->name }}</td>
+          <td>
+            <span class="flex items-center gap-4">
+              <span class="w-5 h-5 rounded-full 
+                  @if ($nomination->status->name == 'Đề xuất') bg-yellow-500
+                  @elseif ($nomination->status->name == 'Đã duyệt') bg-neutral-500
+                  @elseif ($nomination->status->name == 'Từ chối') bg-secondary-600
+                  @else bg-states-600
+                  @endif
+              "></span>
+              <span>{{ $nomination->status->name }}</span>
+            </span>
+        </td>
           <td>
             <div class="flex justify-center items-center gap-2">
-              <button title="Thêm bình xét" class="text-xl px-2 text-states-600 hover:text-states-600/50 edit-btn" 
+              <button title="Thêm bình xét" class="btn btn-primary edit-btn flex items-center gap-2" 
                       data-id="{{ $nomination->id }}" 
                       data-review="{{ $nomination->review }}">
-                <span class="icomoon icon-pencil"></span>
+                <span class="text-xl icomoon icon-pencil-alt"></span>
+                <span>Sửa</span>
               </button>
             </div>
           </td>
