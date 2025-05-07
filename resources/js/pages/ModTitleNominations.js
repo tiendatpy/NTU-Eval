@@ -1,86 +1,48 @@
-export default class ModTitleNominations {
+export default class ModTitleNomination {
     constructor(el) {
         this.$el = $(el);
-        this.$tableBody = this.$el.find('#nominations-table tbody');
-        this.$addRowButton = this.$el.find('#add-row');
-
-        // Lưu trữ dữ liệu mẫu của các select
-        this.titleOptions = $('#nominations-table select[name="titles[]"]:first').html();
-        this.rewardOptions = $('#nominations-table select[name="rewards[]"]:first').html();
+        this.$periodDropdown = this.$el.find('.period-after-nomination');
     }
 
     init() {
         this.bindEvents();
-        this.initializeCKEditor();
     }
 
     bindEvents() {
-        this.$addRowButton.on('click', () => this.addRow());
-        this.$el.on('click', '.remove-row', (e) => this.removeRow(e));
+        this.$periodDropdown.on('change', () => this.loadNominationByYear());
     }
 
-    addRow() {
-        const rowCount = this.$tableBody.find('tr').length + 1;
-        const newRow = `
-            <tr>
-                <td>${rowCount}</td>
-                <td>
-                    <select name="titles[]" class="border-primary-500 border-1 p-2 w-full rounded-lg" required>
-                        ${this.getTitleOptions()}
-                    </select>
-                </td>
-                <td>
-                    <select name="rewards[]" class="border-primary-500 border-1 p-2 w-full rounded-lg" required>
-                        ${this.getRewardOptions()}
-                    </select>
-                </td>
-                <td>
-                    <textarea name="achievements[${rowCount - 1}]" class="ckeditor border-primary-500 border-1 p-2 w-full rounded-lg" required></textarea>
-                </td>
-                <td>
-                    <button type="button" class="btn btn-tertiary remove-row">Xóa</button>
-                </td>
-            </tr>
-        `;
-        this.$tableBody.append(newRow);
+    loadNominationByYear() {
+        const selectedPeriod = this.$periodDropdown.val();
 
-        // Khởi tạo CKEditor cho các textarea mới
-        this.initializeCKEditor();
-    }
-
-    removeRow(e) {
-        const $row = $(e.target).closest('tr');
-        const $textarea = $row.find('textarea.ckeditor');
-
-        if ($textarea.length && CKEDITOR.instances[$textarea.attr('name')]) {
-            CKEDITOR.instances[$textarea.attr('name')].destroy();
-        }
-
-        $row.remove();
-        this.updateRowNumbers();
-    }
-
-    updateRowNumbers() {
-        this.$tableBody.find('tr').each((index, row) => {
-            $(row).find('td:first-child').text(index + 1);
+        $.ajax({
+            url: `${window.location.origin}/title-nominations?year=${selectedPeriod}`,
+            method: 'GET',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+            success: (response) => {
+                if (response.html) {
+                    $('#nomination-content').html(response.html);
+                    this.reinitializeCKEditor();
+                }
+            },
+            error: (xhr, status, error) => {
+                console.error('Error loading nominations:', error);
+            },
         });
     }
 
-    getTitleOptions() {
-        return this.titleOptions; // Trả về dữ liệu mẫu đã lưu
-    }
-
-    getRewardOptions() {
-        return this.rewardOptions; // Trả về dữ liệu mẫu đã lưu
-    }
-
-    initializeCKEditor() {
-        this.$tableBody.find('textarea.ckeditor').each(function() {
-            if (!CKEDITOR.instances[this.name]) {
-                CKEDITOR.replace(this);
+    reinitializeCKEditor() {
+        if (typeof CKEDITOR !== 'undefined') {
+            for (const instance in CKEDITOR.instances) {
+                CKEDITOR.instances[instance].destroy(true);
             }
-        });
+            this.$el.find('textarea.ckeditor').each((index, textarea) => {
+                CKEDITOR.replace(textarea);
+            });
+        }
     }
 }
 
-new ModTitleNominations('.mod-title-nomination').init();
+new ModTitleNomination('.mod-title-nomination').init();
