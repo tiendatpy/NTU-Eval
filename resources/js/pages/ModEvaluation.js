@@ -32,6 +32,10 @@ export default class ModEvaluation {
     }
 
     bindAjaxEvents() {
+        // Gỡ bỏ sự kiện cũ trước khi gắn sự kiện mới
+        this.$periodDropdown.off('change');
+
+        // Gắn sự kiện mới
         this.$periodDropdown.on('change', () => this.loadEvaluationByYear());
     }
 
@@ -64,22 +68,22 @@ export default class ModEvaluation {
         this.$periodDropdown = this.$el.find('.period-after-evaluation');
 
         // Khởi tạo lại CKEditor
-        // if (typeof CKEDITOR !== 'undefined') {
-        //     // Hủy các instance CKEditor chỉ liên quan đến các textarea hiện tại
-        //     this.$el.find('textarea.ckeditor').each((index, textarea) => {
-        //         const instance = CKEDITOR.instances[textarea.name];
-        //         if (instance) {
-        //             instance.destroy(true); // Hủy instance CKEditor cũ
-        //         }
-        //     });
+        if (typeof CKEDITOR !== 'undefined') {
+            // Hủy các instance CKEditor chỉ liên quan đến các textarea hiện tại
+            this.$el.find('textarea.ckeditor').each((index, textarea) => {
+                const instance = CKEDITOR.instances[textarea.name];
+                if (instance) {
+                    instance.destroy(true); // Hủy instance CKEditor cũ
+                }
+            });
 
-        //     // Khởi tạo lại CKEditor cho các textarea hiện tại
-        //     this.$el.find('textarea.ckeditor').each((index, textarea) => {
-        //         if (!CKEDITOR.instances[textarea.name]) {
-        //             CKEDITOR.replace(textarea); // Khởi tạo lại CKEditor
-        //         }
-        //     });
-        // }
+            // Khởi tạo lại CKEditor cho các textarea hiện tại
+            this.$el.find('textarea.ckeditor').each((index, textarea) => {
+                if (!CKEDITOR.instances[textarea.name]) {
+                    CKEDITOR.replace(textarea); // Khởi tạo lại CKEditor
+                }
+            });
+        }
 
         this.bindEvents();
         this.bindAjaxEvents();
