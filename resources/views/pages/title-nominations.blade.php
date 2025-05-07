@@ -7,7 +7,7 @@
     <div class="container py-8">
       {{-- Dropdown chọn năm --}}
       <div class="title-nomination-heading mb-8 text-sm">
-        <h2 class="mb-7 text-base">Đề xuất danh hiệu</h2>
+        <h2 class="mb-7 text-base">Đề Xuất Danh Hiệu Thi Đua</h2>
         <label for="period">Năm học</label>
         <select class="border-primary-500 border-1 p-2 w-100 rounded-lg period-after-nomination" id="period" name="period_id" required>
           @foreach ($periods as $period)

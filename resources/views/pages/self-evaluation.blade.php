@@ -6,7 +6,7 @@
   <section class="mod-self-eval bg-white rounded-2xl py-8">
     <div class="container">
       <div class="mb-8 text-sm">
-        <h2 class="mb-7 text-base">Tự đánh giá</h2>
+        <h2 class="mb-7 text-base">Tự Đánh Giá</h2>
         <label for="period_id">Năm đánh giá</label>
         <select class="border-primary-500 border-1 p-2 w-100 rounded-lg period-after-evaluation" id="period_id" name="period_id" required>
           @foreach ($periods as $period)

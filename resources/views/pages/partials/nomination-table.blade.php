@@ -56,7 +56,7 @@
         </table>
       </div>
       <div class="group-btn text-right mt-8">
-        <button type="submit" class="btn btn-primary">Gửi</button>
+        <button type="submit" class="btn btn-primary">Gửi đề xuất</button>
       </div>
     </form>
   @else
