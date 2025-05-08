@@ -15,14 +15,22 @@
           <td>{{ $loop->iteration }}</td>
           <td>{{ $detail->criteria->name }}</td>
           <td>{{ $detail->evidence }}</td>
-          <td>{{ $detail->score }}</td>
+          <td>
+            @if ($isUnitLeader)
+              {{ $detail->score == 4 ? 'Tốt' : 'Chưa tốt' }}
+            @else
+              {{ $detail->score }}
+            @endif
+          </td>
         </tr>
       @endforeach
-      <tr>
-        <td colspan="4" class="text-right font-bold">
-          Điểm đánh giá: {{ $evaluation->score }}
-        </td>
-      </tr>
+      @if (!$isUnitLeader)
+        <tr>
+          <td colspan="4" class="text-right font-bold">
+            Điểm đánh giá: {{ $evaluation->score }}
+          </td>
+        </tr>
+      @endif
       <tr>
         <td colspan="2"></td>
         <td colspan="2" class="text-right">
@@ -44,7 +52,7 @@
               <th class="w-5p">STT</th>
               <th class="w-30p">Nội dung đánh giá</th>
               <th class="w-60p">Kê khai, minh chứng (nếu có)</th>
-              <th class="w-5p">Mức đạt được (1-4)</th>
+              <th class="w-5p">Mức đạt được</th>
             </tr>
           </thead>
           <tbody>
@@ -62,20 +70,29 @@
                   </textarea>
                 </td>
                 <td>
-                  <div class="flex">
-                    <input class="text-right w-50 score-input rounded-lg px-4 py-2" min="1" max="4" type="number" name="details[{{ $loop->index }}][score]" value="" required>
-                  </div>
+                  @if ($isUnitLeader)
+                    <select name="details[{{ $loop->index }}][score]" class="border-primary-500 border-1 p-2 rounded-lg w-50" required>
+                      <option value="4">Tốt</option>
+                      <option value="1">Chưa tốt</option>
+                    </select>
+                  @else
+                    <div class="flex">
+                      <input class="text-right w-50 score-input rounded-lg px-4 py-2" min="1" max="4" type="number" name="details[{{ $loop->index }}][score]" value="" required>
+                    </div>
+                  @endif
                 </td>
               </tr>
             @endforeach
-            <tr>
-              <td colspan="4">
-                <div class="text-right">
-                  <span class="font-bold">Điểm đánh giá:</span>
-                  <span class="total-score">0</span>
-                </div>
-              </td>
-            </tr>
+            @if (!$isUnitLeader)
+              <tr>
+                <td colspan="4">
+                  <div class="text-right">
+                    <span class="font-bold">Điểm đánh giá:</span>
+                    <span class="total-score">0</span>
+                  </div>
+                </td>
+              </tr>
+            @endif
             <tr>
               <td colspan="2"></td>
               <td colspan="2">

@@ -15,7 +15,9 @@ class EvaluationController extends Controller
     public function index(Request $request)
     {
         $user = auth()->user();
-        $selectedYear = $request->input('year', now()->year-1); // Mặc định là năm hiện tại
+        $isUnitLeader = $user->role->name === 'Trưởng đơn vị'; // Kiểm tra vai trò trưởng đơn vị
+
+        $selectedYear = $request->input('year', now()->year - 1); // Mặc định là năm hiện tại
 
         // Tìm kỳ đánh giá theo năm
         $currentPeriod = Periods::where('year', $selectedYear)->first();
@@ -24,19 +26,24 @@ class EvaluationController extends Controller
         $evaluation = Evaluation::where('evaluator_id', $user->id)
             ->where('period_id', $currentPeriod->id ?? null)
             ->first();
-
-        $criteria = EvaluationCriteria::where('category_id', 30)->get();
+        if($isUnitLeader) {
+            $criteria = EvaluationCriteria::where('category_id', 31)->get();
+        }
+        else {
+            $criteria = EvaluationCriteria::where('category_id', 30)->get();
+        }
         $periods = Periods::all(); // Lấy tất cả các kỳ đánh giá
         $classifications = MetaType::where('category', 'evaluation_classification')->get();
 
-        $isCurrentYear = $selectedYear == now()->year-1; // Kiểm tra có phải năm hiện tại không
+        $isCurrentYear = $selectedYear == now()->year - 1; // Kiểm tra có phải năm hiện tại không
 
         if ($request->ajax()) {
             // Trả về HTML của bảng đánh giá
-            $html = view('pages.partials.evaluation-table', compact('evaluation', 'isCurrentYear', 'criteria', 'classifications'))->render();
+            $html = view('pages.partials.evaluation-table', compact('evaluation', 'isCurrentYear', 'criteria', 'classifications', 'isUnitLeader'))->render();
             return response()->json(['html' => $html]);
         }
-        return view('pages.self-evaluation', compact('evaluation', 'criteria', 'periods', 'classifications', 'selectedYear', 'isCurrentYear'));
+
+        return view('pages.self-evaluation', compact('evaluation', 'criteria', 'periods', 'classifications', 'selectedYear', 'isCurrentYear', 'isUnitLeader'));
     }
 
     public function store(Request $request)
