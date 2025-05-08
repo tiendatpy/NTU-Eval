@@ -39,9 +39,10 @@
         </td>
           <td>
             <div class="flex justify-center items-center gap-2">
-              <button title="Thêm bình xét" class="btn btn-primary edit-btn flex items-center gap-2" 
-                      data-id="{{ $nomination->id }}" 
-                      data-review="{{ $nomination->review }}">
+              <button title="Thêm bình xét" class="btn btn-primary edit-btn flex items-center gap-2 @if ($nomination->status->name != 'Đang xét duyệt') bg-states-500/30 hover:bg-states-500/30 @endif" 
+                      data-id="{{ $nomination->id }}"   
+                      data-review="{{ $nomination->review }}"
+                      @if ($nomination->status->name != 'Đang xét duyệt') disabled @endif>
                 <span class="text-xl icomoon icon-pencil-alt"></span>
                 <span>Sửa</span>
               </button>
