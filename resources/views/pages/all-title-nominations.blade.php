@@ -28,11 +28,10 @@
           <td>{{ $nomination->achievement }}</td>
           <td>
             <span class="flex items-center gap-4">
-              <span class="w-5 h-5 rounded-full 
-                  @if ($nomination->status->name == 'Đề xuất') bg-yellow-500
-                  @elseif ($nomination->status->name == 'Đã duyệt') bg-neutral-500
-                  @elseif ($nomination->status->name == 'Từ chối') bg-secondary-600
-                  @else bg-states-600
+              <span class="min-w-5 h-5 rounded-full 
+                  @if ($nomination->status->name == 'Đang xét duyệt') bg-yellow-500
+                  @elseif ($nomination->status->name == 'Đã phê duyệt') bg-neutral-500
+                  @else bg-secondary-600
                   @endif
               "></span>
               <span>{{ $nomination->status->name }}</span>

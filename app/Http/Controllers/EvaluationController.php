@@ -27,10 +27,10 @@ class EvaluationController extends Controller
             ->where('period_id', $currentPeriod->id ?? null)
             ->first();
         if($isUnitLeader) {
-            $criteria = EvaluationCriteria::where('category_id', 31)->get();
+            $criteria = EvaluationCriteria::where('category_id', 23)->get();
         }
         else {
-            $criteria = EvaluationCriteria::where('category_id', 30)->get();
+            $criteria = EvaluationCriteria::where('category_id', 24)->get();
         }
         $periods = Periods::all(); // Lấy tất cả các kỳ đánh giá
         $classifications = MetaType::where('category', 'evaluation_classification')->get();
@@ -88,7 +88,7 @@ class EvaluationController extends Controller
             $finalScore = $count > 0 ? round($sum / $count, 2) : 0;
 
             $status = MetaType::where('category', 'evaluation_status')
-                ->where('name', 'Tự đánh giá') 
+                ->where('name', 'Hoàn thành') 
                 ->first();
 
             $evaluation = Evaluation::create([
@@ -120,5 +120,19 @@ class EvaluationController extends Controller
             DB::rollBack();
             return back()->with('error', 'Lỗi: ' . $e->getMessage());
         }
+    }
+
+    public function getList()
+    {
+        $user = auth()->user();
+        if (!$user) {
+            return redirect()->route('login')->with('error', 'Bạn cần đăng nhập để thực hiện hành động này.');
+        }
+
+        $evaluations = Evaluation::where('unit_id', $user->unit_id)
+        ->with(['evaluator', 'classification', 'details.criteria'])
+        ->get();
+
+        return view('pages.all-evaluation', compact('evaluations'));
     }
 }

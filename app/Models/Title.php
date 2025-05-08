@@ -9,12 +9,12 @@ class Title extends Model
     protected $fillable = [
         'name', 
         'description', 
-        'level_id',
+        'type_id',
     ];
 
-    public function level()
+    public function type()
     {
-        return $this->belongsTo(MetaType::class, 'level_id');
+        return $this->belongsTo(MetaType::class, 'type_id');
     }
 
 

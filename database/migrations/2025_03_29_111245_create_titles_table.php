@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->text('description')->nullable();
-            $table->foreignId('level_id')->constrained('meta_types');
+            $table->foreignId('type_id')->constrained('meta_types');
             $table->timestamps();
         });
     }

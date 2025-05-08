@@ -19,7 +19,7 @@
     </button>
     <span class="icomoon icon-information-circle"></span>
     <div>
-        <h2 class="mb-0">Thành công</h2>
+        <h2 class="mb-0">Thất bại</h2>
         <span class="text-primary-100">{{ session('error') }}</span>
     </div>
   </div>

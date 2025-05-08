@@ -21,6 +21,7 @@ use App\Http\Controllers\TitleNominationController;
 Route::middleware(['auth'])->group(function () {
     Route::get('/self-evaluation', [EvaluationController::class, 'index'])->name('evaluations.index');
     Route::post('/self-evaluation', [EvaluationController::class, 'store'])->name('evaluations.store');
+    Route::get('/all-evaluations', [EvaluationController::class, 'getList'])->name('evaluations.list');
 });
 
 
@@ -47,5 +48,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/list-title-nominations', [TitleNominationController::class, 'getList'])->name('title-nominations.list');
     Route::put('/title-nominations/{id}', [TitleNominationController::class, 'update'])->name('title-nominations.update');
 });
+
+Route::get('/unit-leader-approvals/{id}', [TitleNominationController::class, 'show'])->name('unit-leader-approvals.show');
+Route::put('/unit-leader-approvals/{id}', [TitleNominationController::class, 'approve'])->name('unit-leader-approvals.approve');
 
 require __DIR__.'/auth.php';
