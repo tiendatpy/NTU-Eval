@@ -53,7 +53,7 @@
             </table>
             <div class="bg-white p-4">
               <fieldset class="border border-gray-300 p-4 rounded-md">
-                <legend class="text-lg">Thông tin cá nhân</legend>
+                <legend >Thông tin cá nhân</legend>
                 <table class="mx-auto profile-details">
                     <tr>
                       <td class="font-semibold text-right">Họ và tên:</td>
