@@ -76,7 +76,7 @@
                       <td>{{ Auth::user()->unit->name ?? 'None' }}</td>
                     </tr>
                     <tr>
-                      <td class="font-semibold text-right">Vai trò:</td>
+                      <td class="font-semibold text-right">Chức vụ:</td>
                       <td>{{ Auth::user()->role->name }}</td>
                 </table>
               </fieldset>

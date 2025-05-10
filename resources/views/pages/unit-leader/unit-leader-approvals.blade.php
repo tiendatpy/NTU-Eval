@@ -34,11 +34,8 @@
                 {{ $nomination->review}}
               </td>
               <td>
-                <button class="confirm-title-nomination" title="Duyệt danh hiệu">
+                <button class="confirm-title-nomination" data-id="{{ $nomination->id }}" title="Duyệt danh hiệu">
                   <span class="icomoon icon-check-circle text-3xl text-neutral-500"></span>
-                </button>
-                <button class="cancel-title-nomination" title="Từ chối">
-                  <span class="icomoon icon-x-circle text-3xl text-secondary-600"></span>
                 </button>
               </td>
             </tr>

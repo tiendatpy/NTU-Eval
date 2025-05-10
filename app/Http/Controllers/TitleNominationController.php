@@ -53,7 +53,6 @@ class TitleNominationController extends Controller
         'reward_id' => ['required', 'exists:rewards,id'], // Kiểm tra phần thưởng hợp lệ
         'achievement' => ['required', 'string', 'max:1000'], // Kiểm tra thành tích không vượt quá 1000 ký tự
     ]);
-    Log::info('Title nomination request: ', $request->all());
 
     // Tìm period_id dựa trên năm
     $period = Periods::where('year', $year)->firstOrFail();
@@ -125,7 +124,6 @@ class TitleNominationController extends Controller
     $request->validate([
       'approved_title_id' => ['required', 'exists:titles,id'], // Kiểm tra danh hiệu được duyệt hợp lệ
     ]);
-    Log::info('Title nomination approval request: ', $request->all());
 
       $nomination = TitleNomination::findOrFail($id);
       $approvedStatus = MetaType::where('category', 'nomination_status')
@@ -140,6 +138,28 @@ class TitleNominationController extends Controller
 
       return redirect()->route('unit-leader-approvals.show', $id)
           ->with('success', 'Đã xét duyệt thành công.');
+  }
+
+  public function fastApprove(Request $request, $id)
+  {
+    $nominaitonId = $request->input('id');
+    
+    $nomination = TitleNomination::findOrFail( $nominaitonId);
+
+    // Lấy trạng thái "Đã phê duyệt"
+    $approvedStatus = MetaType::where('category', 'nomination_status')
+        ->where('name', 'Đã phê duyệt')
+        ->firstOrFail();
+
+    // Cập nhật trạng thái
+    $nomination->update([
+        'status_id' => $approvedStatus->id,
+    ]);
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Đã phê duyệt.',
+    ]);
   }
 
   

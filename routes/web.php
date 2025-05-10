@@ -49,7 +49,10 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/title-nominations/{id}', [TitleNominationController::class, 'update'])->name('title-nominations.update');
 });
 
-Route::get('/unit-leader-approvals/{id}', [TitleNominationController::class, 'show'])->name('unit-leader-approvals.show');
-Route::put('/unit-leader-approvals/{id}', [TitleNominationController::class, 'approve'])->name('unit-leader-approvals.approve');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/unit-leader-approvals/{id}', [TitleNominationController::class, 'show'])->name('unit-leader-approvals.show');
+    Route::put('/unit-leader-approvals/{id}', [TitleNominationController::class, 'approve'])->name('unit-leader-approvals.approve');
+    Route::put('/list-title-nominations/{id}', [TitleNominationController::class, 'fastApprove'])->name('title-nominations.fastApprove');
+});
 
 require __DIR__.'/auth.php';
