@@ -1,13 +1,13 @@
 @layer base {
   body {
-    @apply font-body text-sm text-black bg-primary-050;
+    @apply font-body text-sm text-primary-900 bg-primary-050;
   }
   html {
     @apply m-0;
   }
   html,
   body{
-    @apply overflow-x-hidden ;
+    @apply overflow-x-hidden;
   }
   img {
     @apply inline-block;
