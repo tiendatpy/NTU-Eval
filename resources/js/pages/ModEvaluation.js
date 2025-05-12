@@ -1,7 +1,7 @@
 export default class ModEvaluation {
     constructor(el) {
         this.$el = $(el);
-        this.$scoreInputs = this.$el.find('.score-input'); 
+        this.$scoreInputs = this.$el.find('.rating'); 
         this.$averageScore = this.$el.find('.total-score');
         this.$periodDropdown = this.$el.find('.period-after-evaluation'); // Dropdown chọn năm
     }
@@ -12,7 +12,7 @@ export default class ModEvaluation {
     }
 
     bindEvents() {
-        this.$scoreInputs.on('input', () => this.calculateAverageScore());
+        this.$scoreInputs.on('change', () => this.calculateAverageScore());
     }
 
     calculateAverageScore() {

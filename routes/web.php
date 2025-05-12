@@ -21,7 +21,7 @@ use App\Http\Controllers\TitleNominationController;
 Route::middleware(['auth'])->group(function () {
     Route::get('/self-evaluation', [EvaluationController::class, 'index'])->name('evaluations.index');
     Route::post('/self-evaluation', [EvaluationController::class, 'store'])->name('evaluations.store');
-    Route::get('/all-evaluations', [EvaluationController::class, 'getList'])->name('evaluations.list');
+    Route::get('/all-quality-ratings', [EvaluationController::class, 'getList'])->name('evaluations.list');
 });
 
 

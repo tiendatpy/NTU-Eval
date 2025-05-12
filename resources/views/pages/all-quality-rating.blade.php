@@ -3,9 +3,22 @@
 @section('title', 'Danh sách đánh giá')
 
 @section('content')
-  <section class="unit-evaluations bg-white rounded-2xl py-8">
+  <section class="mod-quality-rating bg-white rounded-2xl py-8">
     <div class="container">
-      <h2 class="mb-7 text-base">Danh Sách Đánh Giá Của Đơn Vị</h2>
+      <div class="flex justify-between items-center mb-7">
+        <h2 class="text-base mb-0">Danh Sách Xếp Loại Chất Lượng Của Đơn Vị</h2>
+        <div class="flex items-center gap-3">
+          <form id="yearFilterForm" action="{{ route('evaluations.list') }}" method="GET" class="flex items-center gap-3">
+            <label for="year" class="font-medium">Năm:</label>
+            <select id="year" name="year" class="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-primary-500">
+              @foreach($years as $year)
+                <option value="{{ $year }}" {{ $selectedYear == $year ? 'selected' : '' }}>{{ $year }} - {{ $year+1 }}</option>
+              @endforeach
+            </select>
+          </form>
+        </div>
+      </div>
+
       <table class="w-full text-sm overflow-hidden">
         <thead class="bg-states-300">
           <tr>
@@ -20,11 +33,11 @@
             <tr class="bg-white">
               <td>{{ $index + 1 }}</td>
               <td>{{ $evaluation->evaluator->full_name }}</td>
-              <td>{{ $evaluation->classification->name }}</td>
+              <td>{{ $evaluation->quality->name }}</td>
               <td>
                 <ul>
                   @foreach ($evaluation->details->pluck('evidence')->filter() as $evidence)
-                    <li class="list-disc">{{ $evidence }}</li>
+                    <p class="mb-3">- {{ $evidence }}</p>
                   @endforeach
                 </ul>
               </td>
@@ -36,6 +49,7 @@
           @endforelse
         </tbody>
       </table>
+
     </div>
   </section>
 @endsection

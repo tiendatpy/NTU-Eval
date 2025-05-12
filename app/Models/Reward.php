@@ -16,8 +16,4 @@ class Reward extends Model
         return $this->hasMany(Title::class);
     }
 
-    public function rewardResults()
-    {
-        return $this->hasMany(RewardResult::class);
-    }
 }
