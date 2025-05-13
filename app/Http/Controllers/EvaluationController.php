@@ -42,10 +42,10 @@ class EvaluationController extends Controller
             ->first();
 
         // Lấy tiêu chí đánh giá phù hợp với vai trò
-        $managerId = Cache::remember('criteria_category_manager_id', 86400, function() {
+        $managerId = Cache::remember('criteria_category_manager_id', 86400, function () {
             return MetaType::where('name', 'Viên chức, NLĐ quản lý')->value('id');
         });
-        $staffId = Cache::remember('criteria_category_staff_id', 86400, function() {
+        $staffId = Cache::remember('criteria_category_staff_id', 86400, function () {
             return MetaType::where('name', 'Viên chức, NLD không quản lý')->value('id');
         });
         if ($isUnitLeader) {
@@ -106,7 +106,7 @@ class EvaluationController extends Controller
 
         // Validate dữ liệu đầu vào
         $request->validate([
-            'classification_id' => 'required|exists:quality,id', 
+            'classification_id' => 'required|exists:quality,id',
             'details' => 'required|array',
             'details.*.criteria_id' => 'required|exists:evaluation_criteria,id',
             'details.*.rating' => 'required|numeric|min:1|max:4',
@@ -177,12 +177,9 @@ class EvaluationController extends Controller
         }
     }
 
-    public function getList(Request $request)
+    public function getListQualityRating(Request $request)
     {
         $user = auth()->user();
-        if (!$user) {
-            return redirect()->route('login')->with('error', 'Bạn cần đăng nhập để thực hiện hành động này.');
-        }
 
         // Lấy danh sách các năm để lọc
         $years = Periods::orderBy('year', 'desc')->pluck('year')->unique();
@@ -208,7 +205,7 @@ class EvaluationController extends Controller
         $evaluations = Evaluation::where('unit_id', $user->unit_id)
             ->where('period_id', $period->id)
             ->with(['evaluator', 'quality', 'title', 'reward', 'approvedQuality', 'approvedTitle', 'details'])
-            ->orderBy('created_at', 'desc')
+            ->orderBy('created_at', 'asc')
             ->get();
 
         return view('pages.all-quality-rating', compact(
@@ -217,4 +214,111 @@ class EvaluationController extends Controller
             'selectedYear'
         ));
     }
+
+    public function getListTitleNomination(Request $request)
+    {
+        $user = auth()->user();
+        if (!$user) {
+            return redirect()->route('login')->with('error', 'Bạn cần đăng nhập để thực hiện hành động này.');
+        }
+
+        $years = Periods::orderBy('year', 'desc')->pluck('year')->unique();
+
+        $defaultYear = now()->year - 1;
+
+        if (!$years->contains($defaultYear)) {
+            $defaultYear = $years->first(); // Nếu không có, lấy năm gần nhất
+        }
+
+        $selectedYear = $request->input('year', $defaultYear);
+
+        $period = Periods::where('year', $selectedYear)->first();
+
+        if (!$period) {
+            return back()->with('error', 'Không tìm thấy kỳ đánh giá cho năm đã chọn.');
+        }
+
+        $query = Evaluation::with(['evaluator', 'title', 'reward', 'status'])
+            ->where('period_id', $period->id)
+            ->where('unit_id', $user->unit_id);
+
+        if ($user->role->name === 'Trưởng đơn vị') {
+            $query->where('unit_id', $user->unit_id);
+        }
+
+        $nominations = $query->orderBy('created_at', 'asc')
+            ->paginate(10);
+
+        if ($user->role->name === 'Trưởng đơn vị') {
+            return view('pages.unit-leader.unit-leader-approvals', compact('nominations', 'years', 'selectedYear'));
+        } else {
+            return view('pages.all-title-nominations', compact('nominations', 'years', 'selectedYear'));
+        }
+    }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'review' => ['required', 'string', 'max:1000'],
+        ]);
+
+        $nomination = Evaluation::findOrFail($id);
+        $nomination->update([
+            'review' => html_entity_decode(strip_tags($request->input('review'))),
+        ]);
+
+        return redirect()->route('title-nominations.list')
+            ->with('success', 'Đã cập nhật góp ý.');
+    }
+    // unit-leader-approval
+
+    // public function show($id)
+    // {
+    //     $nomination = Evaluation::with(['user', 'title', 'reward'])->findOrFail($id);
+    //     $titles = Title::where('type_id', 11)->get(); // Lấy danh hiệu có type_id là 11);
+    //     return view('pages.unit-leader.unit-leader-approval-detail', compact('nomination', 'titles'));
+    // }
+
+    // public function approve(Request $request, $id)
+    // {
+    //     $request->validate([
+    //         'approved_title_id' => ['required', 'exists:titles,id'], // Kiểm tra danh hiệu được duyệt hợp lệ
+    //     ]);
+
+    //     $nomination = Evaluation::findOrFail($id);
+    //     $approvedStatus = MetaType::where('category', 'nomination_status')
+    //         ->where('name', 'Đã phê duyệt')
+    //         ->firstOrFail();
+
+    //     // Cập nhật danh hiệu được duyệt và bình xét
+    //     $nomination->update([
+    //         'approved_title_id' => $request->input('approved_title_id'), // Cập nhật danh hiệu được duyệt
+    //         'status_id' => $approvedStatus->id,
+    //     ]);
+
+    //     return redirect()->route('unit-leader-approvals.show', $id)
+    //         ->with('success', 'Đã xét duyệt thành công.');
+    // }
+
+    // public function fastApprove(Request $request, $id)
+    // {
+    //     $nominaitonId = $request->input('id');
+
+    //     $nomination = Evaluation::findOrFail($nominaitonId);
+
+    //     // Lấy trạng thái "Đã phê duyệt"
+    //     $approvedStatus = MetaType::where('category', 'nomination_status')
+    //         ->where('name', 'Đã phê duyệt')
+    //         ->firstOrFail();
+
+    //     // Cập nhật trạng thái
+    //     $nomination->update([
+    //         'status_id' => $approvedStatus->id,
+    //     ]);
+
+    //     return response()->json([
+    //         'success' => true,
+    //         'message' => 'Đã phê duyệt.',
+    //     ]);
+    // }
 }

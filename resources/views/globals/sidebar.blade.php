@@ -16,7 +16,7 @@
                 </span>
                 <ul class="sub-menu-list pl-24 mt-3 last-mb-none text-black">
                     <li class="sub-menu-item hover:text-states-400 mb-5">
-                        <a class="block" href="{{ route('evaluations.list') }}"><span>Đánh giá</span></a>
+                        <a class="block" href="{{ route('quality-ratings.list') }}"><span>Xếp loại chất lượng</span></a>
                     </li>
                     <li class="sub-menu-item hover:text-states-400 mb-5">
                         <a class="block" href="{{ route('title-nominations.list') }}"><span>Danh hiệu thi đua</span></a>

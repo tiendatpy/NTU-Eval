@@ -8,7 +8,7 @@
       <div class="flex justify-between items-center mb-7">
         <h2 class="text-base mb-0">Danh Sách Xếp Loại Chất Lượng Của Đơn Vị</h2>
         <div class="flex items-center gap-3">
-          <form id="yearFilterForm" action="{{ route('evaluations.list') }}" method="GET" class="flex items-center gap-3">
+          <form id="yearFilterForm" action="{{ route('quality-ratings.list') }}" method="GET" class="flex items-center gap-3">
             <label for="year" class="font-medium">Năm:</label>
             <select id="year" name="year" class="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-primary-500">
               @foreach($years as $year)
