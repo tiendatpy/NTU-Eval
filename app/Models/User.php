@@ -45,6 +45,11 @@ class User extends Authenticatable
         return $this->hasMany(Evaluation::class);
     }
 
+    public function education()
+    {
+        return $this->belongsTo(MetaType::class, 'education_id');
+    }
+
     public function evaluationsAsEvaluator()
     {
         return $this->hasMany(Evaluation::class, 'evaluator_id');

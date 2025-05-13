@@ -3,12 +3,12 @@ export default class ModEvaluation {
         this.$el = $(el);
         this.$scoreInputs = this.$el.find('.rating'); 
         this.$averageScore = this.$el.find('.total-score');
-        this.$periodDropdown = this.$el.find('.period-after-evaluation'); // Dropdown chọn năm
+        this.$periodDropdown = this.$el.find('.period-after-evaluation');
     }
 
     init() {
         this.bindEvents();
-        this.bindAjaxEvents(); // Gắn sự kiện AJAX
+        this.bindAjaxEvents(); 
     }
 
     bindEvents() {

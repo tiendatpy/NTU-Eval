@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->date('date_of_birth');
             $table->string('phone')->nullable();
+            $table->foreignId('education_id')->nullable()->constrained('meta_types');
             $table->foreignId('role_id')->constrained('roles');
             $table->foreignId('unit_id')->nullable()->constrained('units');
             $table->timestamp('email_verified_at')->nullable();

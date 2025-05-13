@@ -52,6 +52,21 @@
                     <x-input-error :messages="$errors->get('phone')" class="mt-2" />
                 </div>
 
+                <!-- Education Level -->
+                <div class="mt-4">
+                    <x-input-label for="education_id" :value="__('Trình Độ')" />
+                    <select id="education_id" name="education_id" 
+                        class="block mt-1 w-full h-20 rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500">
+                        <option value="">{{ __('Chọn trình độ học vấn') }}</option>
+                        @foreach ($educationLevels as $level)
+                            <option value="{{ $level->id }}" {{ old('education_id') == $level->id ? 'selected' : '' }}>
+                                {{ $level->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                    <x-input-error :messages="$errors->get('education_id')" class="mt-2" />
+                </div>
+
                 <!-- Role -->
                 <div class="mt-4">
                     <x-input-label for="role_id" :value="__('Vai Trò')" />

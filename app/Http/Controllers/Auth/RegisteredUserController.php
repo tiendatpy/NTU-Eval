@@ -14,6 +14,7 @@ use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 use App\Models\Role;
 use App\Models\Unit;
+use App\Models\MetaType;
 
 class RegisteredUserController extends Controller
 {
@@ -25,9 +26,10 @@ class RegisteredUserController extends Controller
         // Lấy danh sách roles và units từ cơ sở dữ liệu
         $roles = Role::all(); // Lấy tất cả các vai trò
         $units = Unit::all(); // Lấy tất cả các đơn vị
+        $educationLevels = MetaType::where('category', 'education_level')->get();
 
         // Truyền dữ liệu roles và units đến view
-        return view('auth.register', compact('roles', 'units'));
+        return view('auth.register', compact('roles', 'units', 'educationLevels'));
     }
 
     /**
@@ -42,8 +44,9 @@ class RegisteredUserController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
             'date_of_birth' => ['required', 'date', 'before:today'],
             'phone' => ['nullable', 'string', 'regex:/^[0-9]{10}$/'],
-            'role_id' => ['required', 'exists:roles,id'], // Kiểm tra role_id tồn tại trong bảng roles
-            'unit_id' => ['nullable', 'exists:units,id'], // Kiểm tra unit_id tồn tại trong bảng units
+            'education_id' => ['nullable', 'exists:meta_types,id'],
+            'role_id' => ['required', 'exists:roles,id'], 
+            'unit_id' => ['nullable', 'exists:units,id'], 
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
@@ -52,6 +55,7 @@ class RegisteredUserController extends Controller
             'email' => $request->email,
             'date_of_birth' => $request->date_of_birth,
             'phone' => $request->phone,
+            'education_id' => $request->education_id,
             'role_id' => $request->role_id,
             'unit_id' => $request->unit_id,
             'password' => Hash::make($request->password),

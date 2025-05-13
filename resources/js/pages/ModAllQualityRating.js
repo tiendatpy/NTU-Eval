@@ -1,10 +1,8 @@
 export default class ModAllQualityRating {
     constructor(el) {
-        this.$container = $(el);
-        if (this.$container.length === 0) return;
-        
-        this.$yearSelect = this.$container.find('#year');
-        this.$form = this.$container.find('#yearFilterForm');
+        this.$el = $(el);
+        this.$yearSelect = this.$el.find('#year');
+        this.$form = this.$el.find('#yearFilterForm');
     }
 
     init() {

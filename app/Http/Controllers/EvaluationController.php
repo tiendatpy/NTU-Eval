@@ -11,9 +11,9 @@ use App\Models\Periods;
 use App\Models\Quality;
 use App\Models\Title;
 use App\Models\Reward;
-use App\Models\TitleNomination;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
 
 class EvaluationController extends Controller
 {
@@ -42,10 +42,16 @@ class EvaluationController extends Controller
             ->first();
 
         // Lấy tiêu chí đánh giá phù hợp với vai trò
+        $managerId = Cache::remember('criteria_category_manager_id', 86400, function() {
+            return MetaType::where('name', 'Viên chức, NLĐ quản lý')->value('id');
+        });
+        $staffId = Cache::remember('criteria_category_staff_id', 86400, function() {
+            return MetaType::where('name', 'Viên chức, NLD không quản lý')->value('id');
+        });
         if ($isUnitLeader) {
-            $criteria = EvaluationCriteria::where('category_id', 17)->get();
+            $criteria = EvaluationCriteria::where('category_id', $managerId)->get();
         } else {
-            $criteria = EvaluationCriteria::where('category_id', 18)->get();
+            $criteria = EvaluationCriteria::where('category_id', $staffId)->get();
         }
 
         // Lấy dữ liệu cần thiết cho form
@@ -165,10 +171,9 @@ class EvaluationController extends Controller
             DB::commit();
 
             return redirect()->route('evaluations.index')
-                ->with('success', 'Đánh giá và đề xuất danh hiệu đã được lưu thành công.');
+                ->with('success', 'Tự đánh giá thành công.');
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('Self Evaluation Error: ' . $e->getMessage());
             return back()->with('error', 'Lỗi: ' . $e->getMessage());
         }
     }
