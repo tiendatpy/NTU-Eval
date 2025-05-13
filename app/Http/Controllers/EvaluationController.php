@@ -129,9 +129,8 @@ class EvaluationController extends Controller
             }
             $finalRating = $count > 0 ? round($sum / $count, 2) : 0;
 
-            // Lấy trạng thái "Hoàn thành"
             $status = MetaType::where('category', 'evaluation_status')
-                ->where('name', 'Hoàn thành')
+                ->where('name', 'Đang xét duyệt')
                 ->first();
 
             if (!$status) {

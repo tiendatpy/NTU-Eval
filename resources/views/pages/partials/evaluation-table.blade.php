@@ -24,14 +24,6 @@
           </tr>
           @endforeach
           <tr>
-            <td colspan="4">
-              <div class="text-right">
-                <span class="font-bold">Điểm đánh giá:</span>
-                <span>{{ $evaluation->rating }}</span>
-              </div>
-            </td>
-          </tr>
-          <tr>
             <td colspan="2"></td>
             <td colspan="2">
               <div class="flex justify-between">
