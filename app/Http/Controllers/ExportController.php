@@ -18,7 +18,7 @@ class ExportController extends Controller
         $user = $evaluation->evaluator;
         
         // Đường dẫn đến file template
-        $templatePath = storage_path('app/templates/evaluation_template.docx');
+        $templatePath = storage_path('app/templates/self_evaluation_template.docx');
         
         // Khởi tạo template processor
         $templateProcessor = new TemplateProcessor($templatePath);
@@ -26,9 +26,9 @@ class ExportController extends Controller
         // Điền thông tin cơ bản
         $templateProcessor->setValue('ho_ten', $user->full_name);
         $templateProcessor->setValue('ma_cbvc', $user->id ?? '');
-        $templateProcessor->setValue('trinh_do', $user->education ?? '');
-        $templateProcessor->setValue('chuc_danh', $user->role ?? '');
-        $templateProcessor->setValue('bo_mon', $user->department ?? '');
+        $templateProcessor->setValue('trinh_do', $user->education->name ?? '');
+        $templateProcessor->setValue('chuc_danh', $user->role->name ?? '');
+        // $templateProcessor->setValue('bo_mon', $user->department ?? '');
         $templateProcessor->setValue('don_vi', $user->unit->name ?? '');
         $templateProcessor->setValue('nam_hoc', $evaluation->period->year . ' - ' . ($evaluation->period->year + 1));
         
@@ -38,7 +38,7 @@ class ExportController extends Controller
         // Giả sử trong template có các placeholder như tieu_chi_1, minh_chung_1, muc_dat_1, v.v.
         foreach ($details as $index => $detail) {
             $i = $index + 1;
-            $templateProcessor->setValue('noi_dung_' . $i, $detail->criteria->name ?? '');
+            // $templateProcessor->setValue('noi_dung_' . $i, $detail->criteria->name ?? '');
             $templateProcessor->setValue('ke_khai_' . $i, strip_tags($detail->evidence) ?? '');
             
             // Chuyển số điểm thành text
@@ -63,7 +63,7 @@ class ExportController extends Controller
         $templateProcessor->setValue('thanh_tich', strip_tags($evaluation->achievement) ?? '');
         
         // Thông tin phê duyệt (nếu có)
-        $templateProcessor->setValue('binh_xet', strip_tags($evaluation->review) ?? '');
+        $templateProcessor->setValue('nx_uu_khuyet_diem', strip_tags($evaluation->feedback) ?? '');
         $templateProcessor->setValue('xep_loai_duyet', 
             $evaluation->approved_quality_id ? $evaluation->approvedQuality->name : '');
         $templateProcessor->setValue('danh_hieu_duyet', 

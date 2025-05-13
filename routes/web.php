@@ -3,11 +3,8 @@ use App\Models\Evaluation;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EvaluationController;
-use App\Http\Controllers\AwardController;
-use App\Http\Controllers\AwardNominationController;
-use App\Http\Controllers\EvaluationCriteriaController;
 use App\Http\Controllers\TitleNominationController;
-
+use App\Http\Controllers\ExportController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -18,6 +15,9 @@ use App\Http\Controllers\TitleNominationController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+Route::get('/', function () {
+    return view('welcome');
+});
 Route::middleware(['auth'])->group(function () {
     Route::get('/self-evaluation', [EvaluationController::class, 'index'])->name('evaluations.index');
     Route::post('/self-evaluation', [EvaluationController::class, 'store'])->name('evaluations.store');
@@ -25,9 +25,6 @@ Route::middleware(['auth'])->group(function () {
 });
 
 
-Route::get('/', function () {
-    return view('welcome');
-});
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -54,5 +51,9 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/unit-leader-approvals/{id}', [TitleNominationController::class, 'approve'])->name('unit-leader-approvals.approve');
     Route::put('/list-title-nominations/{id}', [TitleNominationController::class, 'fastApprove'])->name('title-nominations.fastApprove');
 });
+
+Route::get('/self-evaluations/{id}/export', [ExportController::class, 'exportEvaluation'])
+    ->name('evaluations.export')
+    ->middleware('auth');
 
 require __DIR__.'/auth.php';

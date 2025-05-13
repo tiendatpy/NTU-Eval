@@ -26,6 +26,18 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
+  .icon-document-search:before {
+    content: "\e91d";
+  }
+  .icon-download-v2:before {
+    content: "\e91e";
+  }
+  .icon-save:before {
+    content: "\e921";
+  }
+  .icon-document-text:before {
+    content: "\e922";
+  }
   .icon-check-circle:before {
     content: "\e916";
   }

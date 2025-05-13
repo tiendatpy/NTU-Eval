@@ -43,10 +43,10 @@ class RegisteredUserController extends Controller
             'full_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
             'date_of_birth' => ['required', 'date', 'before:today'],
-            'phone' => ['nullable', 'string', 'regex:/^[0-9]{10}$/'],
-            'education_id' => ['nullable', 'exists:meta_types,id'],
+            'phone' => ['required', 'string', 'regex:/^[0-9]{10}$/'],
+            'education_id' => ['required', 'exists:meta_types,id'],
             'role_id' => ['required', 'exists:roles,id'], 
-            'unit_id' => ['nullable', 'exists:units,id'], 
+            'unit_id' => ['required', 'exists:units,id'], 
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 

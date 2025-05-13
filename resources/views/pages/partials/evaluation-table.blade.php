@@ -40,7 +40,7 @@
 
     <div class="self-rating mb-5">
       <h3 class="mb-5">II. TỰ NHẬN XÉT</h3>
-      <div ">
+      <div>
         {!! $evaluation->comment !!}
       </div>
     </div>
@@ -93,6 +93,12 @@
       </div>
     </div>
     @endif
+    <div class="export-file-btn text-right">
+      <a href="{{ route('evaluations.export', $evaluation->id) }}" class="btn btn-secondary inline-flex items-center gap-3">
+        <span class="icomoon icon-download-v2 text-xl"></span>
+        <span>Xuất File</span>
+      </a>
+    </div>
   </div>
 @else
   @if ($isCurrentYear)
