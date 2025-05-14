@@ -5,31 +5,49 @@
         &::before {
             @apply content-["\e90c"] absolute right-0 text-[22px];
             font-family: 'icomoon', sans-serif;
+            transition: transform 0.3s ease;
         }
         &:hover {
             @apply custom-transition;
             &::before {
                 transform: rotate(180deg);
             }
+            .sub-menu-list {
+                @apply h-auto;
+            }
+        }
+        // Menu khi active
+        &.active-parent::before {
+            transform: rotate(180deg);
         }
     }
+    
+    // Style cho menu active
+    .active-menu {
+        @apply bg-primary-100 rounded-xl;
+    }
+    
     .menu-list:has(.has-menu-item) {
         .has-menu-item:hover {
             .sub-menu-list {
                 @apply h-auto;
             }
-            &::before {
-                transition: transform 0.3s ease;
-            }
         }
         .sub-menu-list {
             @apply h-0 overflow-hidden;
+            
+            // Hiển thị submenu khi active
+            &.show-submenu {
+                @apply h-auto;
+            }
         }
     }
+    
     .menu-list:not(:last-child) {
         @apply border-b-1 border-primary-200;
     }
 }
+
 aside {
     @apply border-r-1 border-primary-200;
 }
