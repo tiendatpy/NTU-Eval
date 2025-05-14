@@ -45,7 +45,7 @@
                 <td>{{ $nomination->review }}</td>
                 <td>
                   <input type="hidden" name="nominations[{{ $index }}][id]" value="{{ $nomination->id }}">
-                  <select name="nominations[{{ $index }}][title_id]" class="border-primary-300 border-1 p-2 w-full rounded-lg approve-title">
+                  <select name="nominations[{{ $index }}][title_id]" class="border-primary-300 border-1 p-2 w-auto rounded-lg approve-title">
                     @foreach ($titles as $title)
                       <option value="{{ $title->id }}" {{ ($nomination->approved_title_id ? $nomination->approved_title_id : $nomination->title_id) == $title->id ? 'selected' : '' }}>
                         {{ $title->name }}
