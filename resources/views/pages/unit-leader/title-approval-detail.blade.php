@@ -10,7 +10,7 @@
         <legend><i>Tự đánh giá</i></legend>
         <div>
           <div class="mb-6">
-            <p><strong>Tên cá nhân:</strong> {{ $nomination->user->full_name }}</p>
+            <p><strong>Tên cá nhân:</strong> {{ $nomination->evaluator->full_name }}</p>
             <p><strong>Danh hiệu:</strong> {{ $nomination->title->name }}</p>
             <p><strong>Hình thức khen thưởng:</strong> {{ $nomination->reward->name }}</p>
             <p><strong>Tóm tắt thành tích:</strong> {{ $nomination->achievement }}</p>

@@ -14,8 +14,8 @@
             <th class="w-10p">Danh Hiệu</th>
             <th class="w-15p">Hình Thức <br> Khen Thưởng</th>
             <th class="w-25p">Tóm Tắt Thành Tích</th>
-            <th class="w-20p">Bình Xét</th>
-            <th class="w-10p">Phê duyệt</th>
+            <th class="w-20p">Góp Ý</th>
+            <th class="w-10p">Duyệt</th>
           </tr>
         </thead>
         <tbody>
@@ -24,7 +24,7 @@
               <td>{{ $index + 1 }}</td>
               <td>
                 <a href="{{ route('unit-leader-approvals.show', $nomination->id) }}" class="hover:text-states-400" title="Xem chi tiết">
-                  {{ $nomination->user->full_name }}
+                  {{ $nomination->evaluator->full_name }}
                 </a>
               </td>
               <td>{{ $nomination->title->name }}</td>

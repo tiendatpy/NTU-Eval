@@ -38,20 +38,17 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// Route::middleware(['auth'])->group(function () {
-//     Route::get('/title-nominations', [TitleNominationController::class, 'index'])->name('title-nominations.index');
-//     Route::post('/title-nominations', [TitleNominationController::class, 'store'])->name('title-nominations.store');
-// });
 
 // Route::middleware(['auth'])->group(function () {
 //     Route::put('/title-nominations/{id}', [TitleNominationController::class, 'update'])->name('title-nominations.update');
 // });
 
-// Route::middleware(['auth'])->group(function () {
-//     Route::get('/unit-leader-approvals/{id}', [TitleNominationController::class, 'show'])->name('unit-leader-approvals.show');
-//     Route::put('/unit-leader-approvals/{id}', [TitleNominationController::class, 'approve'])->name('unit-leader-approvals.approve');
-//     Route::put('/list-title-nominations/{id}', [TitleNominationController::class, 'fastApprove'])->name('title-nominations.fastApprove');
-// });
+Route::middleware(['auth'])->group(function () {
+    Route::post('/approve-qualities', [EvaluationController::class, 'approveQualities'])->name('evaluations.approve-qualities');
+    Route::get('/unit-leader-approvals/{id}', [EvaluationController::class, 'show'])->name('unit-leader-approvals.show');
+    Route::put('/unit-leader-approvals/{id}', [EvaluationController::class, 'approve'])->name('unit-leader-approvals.approve');
+    Route::put('/list-title-nominations/{id}', [EvaluationController::class, 'fastApprove'])->name('title-nominations.fastApprove');
+});
 
 Route::get('/self-evaluations/{id}/export', [ExportController::class, 'exportEvaluation'])
     ->name('evaluations.export')

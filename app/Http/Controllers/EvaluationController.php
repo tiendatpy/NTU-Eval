@@ -57,7 +57,12 @@ class EvaluationController extends Controller
         // Lấy dữ liệu cần thiết cho form
         $periods = Periods::all();
         $quality = Quality::all();
-        $titles = Title::where('type_id', 10)->get();
+        $titleTypeId = Cache::remember('title_type_id', 86400, function () {
+            return MetaType::where('category', 'type_title')
+                ->where('name', 'Cá nhân')
+                ->value('id');
+        });
+        $titles = Title::where('type_id', $titleTypeId)->get();
         $rewards = Reward::all();
 
         $isCurrentYear = $selectedYear == now()->year - 1;
@@ -197,22 +202,42 @@ class EvaluationController extends Controller
         // Lấy period_id từ năm được chọn
         $period = Periods::where('year', $selectedYear)->first();
 
+        $quality = Quality::all();
+
         if (!$period) {
             return back()->with('error', 'Không tìm thấy kỳ đánh giá cho năm đã chọn.');
         }
 
-        // Lấy tất cả đánh giá trong đơn vị của người dùng hiện tại
-        $evaluations = Evaluation::where('unit_id', $user->unit_id)
-            ->where('period_id', $period->id)
-            ->with(['evaluator', 'quality', 'title', 'reward', 'approvedQuality', 'approvedTitle', 'details'])
-            ->orderBy('created_at', 'asc')
-            ->get();
+        // Xây dựng query cơ bản
+        $query = Evaluation::where('period_id', $period->id)
+                        ->with(['evaluator', 'quality', 'title', 'reward', 'approvedQuality', 'approvedTitle', 'details']);
 
-        return view('pages.all-quality-rating', compact(
-            'evaluations',
-            'years',
-            'selectedYear'
-        ));
+        // Nếu là trưởng đơn vị, lấy tất cả đánh giá trong đơn vị, ngoại trừ của chính mình
+        if ($user->role->name === 'Trưởng đơn vị') {
+            $query->where('unit_id', $user->unit_id)
+                ->where('evaluator_id', '!=', $user->id);
+        } 
+        // Nếu là nhân viên thường, chỉ lấy đánh giá trong cùng đơn vị
+        else {
+            $query->where('unit_id', $user->unit_id);
+        }
+
+        $evaluations = $query->orderBy('created_at', 'asc')->get();
+
+        if ($user->role->name === 'Trưởng đơn vị') {
+            return view('pages.unit-leader.quality-approval', compact(
+                'evaluations',
+                'years',
+                'quality',
+                'selectedYear'
+            ));
+        } else {
+            return view('pages.all-quality-rating', compact(
+                'evaluations',
+                'years',
+                'selectedYear'
+            ));
+        }
     }
 
     public function getListTitleNomination(Request $request)
@@ -250,7 +275,7 @@ class EvaluationController extends Controller
             ->paginate(10);
 
         if ($user->role->name === 'Trưởng đơn vị') {
-            return view('pages.unit-leader.unit-leader-approvals', compact('nominations', 'years', 'selectedYear'));
+            return view('pages.unit-leader.title-approvals', compact('nominations', 'years', 'selectedYear'));
         } else {
             return view('pages.all-title-nominations', compact('nominations', 'years', 'selectedYear'));
         }
@@ -272,53 +297,75 @@ class EvaluationController extends Controller
     }
     // unit-leader-approval
 
-    // public function show($id)
-    // {
-    //     $nomination = Evaluation::with(['user', 'title', 'reward'])->findOrFail($id);
-    //     $titles = Title::where('type_id', 11)->get(); // Lấy danh hiệu có type_id là 11);
-    //     return view('pages.unit-leader.unit-leader-approval-detail', compact('nomination', 'titles'));
-    // }
+    public function show($id)
+    {
+        $nomination = Evaluation::with(['evaluator', 'title', 'reward'])->findOrFail($id);
+        $titles = Title::where('type_id', 11)->get(); // Lấy danh hiệu có type_id là 11);
+        return view('pages.unit-leader.unit-leader-approval-detail', compact('nomination', 'titles'));
+    }
 
-    // public function approve(Request $request, $id)
-    // {
-    //     $request->validate([
-    //         'approved_title_id' => ['required', 'exists:titles,id'], // Kiểm tra danh hiệu được duyệt hợp lệ
-    //     ]);
+    public function approve(Request $request, $id)
+    {
+        $request->validate([
+            'approved_title_id' => ['required', 'exists:titles,id'], // Kiểm tra danh hiệu được duyệt hợp lệ
+        ]);
 
-    //     $nomination = Evaluation::findOrFail($id);
-    //     $approvedStatus = MetaType::where('category', 'nomination_status')
-    //         ->where('name', 'Đã phê duyệt')
-    //         ->firstOrFail();
+        $nomination = Evaluation::findOrFail($id);
+        $approvedStatus = MetaType::where('category', 'nomination_status')
+            ->where('name', 'Đã phê duyệt')
+            ->firstOrFail();
 
-    //     // Cập nhật danh hiệu được duyệt và bình xét
-    //     $nomination->update([
-    //         'approved_title_id' => $request->input('approved_title_id'), // Cập nhật danh hiệu được duyệt
-    //         'status_id' => $approvedStatus->id,
-    //     ]);
+        // Cập nhật danh hiệu được duyệt và bình xét
+        $nomination->update([
+            'approved_title_id' => $request->input('approved_title_id'), // Cập nhật danh hiệu được duyệt
+            'status_id' => $approvedStatus->id,
+        ]);
 
-    //     return redirect()->route('unit-leader-approvals.show', $id)
-    //         ->with('success', 'Đã xét duyệt thành công.');
-    // }
+        return redirect()->route('unit-leader-approvals.show', $id)
+            ->with('success', 'Đã xét duyệt thành công.');
+    }
 
-    // public function fastApprove(Request $request, $id)
-    // {
-    //     $nominaitonId = $request->input('id');
-
-    //     $nomination = Evaluation::findOrFail($nominaitonId);
-
-    //     // Lấy trạng thái "Đã phê duyệt"
-    //     $approvedStatus = MetaType::where('category', 'nomination_status')
-    //         ->where('name', 'Đã phê duyệt')
-    //         ->firstOrFail();
-
-    //     // Cập nhật trạng thái
-    //     $nomination->update([
-    //         'status_id' => $approvedStatus->id,
-    //     ]);
-
-    //     return response()->json([
-    //         'success' => true,
-    //         'message' => 'Đã phê duyệt.',
-    //     ]);
-    // }
+    public function approveQualities(Request $request)
+    {
+        $user = auth()->user();
+        
+        // Kiểm tra xem người dùng có phải là trưởng đơn vị không
+        if ($user->role->name !== 'Trưởng đơn vị') {
+            return back()->with('error', 'Bạn không có quyền thực hiện hành động này.');
+        }
+        
+        // Validate dữ liệu đầu vào
+        $request->validate([
+            'evaluations' => 'required|array',
+            'evaluations.*.id' => 'required|exists:evaluations,id',
+            'evaluations.*.quality_id' => 'required|exists:quality,id',
+        ]);
+        
+        
+        try {
+            DB::beginTransaction();
+            
+            // Cập nhật từng đánh giá
+            foreach ($request->evaluations as $evaluationData) {
+                $evaluation = Evaluation::findOrFail($evaluationData['id']);
+                
+                // Kiểm tra xem đánh giá có thuộc đơn vị của trưởng đơn vị không
+                if ($evaluation->unit_id != $user->unit_id) {
+                    continue;
+                }
+                
+                // Cập nhật trạng thái và xếp loại được duyệt
+                $evaluation->update([
+                    'approved_quality_id' => $evaluationData['quality_id'],
+                ]);
+            }
+            
+            DB::commit();
+            return redirect()->route('quality-ratings.list')
+                ->with('success', 'Đã phê duyệt xếp loại thành công.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Có lỗi xảy ra: ' . $e->getMessage());
+        }
+    }
 }
