@@ -28,7 +28,6 @@ export default class ModAllQualityRating {
         }
     }
     
-    // Thêm hàm xử lý khi submit form phê duyệt
     handleApprovalSubmit(e) {
         if (!confirm('Bạn có chắc chắn muốn phê duyệt xếp loại cho tất cả nhân viên?')) {
             e.preventDefault();

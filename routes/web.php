@@ -44,10 +44,8 @@ Route::middleware('auth')->group(function () {
 // });
 
 Route::middleware(['auth'])->group(function () {
-    Route::post('/approve-qualities', [EvaluationController::class, 'approveQualities'])->name('evaluations.approve-qualities');
-    Route::get('/unit-leader-approvals/{id}', [EvaluationController::class, 'show'])->name('unit-leader-approvals.show');
-    Route::put('/unit-leader-approvals/{id}', [EvaluationController::class, 'approve'])->name('unit-leader-approvals.approve');
-    Route::put('/list-title-nominations/{id}', [EvaluationController::class, 'fastApprove'])->name('title-nominations.fastApprove');
+    Route::post('/approve-quality', [EvaluationController::class, 'approveQuality'])->name('evaluations.approve-quality');
+    Route::post('/approve-titles', [EvaluationController::class, 'approveTitles'])->name('evaluations.approve-titles');
 });
 
 Route::get('/self-evaluations/{id}/export', [ExportController::class, 'exportEvaluation'])

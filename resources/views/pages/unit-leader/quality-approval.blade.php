@@ -19,7 +19,7 @@
         </div>
       </div>
 
-      <form action="{{ route('evaluations.approve-qualities') }}" method="POST" id="approvalForm">
+      <form action="{{ route('evaluations.approve-quality') }}" method="POST" id="approvalForm">
         @csrf
         
         <table class="w-full text-sm overflow-hidden">
@@ -63,34 +63,26 @@
             @endforelse
           </tbody>
         </table>
-        
         @if ($evaluations->count() > 0)
+          @php
+          $allApproved = $evaluations->filter(function($evaluation) {
+              return $evaluation->evaluator->role->name !== 'Trưởng đơn vị';
+          })->every(function($evaluation) {
+              return !is_null($evaluation->approved_quality_id);
+          });
+          @endphp
           <div class="text-right mt-5">
             <a href="{{ route('evaluations.export', $evaluations->first()->id) }}" class="btn btn-secondary inline-flex items-center gap-3">
               <span class="icomoon icon-download-v2 text-xl"></span>
               <span>Xuất File</span>
             </a>
-            <button type="submit" class="btn btn-primary">
-              <span>Xác nhận</span>
+            <button type="submit" class="btn btn-primary {{ $allApproved ? 'bg-states-600/80 cursor-not-allowed' : '' }}" 
+                    {{ $allApproved ? 'disabled' : '' }}>
+              <span>{{ $allApproved ? 'Đã phê duyệt' : 'Xác nhận' }}</span>
             </button>
           </div>
         @endif
       </form>
     </div>
   </section>
-@endsection
-
-@section('scripts')
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    // Auto submit form when year changes
-    
-    // Thêm xác nhận trước khi submit form
-    document.getElementById('approvalForm').addEventListener('submit', function(e) {
-      if (!confirm('Bạn có chắc chắn muốn phê duyệt xếp loại cho tất cả nhân viên?')) {
-        e.preventDefault();
-      }
-    });
-  });
-</script>
 @endsection
