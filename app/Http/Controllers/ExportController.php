@@ -13,12 +13,18 @@ class ExportController extends Controller
 {
     public function exportEvaluation($id)
     {
+        $user = auth()->user();
+        $isUnitLeader = $user->role->name === 'Trưởng đơn vị';
         // Lấy dữ liệu đánh giá
         $evaluation = Evaluation::with(['evaluator', 'quality', 'details.criteria', 'title', 'reward'])->findOrFail($id);
         $user = $evaluation->evaluator;
         
         // Đường dẫn đến file template
-        $templatePath = storage_path('app/templates/self_evaluation_template.docx');
+        if($isUnitLeader) {
+            $templatePath = storage_path('app/templates/leader_self_evaluation_template.docx');
+        } else {
+            $templatePath = storage_path('app/templates/self_evaluation_template.docx');
+        }
         
         // Khởi tạo template processor
         $templateProcessor = new TemplateProcessor($templatePath);
