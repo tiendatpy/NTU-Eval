@@ -5,16 +5,16 @@
                 <span>© 2025 NTU Eval. All rights reserved.</span>
             </div>
             <div class="footer-right flex gap-12 justify-center">
-                <a href="#">
+                <a href="#" class="hover:text-states-500">
                     <span class="icomoon icon-twitter text-2xl"></span>
                 </a>
-                <a href="#">
+                <a href="#" class="hover:text-states-500">
                     <span class="icomoon icon-instagram text-2xl"></span>
                 </a>
-                <a href="#">
+                <a href="#" class="hover:text-states-500">
                     <span class="icomoon icon-facebook text-2xl"></span>
                 </a>
-                <a href="#">
+                <a href="#" class="hover:text-states-500">
                     <span class="icomoon icon-linkedin2 text-2xl"></span>
                 </a>
             </div>

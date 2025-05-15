@@ -51,7 +51,7 @@
                     <div class="title-approval bg-white rounded-lg p-3 shadow-sm">
                       <div class="flex flex-col gap-2">
                         <label class="font-medium text-gray-700 flex items-center">
-                          <span class="icomoon icon-speakerphone mr-2 text-primary-600"></span>
+                          <span class="icomoon icon-ticket mr-2 text-primary-600"></span>
                           Danh hiệu
                         </label>
                         <input type="hidden" name="nominations[{{ $index }}][id]" value="{{ $nomination->id }}">

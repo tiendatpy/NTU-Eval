@@ -3,7 +3,7 @@
   <div class="self-table mb-5">
     <div class="self-evaluation mb-5">
       <h3 class="mb-5">I. TỰ ĐÁNH GIÁ</h3>
-      <table class="w-full text-sm overflow-hidden">
+      <table class="w-full text-sm overflow-x-auto">
         <thead class="rounded-t-xl">
           <tr class="bg-states-300">
             <th class="w-5p">STT</th>
@@ -40,7 +40,7 @@
 
     <div class="self-rating mb-5">
       <h3 class="mb-5">II. TỰ NHẬN XÉT</h3>
-      <div>
+      <div class="bg-blue-50 rounded-lg p-4 border border-blue-200">
         {!! $evaluation->comment !!}
       </div>
     </div>
@@ -67,11 +67,11 @@
       </div>
     </div>
     
-    @if ($evaluation->review)
+    @if ($evaluation->feedback)
     <div class="self-review mb-5">
       <h3 class="mb-5">IV. BÌNH XÉT CỦA TRƯỞNG ĐƠN VỊ</h3>
-      <div class="border-primary-500 border-1 p-3 rounded-lg bg-white">
-        {!! $evaluation->review !!}
+      <div class="bg-blue-50 rounded-lg p-4 border border-blue-200">
+        {!! $evaluation->feedback !!}
       </div>
     </div>
     @endif
@@ -79,7 +79,7 @@
     @if ($evaluation->approved_quality_id)
     <div class="approved-quality mb-5">
       <h3 class="mb-5">V. XẾP LOẠI ĐƯỢC PHÊ DUYỆT</h3>
-      <div class="border-primary-500 border-1 p-3 rounded-lg bg-white font-medium">
+      <div class="bg-blue-50 rounded-lg p-4 border border-blue-200">
         {{ $evaluation->approvedQuality->name }}
       </div>
     </div>
@@ -88,7 +88,7 @@
     @if ($evaluation->approved_title_id)
     <div class="approved-title-nomination mb-5">
       <h3 class="mb-5">VI. DANH HIỆU ĐƯỢC PHÊ DUYỆT</h3>
-      <div class="border-primary-500 border-1 p-3 rounded-lg bg-white font-medium">
+      <div class="bg-blue-50 rounded-lg p-4 border border-blue-200">
         {{ $evaluation->approvedTitle->name }}
       </div>
     </div>

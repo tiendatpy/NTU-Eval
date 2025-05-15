@@ -25,7 +25,15 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
-
+  .icon-clipboard-check:before {
+    content: "\e923";
+  }
+  .icon-ticket:before {
+    content: "\e924";
+  }
+  .icon-document-report:before {
+    content: "\e925";
+  }
   .icon-document-search:before {
     content: "\e91d";
   }
