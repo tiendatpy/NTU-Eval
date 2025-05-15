@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EvaluationController;
 use App\Http\Controllers\TitleNominationController;
 use App\Http\Controllers\ExportController;
+use App\Http\Controllers\UnitController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -53,5 +54,9 @@ Route::get('/self-evaluations/{id}/export', [ExportController::class, 'exportEva
     ->middleware('auth');
 Route::get('/export-quality-ratings', [ExportController::class, 'exportQualityList'])
     ->name('evaluations.export-quality-ratings');
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/unit-members', [UnitController::class, 'members'])->name('unit.members');
+});
 
 require __DIR__.'/auth.php';

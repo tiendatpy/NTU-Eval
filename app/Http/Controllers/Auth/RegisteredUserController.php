@@ -43,7 +43,7 @@ class RegisteredUserController extends Controller
             'full_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
             'date_of_birth' => ['required', 'date', 'before:today'],
-            'phone' => ['required', 'string', 'regex:/^[0-9]{10}$/'],
+            'phone' => ['required', 'string', 'regex:/^[0-9]{10}$/', 'unique:users,phone'],
             'education_id' => ['required', 'exists:meta_types,id'],
             'role_id' => ['required', 'exists:roles,id'], 
             'unit_id' => ['required', 'exists:units,id'], 
