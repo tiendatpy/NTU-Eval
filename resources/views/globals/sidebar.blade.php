@@ -2,7 +2,7 @@
     <div class="menu px-6 py-8">
         <ul class="menu-list mb-11">
             <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer flex items-center gap-8 {{ request()->routeIs('evaluations.index') ? 'active-menu text-states-600' : '' }}">
-                <span class="icomoon icon-folder text-2xl"></span>
+                <span class="icomoon icon-pencil text-2xl"></span>
                 <a class="block w-full" href="{{ route('evaluations.index')}}">
                     <span>Tự đánh giá</span>
                 </a>
@@ -16,8 +16,8 @@
             <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer has-menu-item
                 {{ request()->routeIs('quality-ratings.list') || request()->routeIs('title-nominations.list') ? 'active-menu active-parent ' : '' }}">
                 <span class="flex items-center gap-8 ">
-                    <span class="icomoon icon-table text-2xl"></span>
-                    <span>Danh sách đánh giá</span>
+                    <span class="icomoon icon-check-circle text-2xl"></span>
+                    <span>Phê duyệt</span>
                 </span>
                 <ul class="sub-menu-list pl-24 mt-3 last-mb-none text-black {{ request()->routeIs('quality-ratings.list') || request()->routeIs('title-nominations.list') ? 'show-submenu' : '' }}">
                     <li class="sub-menu-item hover:text-states-400 mb-5">

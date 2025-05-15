@@ -51,5 +51,7 @@ Route::middleware(['auth'])->group(function () {
 Route::get('/self-evaluations/{id}/export', [ExportController::class, 'exportEvaluation'])
     ->name('evaluations.export')
     ->middleware('auth');
+Route::get('/export-quality-ratings', [ExportController::class, 'exportQualityList'])
+    ->name('evaluations.export-quality-ratings');
 
 require __DIR__.'/auth.php';

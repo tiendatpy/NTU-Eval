@@ -8,6 +8,7 @@ use PhpOffice\PhpWord\PhpWord;
 use PhpOffice\PhpWord\IOFactory;
 use App\Models\Evaluation;
 use App\Models\User;
+use App\Models\Periods;
 
 class ExportController extends Controller
 {
@@ -85,5 +86,96 @@ class ExportController extends Controller
         
         // Tải file về
         return response()->download($tempFilePath, $fileName)->deleteFileAfterSend(true);
+    }
+
+    public function exportQualityList(Request $request)
+    {
+        $user = auth()->user();
+        if ($user->role->name !== 'Trưởng đơn vị') {
+            return redirect()->back()->with('error', 'Bạn không có quyền thực hiện hành động này.');
+        }
+        
+        // Lấy tham số từ request
+        $year = $request->input('year', now()->year - 1);
+        $period = Periods::where('year', $year)->first();
+        
+        if (!$period) {
+            return back()->with('error', 'Không tìm thấy kỳ đánh giá cho năm đã chọn.');
+        }
+        
+        // Lấy danh sách xếp loại của đơn vị
+        $evaluations = Evaluation::with(['evaluator', 'quality', 'approvedQuality'])
+            ->where('period_id', $period->id)
+            ->where('unit_id', $user->unit_id)
+            ->where('evaluator_id', '!=', $user->id) // Loại trừ trưởng đơn vị
+            ->orderBy('evaluator_id')
+            ->get();
+        
+        if ($evaluations->isEmpty()) {
+            return back()->with('error', 'Không có dữ liệu xếp loại để xuất file.');
+        }
+        
+        // Tạo file Word mới
+        $templatePath = storage_path('app/templates/quality_ratings_template.docx');
+        $templateProcessor = new TemplateProcessor($templatePath);
+        
+        // Điền thông tin cơ bản
+        $templateProcessor->setValue('don_vi', $user->unit->name ?? '');
+        $templateProcessor->setValue('nam_hoc', $period->year . ' - ' . ($period->year + 1));
+        
+        // Chuẩn bị dữ liệu cho bảng
+        $replacements = [];
+        foreach ($evaluations as $index => $evaluation) {
+            $replacements[] = [
+                'stt' => $index + 1,
+                'ho_ten' => $evaluation->evaluator->full_name ?? '',
+                'muc_xep_loai' => $evaluations->quality->name ?? '',
+                'dien_giai' => $this->formatEvidences($evaluation)
+            ];
+        }
+        
+        // Áp dụng dữ liệu vào bảng
+        $templateProcessor->cloneRowAndSetValues('stt', $replacements);
+        
+        // Tạo tên file kết quả
+        $fileName = 'Danh_sach_xep_loai_chat_luong_' . $user->unit->name . '_' . $period->year . '.docx';
+        $fileName = str_replace(' ', '_', $fileName);
+        
+        // Lưu file tạm thời
+        $tempFilePath = storage_path('app/temp/' . $fileName);
+        $templateProcessor->saveAs($tempFilePath);
+        
+        // Tải file về
+        return response()->download($tempFilePath, $fileName)->deleteFileAfterSend(true);
+    }
+
+    /**
+     * Định dạng bằng chứng từ evaluation details
+     */
+    private function formatEvidences(Evaluation $evaluation)
+    {
+        $evidences = [];
+        
+        // Thêm các thông tin cần thiết vào diễn giải
+        // Ví dụ: Hoàn thành vượt định mức giờ giảng và nghiên cứu
+        if ($evaluation->details) {
+            foreach ($evaluation->details as $detail) {
+                if ($detail->evidence && !empty(trim($detail->evidence))) {
+                    $evidences[] = '- ' . strip_tags($detail->evidence);
+                }
+            }
+        }
+        
+        // Thêm thông tin thành tích đặc biệt từ trường achievement
+        if ($evaluation->achievement && !empty(trim($evaluation->achievement))) {
+            $evidences[] = '- ' . strip_tags($evaluation->achievement);
+        }
+        
+        // Thêm nhận xét của trưởng đơn vị nếu có
+        if ($evaluation->feedback && !empty(trim($evaluation->feedback))) {
+            $evidences[] = '- ' . strip_tags($evaluation->feedback);
+        }
+        
+        return implode("\n", $evidences);
     }
 }
