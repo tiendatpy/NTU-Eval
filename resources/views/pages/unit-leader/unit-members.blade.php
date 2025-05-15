@@ -27,20 +27,20 @@
                 <tr class="border-b border-states-200 hover:bg-gray-50">
                     <td class="">{{ $index + 1 }}</td>
                     <td>{{ $member->id }}</td>
-                    <td class=" font-medium">{{ $member->full_name }}</td>
-                    <td class="">{{ $member->email }}</td>
-                    <td class="">{{ $member->role->name }}</td>
-                    <td class="">{{ $member->phone}}</td>
+                    <td class="font-medium">{{ $member->full_name }}</td>
+                    <td>{{ $member->email }}</td>
+                    <td>{{ $member->role->name }}</td>
+                    <td>{{ $member->phone}}</td>
                     <td class=" text-center">
                         @if(in_array($member->id, $evaluatedUserIds ?? []))
-                            <span class="inline-flex items-center px-3 py-2 rounded-full text-xs font-medium bg-green-100 text-neutral-600">
+                            <span class="inline-flex items-center px-3 py-2 rounded-full font-medium bg-green-100 text-neutral-600">
                                 <svg class="-ml-0.5 mr-1.5 h-2 w-2 text-green-400" fill="currentColor" viewBox="0 0 8 8">
                                     <circle cx="4" cy="4" r="3" />
                                 </svg>
                                 Đã đánh giá
                             </span>
                         @else
-                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-secondary-600">
+                            <span class="inline-flex items-center px-3 py-1 rounded-full font-medium bg-red-100 text-secondary-600">
                                 <svg class="-ml-0.5 mr-1.5 h-2 w-2 text-red-400" fill="currentColor" viewBox="0 0 8 8">
                                     <circle cx="4" cy="4" r="3" />
                                 </svg>

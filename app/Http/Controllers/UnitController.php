@@ -14,7 +14,7 @@ class UnitController extends Controller
         $user = auth()->user();
         
         if ($user->role->name !== 'Trưởng đơn vị') {
-            return redirect()->route('home')->with('error', 'Bạn không có quyền truy cập tính năng này.');
+            return redirect()->route('login')->with('error', 'Bạn không có quyền truy cập tính năng này.');
         }
         
         $currentYear = now()->year-1;
