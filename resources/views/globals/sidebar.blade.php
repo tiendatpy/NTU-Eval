@@ -47,6 +47,14 @@
                 </a>
             </li>
             @endif
+            @if($isUnitLeader)
+            <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer flex items-center gap-8 ">
+                <span class="icomoon icon-document-text text-2xl"></span>
+                <a class="block w-full" href="">
+                    <span>Báo cáo tổng kết</span>
+                </a>
+            </li>
+            @endif
         </ul>
         <ul class="menu-list mb-11">
             <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer">
