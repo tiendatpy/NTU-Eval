@@ -75,7 +75,7 @@
               <span class="icomoon icon-download-v2 text-xl"></span>
               <span>Xuất File</span>
             </a>
-            <button type="submit" class="btn btn-primary {{ $allApproved ? 'bg-states-600/80  cursor-not-allowed' : '' }}" 
+            <button type="submit" class="btn btn-primary {{ $allApproved ? 'bg-states-600/30 hover:bg-states-600/30  cursor-not-allowed' : '' }}" 
                     {{ $allApproved ? 'disabled' : '' }}>
               <span>{{ $allApproved ? 'Đã phê duyệt' : 'Xác nhận' }}</span>
             </button>
