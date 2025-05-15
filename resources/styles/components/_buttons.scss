@@ -23,6 +23,10 @@
       @apply text-white bg-neutral-500;
       @apply  hover:bg-neutral-500/80;
     }
+    .btn-additional {
+      @apply text-white bg-primary-600;
+      @apply  hover:bg-primary-600/80;
+    }
   
     .btn-tertiary {
       @apply text-white bg-secondary-500;

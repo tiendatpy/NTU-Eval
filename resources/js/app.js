@@ -5,6 +5,8 @@ import './pages/ModEvaluation';
 import './pages/ModAllQualityRating';
 import './pages/ModUnitLeaderApproval';
 import './pages/ModAllTitleNominations';
+import './pages/ModTitleApproval';
+import './pages/ModQualityApproval';
 
 import Alpine from 'alpinejs';
 

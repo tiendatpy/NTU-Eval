@@ -3,7 +3,7 @@
 @section('title', 'Xét Duyệt Danh Hiệu Thi Đua')
 
 @section('content')
-  <section class="mod-all-title-nominations bg-white">
+  <section class="mod-title-approval bg-white">
     <div class="container py-8">
       <div class="flex justify-between items-center mb-7">
         <h2 class="text-base mb-0">Danh Sách Xét Duyệt Danh Hiệu Thi Đua</h2>
@@ -26,11 +26,12 @@
           <thead class="bg-states-300">
             <tr>
               <th class="w-5p">STT</th>
-              <th class="w-15p">Tên cá nhân</th>
+              <th class="w-10p">Tên cá nhân</th>
               <th class="w-10p">Danh Hiệu</th>
-              <th class="w-15p">Hình Thức <br> Khen Thưởng</th>
-              <th class="w-25p">Tóm Tắt Thành Tích</th>
+              <th class="w-10p">Hình Thức <br> Khen Thưởng</th>
+              <th class="w-20p">Tóm Tắt Thành Tích</th>
               <th class="w-15p">Góp Ý</th>
+              <th class="w-15p">NX Ưu, Khuyết Điểm</th>
               <th class="w-15p">Duyệt</th>
             </tr>
           </thead>
@@ -42,16 +43,41 @@
                 <td>{{ $nomination->title->name }}</td>
                 <td>{{ $nomination->reward->name }}</td>
                 <td>{{ $nomination->achievement }}</td>
-                <td>{{ $nomination->review }}</td>
+                <td>{{ $nomination->feedback }}</td>
+                <td>{{ $nomination->comment }}</td>
                 <td>
-                  <input type="hidden" name="nominations[{{ $index }}][id]" value="{{ $nomination->id }}">
-                  <select name="nominations[{{ $index }}][title_id]" class="border-primary-300 border-1 p-2 w-auto rounded-lg approve-title">
-                    @foreach ($titles as $title)
-                      <option value="{{ $title->id }}" {{ ($nomination->approved_title_id ? $nomination->approved_title_id : $nomination->title_id) == $title->id ? 'selected' : '' }}>
-                        {{ $title->name }}
-                      </option>
-                    @endforeach
-                  </select>
+                  <div class="flex flex-col gap-3">
+                    <!-- Phần chọn danh hiệu -->
+                    <div class="title-approval bg-white rounded-lg p-3 shadow-sm">
+                      <div class="flex flex-col gap-2">
+                        <label class="font-medium text-gray-700 flex items-center">
+                          <span class="icomoon icon-speakerphone mr-2 text-primary-600"></span>
+                          Danh hiệu
+                        </label>
+                        <input type="hidden" name="nominations[{{ $index }}][id]" value="{{ $nomination->id }}">
+                        <select name="nominations[{{ $index }}][title_id]" 
+                                class="border border-gray-300 rounded-md p-2 w-full focus:ring-2 focus:ring-primary-500 focus:border-primary-500 approve-title">
+                          @foreach ($titles as $title)
+                            <option value="{{ $title->id }}" 
+                                    {{ ($nomination->approved_title_id ? $nomination->approved_title_id : $nomination->title_id) == $title->id ? 'selected' : '' }}>
+                              {{ $title->name }}
+                            </option>
+                          @endforeach
+                        </select>
+                      </div>
+                    </div>
+                    <!-- Phần feedback -->
+                    <div class="feedback-section flex justify-end">
+                      <button type="button" 
+                              class="btn btn-additional  edit-btn flex items-center justify-center gap-2" 
+                              data-id="{{ $nomination->id }}"   
+                              data-feedback="{{ $nomination->feedback }}"
+                              title="Thêm nhận xét">
+                        <span class="icomoon icon-pencil-alt"></span>
+                        <span>Nhận xét</span>
+                      </button>
+                    </div>
+                  </div>
                 </td>
               </tr>
             @empty
@@ -82,11 +108,38 @@
           </div>
         @endif
       </form>
-
       <!-- Phân trang -->
       <div class="mt-4">
-        {{ $nominations->appends(['year' => $selectedYear])->links() }}
+        {{ $nominations->links() }}
       </div>
+      <form action="{{ route('evaluations.approve-titles', ':id') }}" method="POST" class="edit-feedback-form">
+        @csrf
+        @method('PUT')
+        <div class="overlay js-popup fixed inset-0 bg-black/25 hidden">
+          <!-- Popup -->
+          <div class="feedback-popup absolute min-w-[400px] lg:w-[600px] transform-center-middle bg-white shadow-slate-600 rounded-lg p-4 z-50">
+            <table class="w-full">
+              <tr class="hover:bg-white border-b">
+                <td class="font-semibold p-5 text-primary-800">Nhận xét ưu, khuyết điểm</td>
+                <td class="p-5 text-right text-2xl" >
+                  <button class="hover:text-states-500 close-popup"><span class="icomoon icon-close"></span></button>
+                </td>
+              </tr>
+            </table>
+            <div class="bg-white mt-5">
+              <table class="mx-auto">
+                <textarea class="ckeditor feedback-nomination" name="feedback" id="">
+                </textarea>
+              </table>
+            </div>
+              <div class="mt-4 text-right">
+                <button type="submit" class="btn btn-primary">
+                  <span>Xác nhận</span>
+                </button>
+              </div>
+            </div>
+        </div>
+      </form>
     </div>
   </section>
 @endsection

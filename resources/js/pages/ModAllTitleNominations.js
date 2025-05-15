@@ -8,11 +8,9 @@ export default class ModAllTitleNominations {
         this.$reviewInput = this.$el.find('.review-nomination');
         this.$yearFilter = this.$el.find('#year');
         this.$yearFilterForm = this.$el.find('#yearFilterForm');
-        this.$approvalForm = this.$el.find('#approvalForm');
     }
 
     init() {
-        console.log(this.$approvalForm);
         this.bindEvents();
         this.initCKEditor();
     }
@@ -34,11 +32,6 @@ export default class ModAllTitleNominations {
 
         // Thêm event cho dropdown lọc theo năm
         this.$yearFilter.on("change", () => this.submitYearFilter());
-
-        // submit-form for unit leader
-        if (this.$approvalForm.length) {
-            this.$approvalForm.on('submit', (e) => this.handleApprovalSubmit(e));
-        }
     }
 
     togglePopup(event) {
@@ -104,11 +97,7 @@ export default class ModAllTitleNominations {
         // Khởi tạo lại CKEditor nếu cần
         this.initCKEditor();
     }
-    handleApprovalSubmit(e) {
-        if (!confirm('Bạn có chắc chắn muốn phê duyệt xếp loại cho tất cả nhân viên?')) {
-            e.preventDefault();
-        }
-    }
+
 }
 
 new ModAllTitleNominations('.mod-all-title-nominations').init();

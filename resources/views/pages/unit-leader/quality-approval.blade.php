@@ -3,7 +3,7 @@
 @section('title', 'Danh sách đánh giá')
 
 @section('content')
-  <section class="mod-quality-rating bg-white rounded-2xl py-8">
+  <section class="mod-quality-approval bg-white rounded-2xl py-8">
     <div class="container">
       <div class="flex justify-between items-center mb-7">
         <h2 class="text-base mb-0">Danh Sách Xếp Loại Chất Lượng Của Đơn Vị</h2>
