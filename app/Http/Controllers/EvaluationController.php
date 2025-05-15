@@ -283,7 +283,7 @@ class EvaluationController extends Controller
         }
 
         $nominations = $query->orderBy('created_at', 'asc')
-            ->paginate(10);
+            ->paginate(5);
 
         if ($user->role->name === 'Trưởng đơn vị') {
             return view('pages.unit-leader.title-approvals', compact('nominations', 'years', 'selectedYear', 'titles'));
@@ -306,19 +306,6 @@ class EvaluationController extends Controller
         return redirect()->route('title-nominations.list')
             ->with('success', 'Đã cập nhật góp ý.');
     }
-    // unit-leader-approval
-
-    // public function show($id)
-    // {
-    //     $nomination = Evaluation::with(['evaluator', 'title', 'reward'])->findOrFail($id);
-    //     $titleTypeId = Cache::remember('title_type_id', 86400, function () {
-    //         return MetaType::where('category', 'type_title')
-    //             ->where('name', 'Cá nhân')
-    //             ->value('id');
-    //     });
-    //     $titles = Title::where('type_id', $titleTypeId)->get();
-    //     return view('pages.unit-leader.title-approval-detail', compact('nomination', 'titles'));
-    // }
 
     public function approveTitles(Request $request)
     {
@@ -332,6 +319,7 @@ class EvaluationController extends Controller
             'nominations' => 'required|array',
             'nominations.*.id' => 'required|exists:evaluations,id',
             'nominations.*.title_id' => 'required|exists:titles,id',
+            'nominations_feedback' => 'nullable|array',
         ]);
 
         $titleTypeId = Cache::remember('title_type_id', 86400, function () {
@@ -349,16 +337,27 @@ class EvaluationController extends Controller
             DB::beginTransaction();
 
             foreach ($request->nominations as $nominationData) {
-                $nomination = Evaluation::findOrFail($nominationData['id']);
+                $id = $nominationData['id'];
+                $nomination = Evaluation::findOrFail($id);
 
                 if ($nomination->unit_id != $user->unit_id) {
                     continue;
                 }
 
-                $nomination->update([
+                // Chuẩn bị dữ liệu cập nhật
+                $updateData = [
                     'approved_title_id' => $nominationData['title_id'],
                     'status_id' => $approvedStatus->id
-                ]);
+                ];
+
+                // Thêm feedback nếu có
+                if (isset($request->nominations_feedback[$id])) {
+                    $feedback = $request->nominations_feedback[$id];
+                    $updateData['feedback'] = html_entity_decode(strip_tags($feedback));
+                }
+
+                // Cập nhật dữ liệu
+                $nomination->update($updateData);
             }
 
             DB::commit();
