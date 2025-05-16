@@ -48,12 +48,14 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/approve-quality', [EvaluationController::class, 'approveQuality'])->name('evaluations.approve-quality');
     Route::post('/approve-titles', [EvaluationController::class, 'approveTitles'])->name('evaluations.approve-titles');
 });
-
+// export
 Route::get('/self-evaluations/{id}/export', [ExportController::class, 'exportEvaluation'])
     ->name('evaluations.export')
     ->middleware('auth');
 Route::get('/export-quality-ratings', [ExportController::class, 'exportQualityList'])
     ->name('evaluations.export-quality-ratings');
+Route::get('export/title-nominations', [ExportController::class, 'exportTitleNominations'])
+    ->name('evaluations.export-title-nominations');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/unit-members', [UnitController::class, 'members'])->name('unit.members');

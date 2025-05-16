@@ -97,7 +97,7 @@
           });
           @endphp
           <div class="text-right mt-5">
-            <a href="{{ route('evaluations.export-quality-ratings') }}" class="btn btn-secondary inline-flex items-center gap-3">
+            <a href="{{ route('evaluations.export-title-nominations') }}" class="btn btn-secondary inline-flex items-center gap-3">
               <span class="icomoon icon-download-v2 text-xl"></span>
               <span>Xuất File</span>
             </a>

@@ -126,10 +126,12 @@ class ExportController extends Controller
         // Chuẩn bị dữ liệu cho bảng
         $replacements = [];
         foreach ($evaluations as $index => $evaluation) {
+            $approvedQuality = $evaluation->approved_quality_id ? 
+                $evaluation->approvedQuality->name : $evaluation->quality->name;
             $replacements[] = [
                 'stt' => $index + 1,
                 'ho_ten' => $evaluation->evaluator->full_name ?? '',
-                'muc_xep_loai' => $evaluation->quality->name ?? '',
+                'muc_xep_loai' => $approvedQuality ?? '',
                 'dien_giai' => $this->formatEvidences($evaluation)
             ];
         }
@@ -167,5 +169,152 @@ class ExportController extends Controller
         }
         
         return implode("\n", $evidences);
+    }
+
+    /**
+     * Xuất danh sách đề nghị danh hiệu thi đua và khen thưởng
+     */
+    public function exportTitleNominations(Request $request)
+    {
+        $user = auth()->user();
+        if ($user->role->name !== 'Trưởng đơn vị') {
+            return redirect()->back()->with('error', 'Bạn không có quyền thực hiện hành động này.');
+        }
+        
+        // Lấy tham số từ request
+        $year = $request->input('year', now()->year - 1);
+        $period = Periods::where('year', $year)->first();
+        
+        if (!$period) {
+            return back()->with('error', 'Không tìm thấy kỳ đánh giá cho năm đã chọn.');
+        }
+        
+        // Lấy danh sách đề nghị danh hiệu của đơn vị
+        $nominations = Evaluation::with(['evaluator', 'title', 'approvedTitle', 'reward', 'quality'])
+            ->where('period_id', $period->id)
+            ->where('unit_id', $user->unit_id)
+            ->where('evaluator_id', '!=', $user->id) // Loại trừ trưởng đơn vị
+            ->orderBy('evaluator_id')
+            ->get();
+        
+        if ($nominations->isEmpty()) {
+            return back()->with('error', 'Không có dữ liệu danh hiệu để xuất file.');
+        }
+        
+        // Tạo file Word mới
+        $templatePath = storage_path('app/templates/title_nominations_template.docx');
+        $templateProcessor = new TemplateProcessor($templatePath);
+        
+        // Điền thông tin cơ bản
+        $templateProcessor->setValue('don_vi', $user->unit->name ?? '');
+        $templateProcessor->setValue('nam_hoc', $period->year . ' - ' . ($period->year + 1));
+        $templateProcessor->setValue('ngay_to_trinh', date('d/m/Y'));
+        
+        // Phần 1: Danh sách đề nghị danh hiệu thi đua
+        // Chuẩn bị dữ liệu cho bảng danh hiệu
+        $titleReplacements = [];
+        foreach ($nominations as $index => $nomination) {
+            $approvedTitle = $nomination->approved_title_id ? $nomination->approvedTitle->name : $nomination->title->name;
+            
+            $titleReplacements[] = [
+                'stt' => $index + 1,
+                'ho_ten' => $nomination->evaluator->full_name ?? '',
+                'xlcl' => $nomination->quality->name ?? '',
+                'danh_hieu' => $approvedTitle ?? '',
+                'trich_ngang' => $this->formatAchievements($nomination),
+                'ghi_chu' => ''
+            ];
+        }
+        
+        // Áp dụng dữ liệu vào bảng danh hiệu
+        $templateProcessor->cloneRowAndSetValues('stt', $titleReplacements);
+        
+        // Phần 2: Đề nghị khen thưởng
+        // Chuẩn bị dữ liệu cho bảng khen thưởng
+        $rewardReplacements = [];
+        $rewardCounter = 1;
+        foreach ($nominations as $nomination) {
+            // Chỉ lấy những nomination có hình thức khen thưởng
+            if (!empty($nomination->reward_id) && $nomination->reward->name != 'Không') {
+                $rewardReplacements[] = [
+                    'reward_stt' => $rewardCounter,
+                    'reward_ten' => $nomination->evaluator->full_name ?? '',
+                    'hinh_thuc_khen_thuong' => $this->formatRewardType($nomination->reward->name),
+                    'tom_tat' => $this->formatRewardAchievements($nomination)
+                ];
+                $rewardCounter++;
+            }
+        }
+        
+        // Áp dụng dữ liệu vào bảng khen thưởng nếu có
+        if (!empty($rewardReplacements)) {
+            $templateProcessor->cloneRowAndSetValues('reward_stt', $rewardReplacements);
+        } else {
+            // Nếu không có đề nghị khen thưởng, có thể xóa phần này hoặc để trống
+            $templateProcessor->setValue('reward_stt', '');
+            $templateProcessor->setValue('reward_ten', '');
+            $templateProcessor->setValue('hinh_thuc_khen_thuong', '');
+            $templateProcessor->setValue('tom_tat', '');
+        }
+        
+        // Tạo tên file kết quả
+        $fileName = 'Danh_sach_danh_hieu_thi_dua_' . $user->unit->name . '_' . $period->year . '.docx';
+        $fileName = str_replace(' ', '_', $fileName);
+        
+        // Lưu file tạm thời
+        $tempFilePath = storage_path('app/temp/' . $fileName);
+        $templateProcessor->saveAs($tempFilePath);
+        
+        // Tải file về
+        return response()->download($tempFilePath, $fileName)->deleteFileAfterSend(true);
+    }
+
+    /**
+     * Định dạng thành tích từ evaluation
+     */
+    private function formatAchievements(Evaluation $evaluation)
+    {
+        $achievements = [];
+        // Thêm thành tích từ field achievement
+        if (!empty(trim($evaluation->achievement))) {
+            $achievements[] = '- ' . strip_tags($evaluation->achievement);
+        }
+        
+        return implode("\n", $achievements);
+    }
+
+    /**
+     * Định dạng thành tích cho phần khen thưởng
+     */
+    private function formatRewardAchievements(Evaluation $evaluation)
+    {
+        $achievements = [];
+        
+        // Thêm thành tích từ field achievement với format chi tiết hơn
+        if (!empty(trim($evaluation->achievement))) {
+            $achievementText = strip_tags($evaluation->achievement);
+            
+            // Có thể thêm tiền tố hoặc định dạng theo mẫu
+            $achievements[] = $achievementText;
+        }
+        
+        
+        return implode("\n", $achievements);
+    }
+
+    /**
+     * Định dạng loại khen thưởng
+     */
+    private function formatRewardType($rewardName)
+    {
+        $rewardTypes = [
+            'Giấy khen' => 'Giấy khen Hiệu trưởng',
+            'Bằng khen' => 'Bằng khen (BK)',
+            'Kỷ niệm chương' => 'Kỷ niệm chương (KNC)',
+            'Huân chương Lao động' => 'Huân chương Lao động (HCLĐ)',
+            // Thêm các mapping khác nếu cần
+        ];
+        
+        return $rewardTypes[$rewardName] ?? $rewardName;
     }
 }
