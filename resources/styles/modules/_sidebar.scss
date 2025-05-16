@@ -1,5 +1,33 @@
+// Sidebar styling - fix sidebar collapse
+.sidebar {
+    transition: all 0.3s ease-in-out;
+    min-width: 20%;
+    width: 20%;
+    position: relative;
+    overflow: hidden;
+    
+    @media (max-width: 1024px) {
+        min-width: 280px;
+        width: 280px;
+    }
+}
+
+// Khi sidebar ẩn
+.sidebar-hidden {
+    min-width: 0 !important;
+    width: 0 !important; 
+    padding: 0 !important;
+    margin: 0 !important;
+    opacity: 0;
+    visibility: hidden;
+    overflow: hidden;
+    transform: translateX(-100%);
+}
+
+// Menu styling
 .menu {
     min-height: calc(100vh - 64px);
+    overflow-y: auto;
     .has-menu-item {
         @apply relative;
         &::before {
@@ -48,6 +76,58 @@
     }
 }
 
-aside {
-    @apply border-r-1 border-primary-200;
+// Main content styling
+.main-content {
+    transition: all 0.3s ease-in-out;
+    
+    &.content-expanded {
+        width: 100% !important;
+    }
+}
+
+// Body class khi sidebar đã collapse
+.sidebar-collapsed {
+    .sidebar {
+        min-width: 0 !important;
+        width: 0 !important;
+        overflow: hidden;
+        padding: 0;
+    }
+    
+    .main-content {
+        width: 100% !important;
+    }
+}
+
+// Animation for sidebar transitions
+@keyframes slideOut {
+    0% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+}
+
+@keyframes slideIn {
+    0% {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+// Mobile-specific styles
+@media (max-width: 768px) {
+    .sidebar:not(.sidebar-hidden) {
+        position: fixed;
+        z-index: 40;
+        height: calc(100vh - 5rem);
+        box-shadow: 2px 0px 10px rgba(0, 0, 0, 0.1);
+    }
 }

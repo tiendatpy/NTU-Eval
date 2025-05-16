@@ -8,8 +8,30 @@
     .profile-popup {
         animation: slideDown 0.3s ease-in-out;
     }
+    
+    // Hamburger menu styling
+    .hamburger-menu {
+        button {
+            @apply p-2 rounded-lg hover:bg-gray-100 transition-all duration-200;
+            
+            span {
+                @apply transition-transform duration-300;
+            }
+        }
         
+        // Styling for hamburger menu when sidebar is collapsed
+        .sidebar-collapsed & {
+            button {
+                @apply bg-gray-100;
+                
+                span.icon-menu {
+                    transform: rotate(90deg);
+                }
+            }
+        }
+    }
 }
+
 @keyframes slideDown {
     0% {
         opacity: 0;
@@ -19,5 +41,21 @@
         opacity: 1;
         margin-top: 0;
     }
-    
+}
+
+// Media queries for responsive header
+@media (max-width: 1024px) {
+    .header {
+        .header-left {
+            @apply gap-4;
+        }
+        
+        .hamburger-menu {
+            @apply order-1;
+        }
+        
+        .logo {
+            @apply order-2;
+        }
+    }
 }

@@ -121,7 +121,7 @@ module.exports = {
             paddingRight: '16px',
           },
           '@screen xl': {
-            maxWidth: '1360px',
+            // maxWidth: '1440px',
           },
         },
         '.container-fluid': {
