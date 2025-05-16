@@ -30,7 +30,7 @@
               <th class="w-10p">Danh Hiệu</th>
               <th class="w-10p">Hình Thức <br> Khen Thưởng</th>
               <th class="w-20p">Tóm Tắt Thành Tích</th>
-              <th class="w-15p">NX Ưu, Khuyết Điểm</th>
+              <th class="w-15p">Tự Nhận Xét</th>
               <th class="w-15p">Góp Ý</th>
               <th class="w-15p">Duyệt</th>
             </tr>
@@ -67,9 +67,9 @@
                       </div>
                     </div>
                     <!-- Phần feedback -->
-                    <div class="feedback-section">
+                    <div class="feedback-section mx-auto">
                       <button type="button" 
-                              class="btn btn-additional w-full edit-btn flex items-center justify-center gap-2" 
+                              class="btn btn-additional edit-btn flex items-center justify-center gap-2" 
                               data-id="{{ $nomination->id }}"   
                               data-feedback="{{ $nomination->feedback }}"
                               title="Thêm nhận xét">
@@ -97,7 +97,7 @@
           });
           @endphp
           <div class="text-right mt-5">
-            <a href="" class="btn btn-secondary inline-flex items-center gap-3">
+            <a href="{{ route('evaluations.export-quality-ratings') }}" class="btn btn-secondary inline-flex items-center gap-3">
               <span class="icomoon icon-download-v2 text-xl"></span>
               <span>Xuất File</span>
             </a>

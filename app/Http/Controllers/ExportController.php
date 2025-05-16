@@ -129,7 +129,7 @@ class ExportController extends Controller
             $replacements[] = [
                 'stt' => $index + 1,
                 'ho_ten' => $evaluation->evaluator->full_name ?? '',
-                'muc_xep_loai' => $evaluations->quality->name ?? '',
+                'muc_xep_loai' => $evaluation->quality->name ?? '',
                 'dien_giai' => $this->formatEvidences($evaluation)
             ];
         }
@@ -164,16 +164,6 @@ class ExportController extends Controller
                     $evidences[] = '- ' . strip_tags($detail->evidence);
                 }
             }
-        }
-        
-        // Thêm thông tin thành tích đặc biệt từ trường achievement
-        if ($evaluation->achievement && !empty(trim($evaluation->achievement))) {
-            $evidences[] = '- ' . strip_tags($evaluation->achievement);
-        }
-        
-        // Thêm nhận xét của trưởng đơn vị nếu có
-        if ($evaluation->feedback && !empty(trim($evaluation->feedback))) {
-            $evidences[] = '- ' . strip_tags($evaluation->feedback);
         }
         
         return implode("\n", $evidences);
