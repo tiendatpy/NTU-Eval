@@ -10,7 +10,7 @@ export default class ModTitleApproval {
     this.$popup = this.$el.find('.js-popup');
     this.$closeButtons = this.$el.find('.close-popup');
     this.$feedbackForm = this.$el.find('.edit-feedback-form');
-    this.$feedbackInput = this.$el.find('.feedback-nomination');
+    this.$feedbackInput = this.$el.find('#feedback-nomination');
     this.$feedbackPopup = this.$el.find('.feedback-popup');
     
     // Lưu trữ các nhận xét tạm thời
@@ -19,7 +19,6 @@ export default class ModTitleApproval {
   
   init() {
     this.bindEvents();
-    this.initCKEditor();
   }
   
   bindEvents() {
@@ -100,6 +99,12 @@ export default class ModTitleApproval {
     // Lưu id hiện tại để sử dụng trong handleFeedbackSubmit
     this.currentNominationId = id;
     
+    // Hiển thị popup trước
+    this.$popup.removeClass('hidden');
+    
+    // Sau đó mới khởi tạo CKEditor (nếu chưa khởi tạo)
+    this.initCKEditor();
+    
     // Hiển thị nội dung feedback hiện tại hoặc từ bộ nhớ tạm
     const currentFeedback = this.tempFeedbacks[id] || feedback || '';
     
@@ -109,12 +114,14 @@ export default class ModTitleApproval {
     } else {
       this.$feedbackInput.val(currentFeedback);
     }
-    
-    // Hiển thị popup
-    this.$popup.removeClass('hidden');
   }
   
   hidePopup() {
+    // Hủy instance CKEditor trước khi đóng popup
+    if (typeof CKEDITOR !== 'undefined' && CKEDITOR.instances['feedback-nomination']) {
+      CKEDITOR.instances['feedback-nomination'].destroy();
+    }
+    
     this.$popup.addClass('hidden');
   }
   
@@ -138,6 +145,11 @@ export default class ModTitleApproval {
     
     // Hiển thị thông báo nhận xét đã được ghi nhận
     alert('Đã ghi nhận nhận xét. Nhận xét sẽ được lưu khi bạn nhấn nút "Xác nhận" duyệt danh hiệu.');
+    
+    // Hủy instance CKEditor trước khi đóng popup để tránh lỗi
+    if (typeof CKEDITOR !== 'undefined' && CKEDITOR.instances['feedback-nomination']) {
+      CKEDITOR.instances['feedback-nomination'].destroy();
+    }
     
     // Đóng popup
     this.hidePopup();
