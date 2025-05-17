@@ -45,7 +45,7 @@ export default class Header {
         this.$hamburgerMenu.on('click', () => this.toggleSidebar());
         
         // Xử lý responsive
-        $(window).on('resize', () => this.handleResize());
+        // $(window).on('resize', () => this.handleResize());
     }
 
     toggleProfilePopup(event) {
@@ -67,40 +67,40 @@ export default class Header {
             this.$mainContent.addClass('content-expanded');
             
             // Animate icon hamburger menu
-            this.$hamburgerMenu.find('span').removeClass('icon-menu-alt-1').addClass('icon-menu');
+            this.$hamburgerMenu.find('span').removeClass('icon-menu-alt-1').addClass('icon-close');
         } else {
             // Nếu sidebar đang ẩn, hiển thị nó
             this.$sidebar.removeClass('sidebar-hidden');
             this.$mainContent.removeClass('content-expanded');
             
             // Animate icon hamburger menu
-            this.$hamburgerMenu.find('span').removeClass('icon-menu').addClass('icon-menu-alt-1');
+            this.$hamburgerMenu.find('span').removeClass('icon-close').addClass('icon-menu-alt-1');
         }
         
         // Đảo ngược trạng thái
         this.sidebarVisible = !this.sidebarVisible;
     }
     
-    handleResize() {
-        const isSmallScreen = window.innerWidth < 1024;
+    // handleResize() {
+    //     const isSmallScreen = window.innerWidth < 1024;
         
-        // Nếu đang ở màn hình nhỏ và sidebar đang hiển thị, ẩn nó đi
-        if (isSmallScreen && this.sidebarVisible) {
-            this.sidebarVisible = false;
-            $('body').addClass('sidebar-collapsed');
-            this.$sidebar.addClass('sidebar-hidden');
-            this.$mainContent.addClass('content-expanded');
-            this.$hamburgerMenu.find('span').removeClass('icon-menu-alt-1').addClass('icon-menu');
-        } 
-        // Nếu đang ở màn hình lớn và sidebar đang ẩn (và không phải do người dùng click), hiển thị nó
-        else if (!isSmallScreen && !this.sidebarVisible && !$('body').hasClass('user-collapsed')) {
-            this.sidebarVisible = true;
-            $('body').removeClass('sidebar-collapsed');
-            this.$sidebar.removeClass('sidebar-hidden');
-            this.$mainContent.removeClass('content-expanded');
-            this.$hamburgerMenu.find('span').removeClass('icon-menu').addClass('icon-menu-alt-1');
-        }
-    }
+    //     // Nếu đang ở màn hình nhỏ và sidebar đang hiển thị, ẩn nó đi
+    //     if (isSmallScreen && this.sidebarVisible) {
+    //         this.sidebarVisible = false;
+    //         $('body').addClass('sidebar-collapsed');
+    //         this.$sidebar.addClass('sidebar-hidden');
+    //         this.$mainContent.addClass('content-expanded');
+    //         this.$hamburgerMenu.find('span').removeClass('icon-menu-alt-1').addClass('icon-menu');
+    //     } 
+    //     // Nếu đang ở màn hình lớn và sidebar đang ẩn (và không phải do người dùng click), hiển thị nó
+    //     else if (!isSmallScreen && !this.sidebarVisible && !$('body').hasClass('user-collapsed')) {
+    //         this.sidebarVisible = true;
+    //         $('body').removeClass('sidebar-collapsed');
+    //         this.$sidebar.removeClass('sidebar-hidden');
+    //         this.$mainContent.removeClass('content-expanded');
+    //         this.$hamburgerMenu.find('span').removeClass('icon-menu').addClass('icon-menu-alt-1');
+    //     }
+    // }
 
     logout() {
         this.$logoutButton.closest('form').on('submit', (e) => e.preventDefault());

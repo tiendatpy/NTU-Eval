@@ -15,7 +15,7 @@
     <x-toast />
     @include('globals.header')
     <div class="dashboard-layout relative flex pt-32 overflow-y-hidden">
-        <aside class="sidebar bg-white relative left-0 bottom-0 w-20p down_lg:hidden xl:text-lg">
+        <aside class="sidebar bg-white relative left-0 bottom-0 w-20p xl:text-lg">
             @include('globals.sidebar')
         </aside>
         <main class="main-content bg-primary-050 w-full lg:w-80p p-8 relative">
