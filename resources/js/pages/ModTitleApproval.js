@@ -15,10 +15,12 @@ export default class ModTitleApproval {
     
     // Lưu trữ các nhận xét tạm thời
     this.tempFeedbacks = {};
+    this.currentNominationId = null;
   }
   
   init() {
     this.bindEvents();
+    this.initCKEditor();
   }
   
   bindEvents() {
@@ -53,17 +55,22 @@ export default class ModTitleApproval {
   }
   
   initCKEditor() {
-    // Nếu đã load CKEDITOR
-    if (typeof CKEDITOR !== 'undefined') {
-      CKEDITOR.replace('feedback-nomination', {
-        height: 200,
-        toolbar: [
-          { name: 'basicstyles', items: ['Bold', 'Italic', 'Underline', 'Strike'] },
-          { name: 'paragraph', items: ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent'] },
-          { name: 'links', items: ['Link', 'Unlink'] },
-          { name: 'tools', items: ['Maximize'] }
-        ]
-      });
+    // Kiểm tra xem có textarea feedback-nomination không
+    const $textarea = this.$feedbackInput;
+    
+    if ($textarea.length > 0 && typeof CKEDITOR !== 'undefined') {
+      // Quan trọng: Kiểm tra instance đã tồn tại chưa để tránh lỗi "already attached"
+      if (!CKEDITOR.instances['feedback-nomination']) {
+        CKEDITOR.replace('feedback-nomination', {
+          height: 200,
+          toolbar: [
+            { name: 'basicstyles', items: ['Bold', 'Italic', 'Underline', 'Strike'] },
+            { name: 'paragraph', items: ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent'] },
+            { name: 'links', items: ['Link', 'Unlink'] },
+            { name: 'tools', items: ['Maximize'] }
+          ]
+        });
+      }
     }
   }
   
@@ -94,7 +101,7 @@ export default class ModTitleApproval {
   showFeedbackPopup(e) {
     const button = $(e.currentTarget);
     const id = button.data('id');
-    const feedback = button.data('feedback');
+    const feedback = button.attr('data-feedback') || '';
     
     // Lưu id hiện tại để sử dụng trong handleFeedbackSubmit
     this.currentNominationId = id;
@@ -102,26 +109,23 @@ export default class ModTitleApproval {
     // Hiển thị popup trước
     this.$popup.removeClass('hidden');
     
-    // Sau đó mới khởi tạo CKEditor (nếu chưa khởi tạo)
-    this.initCKEditor();
-    
     // Hiển thị nội dung feedback hiện tại hoặc từ bộ nhớ tạm
     const currentFeedback = this.tempFeedbacks[id] || feedback || '';
     
-    // Đặt giá trị feedback vào editor
+    // Đặt giá trị feedback vào editor - tương tự như ModAllTitleNominations
     if (typeof CKEDITOR !== 'undefined' && CKEDITOR.instances['feedback-nomination']) {
       CKEDITOR.instances['feedback-nomination'].setData(currentFeedback);
     } else {
+      // Đây là fallback nếu CKEditor chưa load xong
       this.$feedbackInput.val(currentFeedback);
+      // Thử khởi tạo CKEditor một lần nữa
+      this.initCKEditor();
     }
   }
   
   hidePopup() {
-    // Hủy instance CKEditor trước khi đóng popup
-    if (typeof CKEDITOR !== 'undefined' && CKEDITOR.instances['feedback-nomination']) {
-      CKEDITOR.instances['feedback-nomination'].destroy();
-    }
-    
+    // KHÔNG hủy instance CKEditor khi đóng popup - đây là điểm khác biệt quan trọng
+    // Chỉ ẩn popup đi
     this.$popup.addClass('hidden');
   }
   
@@ -138,22 +142,22 @@ export default class ModTitleApproval {
     
     // Lưu feedback vào bộ nhớ tạm
     const nominationId = this.currentNominationId;
-    this.tempFeedbacks[nominationId] = feedbackValue;
-    
-    // Cập nhật data-feedback cho button tương ứng
-    $(`.edit-btn[data-id="${nominationId}"]`).data('feedback', feedbackValue);
-    
-    // Hiển thị thông báo nhận xét đã được ghi nhận
-    alert('Đã ghi nhận nhận xét. Nhận xét sẽ được lưu khi bạn nhấn nút "Xác nhận" duyệt danh hiệu.');
-    
-    // Hủy instance CKEditor trước khi đóng popup để tránh lỗi
-    if (typeof CKEDITOR !== 'undefined' && CKEDITOR.instances['feedback-nomination']) {
-      CKEDITOR.instances['feedback-nomination'].destroy();
+    if (nominationId) {
+      this.tempFeedbacks[nominationId] = feedbackValue;
+      
+      // Cập nhật data-feedback cho button tương ứng
+      // Sử dụng attr thay vì data để đảm bảo cập nhật đồng thời cả attribute HTML
+      $(`.edit-btn[data-id="${nominationId}"]`).attr('data-feedback', feedbackValue);
+      
     }
     
-    // Đóng popup
+    // Đóng popup (không hủy CKEditor)
     this.hidePopup();
   }
 }
 
-new ModTitleApproval('.mod-title-approval').init();
+// Đảm bảo DOM đã sẵn sàng trước khi khởi tạo
+$(document).ready(function() {
+  const app = new ModTitleApproval('.mod-title-approval');
+  app.init();
+});
