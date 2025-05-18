@@ -1,13 +1,40 @@
 @php
- $isUnitLeader = auth()->user() && auth()->user()->role->name === 'Trưởng đơn vị';
+ $isUnitLeader = auth()->user()->role->name === 'Trưởng đơn vị';
 @endphp
 <div class="menu px-6 py-8">
     <ul class="menu-list mb-11">
-        <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer flex items-center gap-8 {{ request()->routeIs('evaluations.index') ? 'active-menu text-states-600' : '' }}">
+        @if($isUnitLeader)
+        <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer flex items-center gap-8 ">
+            <span class="icomoon icon-chart-pie text-2xl"></span>
+            <a class="block w-full" href="">
+                <span>Tổng quan</span>
+            </a>
+        </li>
+        @endif
+        <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer {{ request()->routeIs('evaluations.index') ? 'active-menu text-states-600' : '' }} {{ $isUnitLeader ? 'has-menu-item' : 'flex items-center gap-8' }}">
+            @if ($isUnitLeader)
+            <span class="flex items-center gap-8 ">
+                <span class="icomoon icon-pencil text-2xl"></span>
+                <span>Tự đánh giá</span>
+            </span>
+            <ul class="sub-menu-list pl-24 mt-3 last-mb-none text-black ">
+                <li class="sub-menu-item hover:text-states-400 mb-5">
+                    <a class="block" href="{{ route('evaluations.index')}}">
+                        <span>Cá nhân</span>
+                    </a>
+                </li>
+                <li class="sub-menu-item hover:text-states-400 mb-5">
+                    <a class="block " href="{{ route('unit.evaluations.index') }}">
+                        <span>Đơn vị</span>
+                    </a>
+                </li>
+            </ul>
+            @else
             <span class="icomoon icon-pencil text-2xl"></span>
             <a class="block w-full" href="{{ route('evaluations.index')}}">
                 <span>Tự đánh giá</span>
             </a>
+            @endif
         </li>
         <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer has-menu-item
             {{ request()->routeIs('quality-ratings.list') || request()->routeIs('title-nominations.list') ? 'active-menu active-parent ' : '' }}">

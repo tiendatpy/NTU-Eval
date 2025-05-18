@@ -55,7 +55,7 @@ class EvaluationController extends Controller
         }
 
         // Lấy dữ liệu cần thiết cho form
-        $periods = Periods::all();
+        $periods = Periods::orderBy('year', 'desc')->get();
         $quality = Quality::all();
 
         $titleTypeId = Cache::remember('title_type_id', 86400, function () {

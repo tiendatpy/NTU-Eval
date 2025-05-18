@@ -15,5 +15,10 @@ class Reward extends Model
     {
         return $this->hasMany(Title::class);
     }
+    public function evaluations()
+    {
+        return $this->hasMany(UnitEvaluation::class, 'reward_id');
+    }
+    
 
 }

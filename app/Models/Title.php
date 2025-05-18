@@ -17,14 +17,4 @@ class Title extends Model
         return $this->belongsTo(MetaType::class, 'type_id');
     }
 
-
-    public function nominations()
-    {
-        return $this->hasMany(TitleNomination::class);
-    }
-
-    public function rewardResults()
-    {
-        return $this->hasMany(RewardResult::class);
-    }
 }

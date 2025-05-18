@@ -16,9 +16,4 @@ class Periods extends Model
         return $this->hasMany(Evaluation::class, 'period_id');
     }
 
-    // Quan hệ với TitleNomination
-    public function titleNominations()
-    {
-        return $this->hasMany(TitleNomination::class, 'period_id');
-    }
 }

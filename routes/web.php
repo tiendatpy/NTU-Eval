@@ -3,9 +3,9 @@ use App\Models\Evaluation;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EvaluationController;
-use App\Http\Controllers\TitleNominationController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\UnitController;
+use App\Http\Controllers\UnitEvaluationController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -59,6 +59,17 @@ Route::get('export/title-nominations', [ExportController::class, 'exportTitleNom
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/unit-members', [UnitController::class, 'members'])->name('unit.members');
+});
+
+Route::middleware(['auth'])->group(function () {
+    // Tự đánh giá đơn vị (cho trưởng đơn vị)
+    Route::get('/unit-evaluation', [UnitEvaluationController::class, 'index'])->name('unit.evaluations.index');
+    Route::post('/unit-evaluation', [UnitEvaluationController::class, 'store'])->name('unit.evaluations.store');
+    
+    // // Xem danh sách đánh giá đơn vị 
+    // Route::get('/unit-evaluations/list', [UnitEvaluationController::class, 'getListUnitEvaluations'])
+    //     ->name('unit.evaluations.list');
+    
 });
 
 require __DIR__.'/auth.php';
