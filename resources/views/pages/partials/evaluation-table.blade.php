@@ -214,7 +214,11 @@
       </div>
     </form>
   @else
-    {{-- Hiển thị thông báo nếu là năm khác và chưa có đánh giá --}}
-    <p>Không có dữ liệu đánh giá cho năm này.</p>
+    <div class="alert flex p-4 mb-5 bg-blue-50 border-l-4 border-blue-500 rounded">
+      <span class="icomoon icon-information-circle text-blue-500 mr-3 text-xl"></span>
+      <div>
+        <span class="font-medium">Thông báo:</span> Chưa có dữ liệu đánh giá cho năm học này.
+      </div>
+    </div>
   @endif
 @endif
