@@ -41,7 +41,7 @@
                 <td>
                   <ul>
                     @foreach ($evaluation->details->pluck('evidence')->filter() as $evidence)
-                      <p class="mb-3">- {{ $evidence }}</p>
+                      <p class="mb-3">{!! $evidence !!}</p>
                     @endforeach
                   </ul>
                 </td>

@@ -37,7 +37,7 @@
           <td>{{ $nomination->evaluator->full_name }}</td>
           <td>{{ $nomination->title->name }}</td>
           <td>{{ $nomination->reward->name }}</td>
-          <td>{{ $nomination->achievement }}</td>
+          <td>{!! $nomination->achievement !!}</td>
           <td>
             <span class="flex items-center gap-4">
               <span class="min-w-5 h-5 rounded-full 

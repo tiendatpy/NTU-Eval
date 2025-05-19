@@ -42,9 +42,9 @@
                 <td>{{ $nomination->evaluator->full_name }}</td>
                 <td>{{ $nomination->title->name }}</td>
                 <td>{{ $nomination->reward->name }}</td>
-                <td>{{ $nomination->review }}</td>
-                <td>{{ $nomination->achievement }}</td>
-                <td>{{ $nomination->comment }}</td>
+                <td>{!! $nomination->review !!}</td>
+                <td>{!! $nomination->achievement !!}</td>
+                <td>{!! $nomination->comment !!}</td>
                 <td>
                   <div class="flex flex-col gap-3">
                     <!-- Phần chọn danh hiệu -->
