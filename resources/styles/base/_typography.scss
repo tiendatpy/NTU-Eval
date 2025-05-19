@@ -16,8 +16,12 @@
     @apply no-underline;
   }
 
-  blockquote, dl, dd, h1, h2, h3, h4, h5, h6, hr, figure, p, pre {
+  blockquote, dl, dd, h1, h2, h3, h4, h5, h6, hr, figure, pre {
     @apply mb-12;
+  }
+
+  p {
+    @apply mb-4;
   }
   
   a,
