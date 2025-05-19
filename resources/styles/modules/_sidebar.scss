@@ -125,9 +125,7 @@
 // Mobile-specific styles
 @media (max-width: 768px) {
     .sidebar:not(.sidebar-hidden) {
-        position: fixed;
-        z-index: 40;
+        @apply fixed z-40 custom-box-shadow;
         height: calc(100vh - 5rem);
-        box-shadow: 2px 0px 10px rgba(0, 0, 0, 0.1);
     }
 }

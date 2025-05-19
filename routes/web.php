@@ -22,6 +22,7 @@ Route::get('/', function () {
 Route::middleware(['auth'])->group(function () {
     Route::get('/self-evaluation', [EvaluationController::class, 'index'])->name('evaluations.index');
     Route::post('/self-evaluation', [EvaluationController::class, 'store'])->name('evaluations.store');
+    Route::get('/self-evaluation/result', [EvaluationController::class, 'result'])->name('evaluations.result');
     Route::get('/all-quality-ratings', [EvaluationController::class, 'getListQualityRating'])->name('quality-ratings.list');
     Route::get('/all-title-nominations', [EvaluationController::class, 'getListTitleNomination'])->name('title-nominations.list');
     Route::put('/all-title-nominations/{id}', [EvaluationController::class, 'update'])->name('title-nominations.update');

@@ -47,11 +47,11 @@ class ExportController extends Controller
         foreach ($details as $index => $detail) {
             $i = $index + 1;
             // $templateProcessor->setValue('noi_dung_' . $i, $detail->criteria->name ?? '');
-            $templateProcessor->setValue('ke_khai_' . $i, strip_tags($detail->evidence) ?? '');
+            $templateProcessor->setValue('ke_khai_' . $i, html_entity_decode(strip_tags($detail->evidence)) ?? '');
 
             // Chuyển số điểm thành text
             $rating = '';
-            switch ($detail->score) {
+            switch ($detail->rating) {
                 case 4:
                     $rating = 'Xuất sắc';
                     break;
@@ -71,15 +71,15 @@ class ExportController extends Controller
         // Điền thông tin kết quả và xếp loại
         $templateProcessor->setValue('diem_danh_gia', (string) $evaluation->rating);
         $templateProcessor->setValue('xep_loai', $evaluation->quality->name ?? '');
-        $templateProcessor->setValue('tu_nhan_xet', strip_tags($evaluation->comment) ?? '');
+        $templateProcessor->setValue('tu_nhan_xet', html_entity_decode(strip_tags($evaluation->comment)) ?? '');
 
         // Thông tin đề xuất danh hiệu
         $templateProcessor->setValue('danh_hieu', $evaluation->title->name ?? '');
         $templateProcessor->setValue('khen_thuong', $evaluation->reward->name ?? '');
-        $templateProcessor->setValue('thanh_tich', strip_tags($evaluation->achievement) ?? '');
+        $templateProcessor->setValue('thanh_tich', html_entity_decode(strip_tags($evaluation->achievement)) ?? '');
 
         // Thông tin phê duyệt (nếu có)
-        $templateProcessor->setValue('nx_uu_khuyet_diem', strip_tags($evaluation->feedback) ?? '');
+        $templateProcessor->setValue('nx_uu_khuyet_diem', html_entity_decode(strip_tags($evaluation->feedback)) ?? '');
         $templateProcessor->setValue(
             'xep_loai_duyet',
             $evaluation->approved_quality_id ? $evaluation->approvedQuality->name : ''
@@ -203,7 +203,7 @@ class ExportController extends Controller
         if ($evaluation->details) {
             foreach ($evaluation->details as $detail) {
                 if ($detail->evidence && !empty(trim($detail->evidence))) {
-                    $evidences[] = '- ' . strip_tags($detail->evidence);
+                    $evidences[] = '- ' . html_entity_decode(strip_tags($detail->evidence));
                 }
             }
         }
@@ -318,7 +318,7 @@ class ExportController extends Controller
         $achievements = [];
         // Thêm thành tích từ field achievement
         if (!empty(trim($evaluation->achievement))) {
-            $achievements[] = '- ' . strip_tags($evaluation->achievement);
+            $achievements[] = '- ' . html_entity_decode(strip_tags($evaluation->achievement));
         }
 
         return implode("\n", $achievements);
@@ -333,7 +333,7 @@ class ExportController extends Controller
 
         // Thêm thành tích từ field achievement với format chi tiết hơn
         if (!empty(trim($evaluation->achievement))) {
-            $achievementText = strip_tags($evaluation->achievement);
+            $achievementText = html_entity_decode(strip_tags($evaluation->achievement));
 
             // Có thể thêm tiền tố hoặc định dạng theo mẫu
             $achievements[] = $achievementText;

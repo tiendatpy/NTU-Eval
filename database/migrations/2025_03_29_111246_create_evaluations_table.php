@@ -19,10 +19,10 @@ return new class extends Migration
             $table->foreignId('title_id')->constrained('titles');
             $table->foreignId('approved_title_id')->nullable()->constrained('titles');
             $table->foreignId('reward_id')->constrained('rewards');
-            $table->text('achievement');
-            $table->text('comment')->nullable();
-            $table->text('review')->nullable();
-            $table->text('feedback')->nullable();
+            $table->longText('achievement');
+            $table->longText('comment')->nullable();
+            $table->longText('review')->nullable();
+            $table->longText('feedback')->nullable();
             $table->foreignId('status_id')->constrained('meta_types');
             $table->timestamps();
         });

@@ -20,8 +20,8 @@ return new class extends Migration
             $table->foreignId('title_id')->constrained('titles');
             $table->foreignId('reward_id')->constrained('rewards');
             $table->foreignId('period_id')->constrained('periods');
-            $table->text('evidence')->nullable();
-            $table->text('achievement')->nullable();
+            $table->longText('evidence')->nullable();
+            $table->longText('achievement')->nullable();
             $table->timestamps();
         });
     }

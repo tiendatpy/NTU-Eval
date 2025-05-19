@@ -1,8 +1,8 @@
 export default class ModEvaluation {
     constructor(el) {
         this.$el = $(el);
-        this.$scoreInputs = this.$el.find(".rating");
-        this.$averageScore = this.$el.find(".total-score");
+        this.$ratingInputs = this.$el.find(".rating");
+        this.$averagerating = this.$el.find(".total-rating");
         this.$periodDropdown = this.$el.find(".period-after-evaluation");
     }
 
@@ -10,15 +10,15 @@ export default class ModEvaluation {
         this.bindEvents();
         this.bindAjaxEvents();
         // Tính điểm ban đầu
-        this.calculateAverageScore();
+        this.calculateAverageRating();
     }
 
     bindEvents() {
         // Sử dụng event delegation để đảm bảo các phần tử mới thêm vào vẫn được gắn sự kiện
-        this.$el.on("change", ".rating", () => this.calculateAverageScore());
+        this.$el.on("change", ".rating", () => this.calculateAverageRating());
     }
 
-    calculateAverageScore() {
+    calculateAverageRating() {
         let total = 0;
         let count = 0;
 
@@ -36,9 +36,9 @@ export default class ModEvaluation {
         const average = count > 0 ? (total / count).toFixed(2) : 0;
 
         // Tìm lại phần tử hiển thị điểm trong DOM hiện tại
-        const $currentAverageScore = this.$el.find(".total-score");
-        if ($currentAverageScore.length > 0) {
-            $currentAverageScore.text(average);
+        const $currentAveragerating = this.$el.find(".total-rating");
+        if ($currentAveragerating.length > 0) {
+            $currentAveragerating.text(average);
         }
     }
 
@@ -74,8 +74,8 @@ export default class ModEvaluation {
 
     reinitialize() {
         // Cập nhật lại các selector để trỏ đến các phần tử mới trong DOM
-        this.$scoreInputs = this.$el.find(".rating");
-        this.$averageScore = this.$el.find(".total-score");
+        this.$ratingInputs = this.$el.find(".rating");
+        this.$averagerating = this.$el.find(".total-rating");
         this.$periodDropdown = this.$el.find(".period-after-evaluation");
 
         // Khởi tạo lại CKEditor
@@ -97,7 +97,7 @@ export default class ModEvaluation {
         }
 
         // Tính toán lại điểm trung bình sau khi nội dung đã được cập nhật
-        this.calculateAverageScore();
+        this.calculateAverageRating();
 
         this.bindEvents();
         this.bindAjaxEvents();

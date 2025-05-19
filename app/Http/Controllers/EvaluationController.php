@@ -113,12 +113,12 @@ class EvaluationController extends Controller
 
         // Validate dữ liệu đầu vào
         $request->validate([
-            'classification_id' => 'required|exists:quality,id',
+            'quality_id' => 'required|exists:quality,id',
             'details' => 'required|array',
             'details.*.criteria_id' => 'required|exists:evaluation_criteria,id',
             'details.*.rating' => 'required|numeric|min:1|max:4',
             'details.*.evidence' => 'nullable|string',
-            'comment' => 'nullable|string|max:1000',
+            'comment' => 'nullable|string',
             'title_id' => 'required|exists:titles,id',
             'reward_id' => 'required|exists:rewards,id',
             'achievement' => 'required|string',
@@ -144,44 +144,141 @@ class EvaluationController extends Controller
                 throw new \Exception('Không tìm thấy trạng thái đánh giá.');
             }
 
-            // Tạo đánh giá theo cấu trúc mới
-            $evaluation = Evaluation::create([
-                'evaluator_id' => $user->id,
-                'unit_id' => $user->unit_id,
-                'period_id' => $periodId,
-                'rating' => $finalRating, // Sử dụng trường 'rating' theo migration mới
-                'quality_id' => $request->classification_id, // Sử dụng quality_id thay vì classification_id
-                'approved_quality_id' => null, // Trường này sẽ được điền bởi trưởng đơn vị sau này
-                'title_id' => $request->title_id, // Thêm title_id trực tiếp vào evaluation
-                'approved_title_id' => null, // Trường này sẽ được điền bởi trưởng đơn vị sau này
-                'reward_id' => $request->reward_id, // Thêm reward_id trực tiếp vào evaluation
-                'achievement' => html_entity_decode(strip_tags($request->achievement)), // Thêm thành tích trực tiếp
-                'comment' => html_entity_decode(strip_tags($request->comment)),
-                'review' => null, // Trường này sẽ được điền bởi trưởng đơn vị sau này
-                'feedback' => null, // Trường này sẽ được điền sau này
-                'status_id' => $status->id,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
+            // Kiểm tra xem đã tồn tại đánh giá cho kỳ đánh giá này chưa
+            $existingEvaluation = Evaluation::where('evaluator_id', $user->id)
+                ->where('period_id', $periodId)
+                ->first();
 
-            // Tạo chi tiết đánh giá
-            foreach ($request->details as $detail) {
-                EvaluationDetail::create([
-                    'evaluation_id' => $evaluation->id,
-                    'criteria_id' => $detail['criteria_id'],
-                    'score' => $detail['rating'], // Vẫn giữ score tại bảng chi tiết
-                    'evidence' => html_entity_decode(strip_tags($detail['evidence'])),
+            if ($existingEvaluation) {
+                // Cập nhật đánh giá hiện có
+                $existingEvaluation->update([
+                    'rating' => $finalRating,
+                    'quality_id' => $request->quality_id,
+                    'title_id' => $request->title_id,
+                    'reward_id' => $request->reward_id,
+                    'achievement' => $request->achievement,
+                    'comment' => $request->comment,
+                    'status_id' => $status->id, // Cập nhật lại trạng thái thành "Đang xét duyệt"
+                    'updated_at' => now(),
                 ]);
+
+                // Cập nhật chi tiết đánh giá
+                foreach ($request->details as $detail) {
+                    $existingDetail = EvaluationDetail::where('evaluation_id', $existingEvaluation->id)
+                        ->where('criteria_id', $detail['criteria_id'])
+                        ->first();
+
+                    if ($existingDetail) {
+                        // Cập nhật chi tiết hiện có
+                        $existingDetail->update([
+                            'rating' => $detail['rating'],
+                            'evidence' => $detail['evidence'],
+                        ]);
+                    } else {
+                        // Tạo chi tiết mới nếu không tồn tại
+                        EvaluationDetail::create([
+                            'evaluation_id' => $existingEvaluation->id,
+                            'criteria_id' => $detail['criteria_id'],
+                            'rating' => $detail['rating'],
+                            'evidence' => $detail['evidence'],
+                        ]);
+                    }
+                }
+
+                $evaluation = $existingEvaluation;
+                $message = 'Cập nhật đánh giá thành công.';
+            } else {
+                // Tạo đánh giá mới
+                $evaluation = Evaluation::create([
+                    'evaluator_id' => $user->id,
+                    'unit_id' => $user->unit_id,
+                    'period_id' => $periodId,
+                    'rating' => $finalRating,
+                    'quality_id' => $request->quality_id,
+                    'approved_quality_id' => null,
+                    'title_id' => $request->title_id,
+                    'approved_title_id' => null,
+                    'reward_id' => $request->reward_id,
+                    'achievement' => $request->achievement,
+                    'comment' => $request->comment,
+                    'review' => null,
+                    'feedback' => null,
+                    'status_id' => $status->id,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+
+                // Tạo chi tiết đánh giá
+                foreach ($request->details as $detail) {
+                    EvaluationDetail::create([
+                        'evaluation_id' => $evaluation->id,
+                        'criteria_id' => $detail['criteria_id'],
+                        'rating' => $detail['rating'],
+                        'evidence' => $detail['evidence'],
+                    ]);
+                }
+
+                $message = 'Tự đánh giá thành công.';
             }
 
             DB::commit();
 
             return redirect()->route('evaluations.index')
-                ->with('success', 'Tự đánh giá thành công.');
+                ->with('success', $message);
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', 'Lỗi: ' . $e->getMessage());
         }
+    }
+
+    public function result()
+    {
+        $user = auth()->user();
+        if (!$user) {
+            return redirect()->route('login')->with('error', 'Bạn cần đăng nhập để thực hiện hành động này.');
+        }
+
+        // Lấy kỳ đánh giá của năm hiện tại - 1
+        $currentPeriod = Periods::where('year', now()->year - 1)->first();
+        if (!$currentPeriod) {
+            return back()->with('error', 'Không tìm thấy kỳ đánh giá cho năm hiện tại.');
+        }
+
+        // Tìm đánh giá của người dùng cho kỳ đánh giá đó
+        $evaluation = Evaluation::where('evaluator_id', $user->id)
+            ->where('period_id', $currentPeriod->id)
+            ->with(['details.criteria', 'quality', 'title', 'reward', 'approvedQuality', 'approvedTitle'])
+            ->first();
+
+        if (!$evaluation) {
+            return redirect()->route('evaluations.index')
+                ->with('error', 'Không tìm thấy đánh giá của bạn cho kỳ đánh giá này.');
+        }
+
+        // Lấy tiêu chí đánh giá phù hợp với vai trò
+        $isUnitLeader = $user->role->name === 'Trưởng đơn vị';
+        $managerId = Cache::remember('criteria_category_manager_id', 86400, function () {
+            return MetaType::where('name', 'Viên chức, NLĐ quản lý')->value('id');
+        });
+        $staffId = Cache::remember('criteria_category_staff_id', 86400, function () {
+            return MetaType::where('name', 'Viên chức, NLD không quản lý')->value('id');
+        });
+
+        if ($isUnitLeader) {
+            $criteria = EvaluationCriteria::where('category_id', $managerId)->get();
+        } else {
+            $criteria = EvaluationCriteria::where('category_id', $staffId)->get();
+        }
+
+        $isCurrentYear = true; // Luôn true vì chúng ta đang xem đánh giá năm hiện tại
+
+        // Trả về view với partial evaluation-result
+        return view('pages.self-evaluation-result', compact(
+            'evaluation',
+            'isCurrentYear',
+            'criteria',
+            'isUnitLeader'
+        ));
     }
 
     public function getListQualityRating(Request $request)
@@ -300,7 +397,7 @@ class EvaluationController extends Controller
 
         $nomination = Evaluation::findOrFail($id);
         $nomination->update([
-            'review' => html_entity_decode(strip_tags($request->input('review'))),
+            'review' => $request->input('review'),
         ]);
 
         return redirect()->route('title-nominations.list')
@@ -353,7 +450,7 @@ class EvaluationController extends Controller
                 // Thêm feedback nếu có
                 if (isset($request->nominations_feedback[$id])) {
                     $feedback = $request->nominations_feedback[$id];
-                    $updateData['feedback'] = html_entity_decode(strip_tags($feedback));
+                    $updateData['feedback'] = $feedback;
                 }
 
                 // Cập nhật dữ liệu

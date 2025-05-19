@@ -17,8 +17,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('evaluation_id')->constrained('evaluations');
             $table->foreignId('criteria_id')->constrained('evaluation_criteria');
-            $table->string('evidence')->nullable();
-            $table->string('score');
+            $table->longText('evidence')->nullable();
+            $table->string('rating');
             $table->timestamps();
         });
     }
