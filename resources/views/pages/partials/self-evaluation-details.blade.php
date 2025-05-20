@@ -92,6 +92,24 @@
             </table>
           </div>
         </div>
+        @if(!$isUnitLeader)
+          <div class="user-review mb-5">
+            <h3 class="mb-5">IV. GÓP Ý</h3>
+            <form action="{{ route('all-evaluations.add-review', $evaluation->id) }}" method="post">
+              @csrf
+              <div class="mb-4">
+                <label for="review" class="block mb-2 font-medium">Thêm góp ý của bạn:</label>
+                <textarea id="review" name="review" class="ckeditor border-primary-500 border-1 p-2 w-full rounded-lg" rows="5">{{ $evaluation->review }}</textarea>
+              </div>
+              
+              <div class="flex justify-end">
+                <button type="submit" class="btn btn-primary">
+                  {{ $evaluation->review ? 'Cập nhật góp ý' : 'Gửi góp ý' }}
+                </button>
+              </div>
+            </form>
+          </div>
+        @endif
         
         @if($isUnitLeader)
         <form action="{{ route('all-evaluations.approve-details', $evaluation->id) }}" method="post">
@@ -138,30 +156,44 @@
         </form>
         @elseif($evaluation->feedback)
         <div class="approval-results mb-5">
-          <h3 class="mb-5">IV. ĐÁNH GIÁ CỦA TRƯỞNG ĐƠN VỊ</h3>
-          <div class="bg-blue-50 rounded-lg p-4 border border-blue-200 mb-4">
-            {!! $evaluation->feedback !!}
+          <h3 class="mb-5">V. ĐÁNH GIÁ CỦA TRƯỞNG ĐƠN VỊ</h3>
+          </h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-5">
+            @if($evaluation->approved_quality_id)
+            <div class="bg-blue-50 rounded-lg p-4 border-l-4 border-blue-500">
+              <h4 class="text-sm font-medium text-gray-600 mb-2">Xếp loại được phê duyệt:</h4>
+              <p class="text-base font-semibold">
+                <span class="inline-flex items-center">
+                  <span class="icomoon icon-medal text-yellow-500 mr-2"></span>
+                  {{ $evaluation->approvedQuality->name }}
+                </span>
+              </p>
+            </div>
+            @endif
+            
+            @if($evaluation->approved_title_id)
+            <div class="bg-blue-50 rounded-lg p-4 border-l-4 border-indigo-500">
+              <h4 class="text-sm font-medium text-gray-600 mb-2">Danh hiệu được phê duyệt:</h4>
+              <p class="text-base font-semibold">
+                <span class="inline-flex items-center">
+                  <span class="icomoon icon-award text-indigo-500 mr-2"></span>
+                  {{ $evaluation->approvedTitle->name }}
+                </span>
+              </p>
+            </div>
+            @endif
           </div>
-          
-          @if($evaluation->approved_quality_id)
-          <div class="mb-3">
-            <strong>Xếp loại được phê duyệt:</strong> {{ $evaluation->approvedQuality->name }}
-          </div>
-          @endif
-          
-          @if($evaluation->approved_title_id)
-          <div>
-            <strong>Danh hiệu được phê duyệt:</strong> {{ $evaluation->approvedTitle->name }}
-          </div>
-          @endif
         </div>
         @endif
-        <div class="export-file-btn text-right mt-6">
-          <a href="{{ route('evaluations.export', $evaluation->id) }}" class="btn btn-secondary inline-flex items-center gap-3">
-            <span class="icomoon icon-download-v2 text-xl"></span>
-            <span>Xuất File</span>
-          </a>
-        </div>
+
+        @if($isUnitLeader)
+          <div class="export-file-btn text-right mt-6">
+            <a href="{{ route('evaluations.export', $evaluation->id) }}" class="btn btn-secondary inline-flex items-center gap-3">
+              <span class="icomoon icon-download-v2 text-xl"></span>
+              <span>Xuất File</span>
+            </a>
+          </div>
+        @endif
       </div>
     </div>
   </div>

@@ -24,4 +24,4 @@ export default class ModAllQualityRating {
     
 }
 
-new ModAllQualityRating('.mod-quality-rating').init();
+new ModAllQualityRating('.mod-self-eval-list').init();

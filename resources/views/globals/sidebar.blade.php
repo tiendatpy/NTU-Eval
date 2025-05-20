@@ -36,36 +36,18 @@
             </a>
             @endif
         </li>
-        @if($isUnitLeader)
-        <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer flex items-center gap-8 ">
-            <span class="icomoon icon-clipboard-check text-2xl"></span>
-            <a class="block w-full" href="{{ route('evaluations.list')}}">
-                <span>Phê duyệt</span>
-            </a>
-        </li>
-        @endif
-        <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer has-menu-item
-            {{ request()->routeIs('quality-ratings.list') || request()->routeIs('title-nominations.list') ? 'active-menu active-parent ' : '' }}">
-            <span class="flex items-center gap-8 ">
+        <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer flex items-center gap-8 {{ request()->routeIs('evaluations.list') ? 'active-menu text-states-600' : '' }}">
+            @if($isUnitLeader)
                 <span class="icomoon icon-clipboard-check text-2xl"></span>
-                @if($isUnitLeader)
-                    <span>Tổng hợp</span>
-                @else
+                <a class="block w-full" href="{{ route('evaluations.list')}}">
+                    <span>Phê duyệt</span>
+                </a>
+            @else
+                <span class="icomoon icon-document-search text-2xl"></span>
+                <a class="block w-full" href="{{ route('evaluations.list')}}">
                     <span>Danh sách đánh giá</span>
-                @endif
-            </span>
-            <ul class="sub-menu-list pl-24 mt-3 last-mb-none text-black {{ request()->routeIs('quality-ratings.list') || request()->routeIs('title-nominations.list') ? 'show-submenu' : '' }}">
-                <li class="sub-menu-item hover:text-states-400 mb-5">
-                    <a class="block {{ request()->routeIs('quality-ratings.list') ? 'text-states-600 font-medium' : '' }}" href="{{ route('quality-ratings.list') }}">
-                        <span>Xếp loại chất lượng</span>
-                    </a>
-                </li>
-                <li class="sub-menu-item hover:text-states-400 mb-5">
-                    <a class="block {{ request()->routeIs('title-nominations.list') ? 'text-states-600 font-medium' : '' }}" href="{{ route('title-nominations.list') }}">
-                        <span>Danh hiệu thi đua</span>
-                    </a>
-                </li>
-            </ul>
+                </a>
+            @endif
         </li>
         @if($isUnitLeader)
         <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer flex items-center gap-8 {{ request()->routeIs('unit.members') ? 'active-menu text-states-600' : '' }}">

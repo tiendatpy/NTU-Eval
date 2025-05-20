@@ -3,12 +3,12 @@
 @section('title', 'Danh sách đánh giá')
 
 @section('content')
-<section class="mod-self-eval-result bg-white rounded-2xl py-8">
+<section class="mod-self-eval-list bg-white rounded-2xl py-8">
   <div class="container">
     <div class="flex justify-between items-center mb-7">
       <h2 class="text-base mb-0">Danh Sách Các Phiếu Đánh Giá</h2>
       <div class="flex items-center gap-3">
-        <form id="yearFilterForm" action="{{ route('quality-ratings.list') }}" method="GET" class="flex items-center gap-3">
+        <form id="yearFilterForm" action="{{ route('evaluations.list') }}" method="GET" class="flex items-center gap-3">
           <label for="year" class="font-medium">Năm:</label>
           <select id="year" name="year" class="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-primary-500">
             @foreach($years as $year)
@@ -59,17 +59,19 @@
           </tr>
         @empty
           <tr>
-            <td colspan="5" class="text-center">Không có đánh giá nào trong đơn vị.</td>
+            <td colspan="7" class="text-center">Không có đánh giá nào trong đơn vị.</td>
           </tr>
         @endforelse
       </tbody>
     </table>
-    <div class="text-right mt-5">
-      <a href="{{ route('evaluations.export-quality-ratings', $evaluations->first()->id) }}" class="btn btn-primary inline-flex items-center gap-3" title="Xuất danh sách tự đánh giá">
-        <span class="icomoon icon-download-v2 text-xl"></span>
-        <span>Xuất File</span>
-      </a>
-    </div>
+    @if ($isUnitLeader)
+      <div class="text-right mt-5">
+        <a href="{{ route('evaluations.export-quality-ratings', $evaluations->first()->id) }}" class="btn btn-primary inline-flex items-center gap-3" title="Xuất danh sách tự đánh giá">
+          <span class="icomoon icon-download-v2 text-xl"></span>
+          <span>Xuất File</span>
+        </a>
+      </div>
+    @endif
   </div>
 </section>
 @endsection
