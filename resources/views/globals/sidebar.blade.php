@@ -11,20 +11,20 @@
             </a>
         </li>
         @endif
-        <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer {{ request()->routeIs('evaluations.index') ? 'active-menu text-states-600' : '' }} {{ $isUnitLeader ? 'has-menu-item' : 'flex items-center gap-8' }}">
+        <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer {{ request()->routeIs('evaluations.index') && !$isUnitLeader ? 'active-menu text-states-600' : '' }} {{ $isUnitLeader ? 'has-menu-item' : 'active-menu active-parent' }}">
             @if ($isUnitLeader)
             <span class="flex items-center gap-8 ">
                 <span class="icomoon icon-pencil text-2xl"></span>
                 <span>Tự đánh giá</span>
             </span>
-            <ul class="sub-menu-list pl-24 mt-3 last-mb-none text-black ">
+            <ul class="sub-menu-list pl-24 mt-3 last-mb-none text-black {{ request()->routeIs('evaluations.index') || request()->routeIs('unit.evaluations.index') ? 'show-submenu' : '' }} ">
                 <li class="sub-menu-item hover:text-states-400 mb-5">
-                    <a class="block" href="{{ route('evaluations.index')}}">
+                    <a class="block {{ request()->routeIs('evaluations.index') ? 'text-states-600 font-medium' : '' }}" href="{{ route('evaluations.index')}}">
                         <span>Cá nhân</span>
                     </a>
                 </li>
                 <li class="sub-menu-item hover:text-states-400 mb-5">
-                    <a class="block " href="{{ route('unit.evaluations.index') }}">
+                    <a class="block {{ request()->routeIs('unit.evaluations.index') ? 'text-states-600 font-medium' : '' }}" href="{{ route('unit.evaluations.index') }}">
                         <span>Đơn vị</span>
                     </a>
                 </li>
