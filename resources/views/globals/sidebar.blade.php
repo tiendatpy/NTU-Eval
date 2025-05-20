@@ -36,12 +36,20 @@
             </a>
             @endif
         </li>
+        @if($isUnitLeader)
+        <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer flex items-center gap-8 ">
+            <span class="icomoon icon-clipboard-check text-2xl"></span>
+            <a class="block w-full" href="{{ route('evaluations.list')}}">
+                <span>Phê duyệt</span>
+            </a>
+        </li>
+        @endif
         <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer has-menu-item
             {{ request()->routeIs('quality-ratings.list') || request()->routeIs('title-nominations.list') ? 'active-menu active-parent ' : '' }}">
             <span class="flex items-center gap-8 ">
                 <span class="icomoon icon-clipboard-check text-2xl"></span>
                 @if($isUnitLeader)
-                    <span>Phê duyệt</span>
+                    <span>Tổng hợp</span>
                 @else
                     <span>Danh sách đánh giá</span>
                 @endif

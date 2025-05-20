@@ -24,6 +24,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/self-evaluation', [EvaluationController::class, 'store'])->name('evaluations.store');
     Route::get('/self-evaluation/result', [EvaluationController::class, 'result'])->name('evaluations.result');
     Route::get('/all-quality-ratings', [EvaluationController::class, 'getListQualityRating'])->name('quality-ratings.list');
+    Route::get('/all-evaluations', [EvaluationController::class, 'getListEvaluation'])->name('evaluations.list');
+    // Route::get('/all-evaluations/{id}', [EvaluationController::class, 'show'])->name('evaluations.show');
+
     Route::get('/all-title-nominations', [EvaluationController::class, 'getListTitleNomination'])->name('title-nominations.list');
     Route::put('/all-title-nominations/{id}', [EvaluationController::class, 'update'])->name('title-nominations.update');
 });
@@ -49,6 +52,14 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/approve-quality', [EvaluationController::class, 'approveQuality'])->name('evaluations.approve-quality');
     Route::post('/approve-titles', [EvaluationController::class, 'approveTitles'])->name('evaluations.approve-titles');
 });
+
+Route::get('all-evaluations/{evaluation}/details', [EvaluationController::class, 'viewDetails'])
+    ->name('all-evaluations.view-details')
+    ->middleware('auth');
+Route::post('all-evaluations/{evaluation}/approve-details', [EvaluationController::class, 'approveDetails'])
+    ->name('all-evaluations.approve-details')
+    ->middleware('auth');
+
 // export
 Route::get('/self-evaluations/{id}/export', [ExportController::class, 'exportEvaluation'])
     ->name('evaluations.export')
@@ -67,9 +78,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/unit-evaluation', [UnitEvaluationController::class, 'index'])->name('unit.evaluations.index');
     Route::post('/unit-evaluation', [UnitEvaluationController::class, 'store'])->name('unit.evaluations.store');
     
-    // // Xem danh sách đánh giá đơn vị 
-    // Route::get('/unit-evaluations/list', [UnitEvaluationController::class, 'getListUnitEvaluations'])
-    //     ->name('unit.evaluations.list');
     
 });
 

@@ -219,6 +219,7 @@ class EvaluationController extends Controller
                 }
 
                 $message = 'Tự đánh giá thành công.';
+                
             }
 
             DB::commit();
@@ -389,6 +390,108 @@ class EvaluationController extends Controller
         }
     }
 
+    public function getListEvaluation(Request $request)
+    {
+        $user = auth()->user();
+        if (!$user) {
+            return redirect()->route('login')->with('error', 'Bạn cần đăng nhập để thực hiện hành động này.');
+        }
+
+        // Lấy danh sách các năm để lọc
+        $years = Periods::orderBy('year', 'desc')->pluck('year')->unique();
+
+        // Lấy năm được chọn, mặc định là năm hiện tại - 1
+        $defaultYear = now()->year - 1;
+
+        // Kiểm tra xem năm mặc định có trong danh sách năm không
+        if (!$years->contains($defaultYear)) {
+            $defaultYear = $years->first(); // Nếu không có, lấy năm gần nhất
+        }
+
+        $selectedYear = $request->input('year', $defaultYear);
+
+        // Lấy period_id từ năm được chọn
+        $period = Periods::where('year', $selectedYear)->first();
+
+        if (!$period) {
+            return back()->with('error', 'Không tìm thấy kỳ đánh giá cho năm đã chọn.');
+        }
+
+        // Xây dựng query cơ bản
+        $query = Evaluation::where('period_id', $period->id)
+            ->with([
+                'evaluator',
+                'quality',
+                'approvedQuality',
+                'title',
+                'approvedTitle',
+                'reward',
+                'status',
+                'unit'
+            ])->orderBy('created_at', 'asc');
+        // Nếu là trưởng đơn vị, lấy tất cả đánh giá trong đơn vị
+        if ($user->role->name === 'Trưởng đơn vị') {
+            $query->where('unit_id', $user->unit_id);
+        }
+        // Nếu là nhân viên thường, chỉ lấy đánh giá của bản thân
+        else {
+            $query->where('evaluator_id', $user->id);
+        }
+
+        // Lọc theo đơn vị nếu có
+        if ($request->has('unit_id') && $request->unit_id) {
+            $query->where('unit_id', $request->unit_id);
+        }
+
+        // Lọc theo xếp loại chất lượng nếu có
+        if ($request->has('quality_id') && $request->quality_id) {
+            $query->where('quality_id', $request->quality_id);
+        }
+
+        // Lọc theo danh hiệu thi đua nếu có
+        if ($request->has('title_id') && $request->title_id) {
+            $query->where('title_id', $request->title_id);
+        }
+
+        // Lọc theo trạng thái nếu có
+        if ($request->has('status_id') && $request->status_id) {
+            $query->where('status_id', $request->status_id);
+        }
+
+        // Lấy danh sách đánh giá đã lọc
+        $evaluations = $query->orderBy('created_at', 'desc')->paginate(10);
+
+        // Lấy danh sách xếp loại chất lượng để hiện thị trong dropdown filter
+        $qualities = Quality::all();
+
+        // Lấy danh sách danh hiệu thi đua để hiển thị trong dropdown filter
+        $titleTypeId = Cache::remember('title_type_id', 86400, function () {
+            return MetaType::where('category', 'type_title')
+                ->where('name', 'Cá nhân')
+                ->value('id');
+        });
+        $titles = Title::where('type_id', $titleTypeId)->get();
+
+        // Lấy danh sách trạng thái để hiển thị trong dropdown filter
+        $statuses = MetaType::where('category', 'evaluation_status')->get();
+
+        // Return view hoặc JSON data tùy theo request type
+        if ($request->ajax()) {
+            return response()->json([
+                'html' => view('pages.partials.evaluation-list-table', compact('evaluations'))->render(),
+            ]);
+        }
+
+        return view('pages.unit-leader.self-evaluation-approval', compact(
+            'evaluations',
+            'years',
+            'selectedYear',
+            'qualities',
+            'titles',
+            'statuses'
+        ));
+    }
+
     public function update(Request $request, $id)
     {
         $request->validate([
@@ -404,6 +507,25 @@ class EvaluationController extends Controller
             ->with('success', 'Đã cập nhật góp ý.');
     }
 
+    public function approve(Request $request, $id)
+    {
+        $user = auth()->user();
+
+        if ($user->role->name !== 'Trưởng đơn vị') {
+            return back()->with('error', 'Bạn không có quyền thực hiện hành động này.');
+        }
+
+        $nomination = Evaluation::findOrFail($id);
+        $nomination->update([
+            'status_id' => MetaType::where('category', 'evaluation_status')
+                ->where('name', 'Đã phê duyệt')
+                ->firstOrFail()
+                ->id,
+        ]);
+
+        return redirect()->route('title-nominations.list')
+            ->with('success', 'Đã phê duyệt danh hiệu thành công.');
+    }
     public function approveTitles(Request $request)
     {
         $user = auth()->user();
@@ -504,6 +626,98 @@ class EvaluationController extends Controller
             DB::commit();
             return redirect()->route('quality-ratings.list')
                 ->with('success', 'Đã phê duyệt xếp loại thành công.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Có lỗi xảy ra: ' . $e->getMessage());
+        }
+    }
+
+    public function viewDetails(Evaluation $evaluation)
+    {
+        $user = auth()->user();
+        if (!$user) {
+            return redirect()->route('login')
+                ->with('error', 'Bạn cần đăng nhập để thực hiện hành động này.');
+        }
+
+        // Load các quan hệ cần thiết
+        $evaluation->load([
+            'details.criteria', 
+            'quality', 
+            'title', 
+            'reward', 
+            'approvedQuality', 
+            'approvedTitle',
+            'status',
+            'evaluator',
+            'unit'
+        ]);
+
+        // Xác định vai trò của người xem
+        $isUnitLeader = $user->role->name === 'Trưởng đơn vị';
+        $isCurrentUserEvaluation = $user->id === $evaluation->evaluator_id;
+        
+        // Lấy danh sách xếp loại và danh hiệu cho dropdown
+        $qualities = Quality::all();
+        
+        $titleTypeId = Cache::remember('title_type_id', 86400, function () {
+            return MetaType::where('category', 'type_title')
+                ->where('name', 'Cá nhân')
+                ->value('id');
+        });
+        $titles = Title::where('type_id', $titleTypeId)->get();
+
+        return view('pages.unit-leader.self-evaluation-aproval-details', compact(
+            'evaluation',
+            'isUnitLeader',
+            'isCurrentUserEvaluation',
+            'qualities',
+            'titles'
+        ));
+    }
+
+    public function approveDetails(Request $request, Evaluation $evaluation)
+    {
+        $user = auth()->user();
+        
+        if (!$user || $user->role->name !== 'Trưởng đơn vị') {
+            return redirect()->route('login')
+                ->with('error', 'Bạn không có quyền thực hiện hành động này.');
+        }
+        
+        // Kiểm tra xem người dùng có phải là trưởng đơn vị của người đánh giá không
+        if ($user->unit_id != $evaluation->unit_id) {
+            return back()->with('error', 'Bạn không có quyền phê duyệt đánh giá này.');
+        }
+        
+        // Validate dữ liệu đầu vào
+        $validatedData = $request->validate([
+            'approved_quality_id' => 'required|exists:quality,id',
+            'approved_title_id' => 'required|exists:titles,id',
+            'feedback' => 'required|string',
+        ]);
+        
+        
+        try {
+            DB::beginTransaction();
+            
+            // Cập nhật trạng thái thành "Đã phê duyệt"
+            $approvedStatus = MetaType::where('category', 'evaluation_status')
+                ->where('name', 'Đã phê duyệt')
+                ->firstOrFail();
+                
+            // Cập nhật đánh giá
+            $evaluation->update([
+                'approved_quality_id' => $request->approved_quality_id,
+                'approved_title_id' => $request->approved_title_id,
+                'feedback' => $request->feedback,
+                'status_id' => $approvedStatus->id,
+            ]);
+            
+            DB::commit();
+            
+            return redirect()->route('evaluations.list')
+                ->with('success', 'Đã phê duyệt đánh giá thành công.');
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', 'Có lỗi xảy ra: ' . $e->getMessage());
