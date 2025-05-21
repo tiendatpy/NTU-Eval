@@ -3,7 +3,7 @@
 @section('title', 'Thống kê đánh giá')
 
 @section('content')
-<div class="stats-dashboard py-8">
+<div class="stats-dashboard">
   <div class="container px-4">
     <!-- Header & Filter -->
     <div class="bg-white rounded-xl custom-box-shadow p-6 mb-8">

@@ -51,4 +51,8 @@
         @apply border-b-1 border-b-primary-200;
     }
 
+    select {
+        @apply hover:cursor-pointer;
+    }
+
 }

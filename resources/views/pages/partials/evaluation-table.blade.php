@@ -90,14 +90,14 @@
           <tbody>
             <tr>
               <td>
-                <select name="title_id" class="border-primary-500 border-1 p-2 w-full rounded-lg" required>
+                <select name="title_id" class="border-primary-300 border-1 px-5 py-4 w-full rounded-lg" required>
                   @foreach ($titles as $title)
                     <option value="{{ $title->id }}"{{ ($evaluation && $evaluation->title_id == $title->id) ? 'selected' : '' }}>{{ $title->name }}</option>
                   @endforeach
                 </select>
               </td>
               <td>
-                <select name="reward_id" class="border-primary-500 border-1 p-2 w-full rounded-lg" required>
+                <select name="reward_id" class="border-primary-300 border-1 px-5 py-4 w-full rounded-lg" required>
                   @foreach ($rewards as $reward)
                     <option value="{{ $reward->id }}" {{ ($evaluation && $evaluation->reward_id == $reward->id) ? 'selected' : '' }} >{{ $reward->name }}</option>
                   @endforeach
