@@ -8,7 +8,7 @@
       <div class="mb-8 text-sm">
         <h2 class="mb-7 text-base">Tự Đánh Giá</h2>
         <label for="period_id">Năm đánh giá</label>
-        <select class="border-primary-500 border-1 p-2 w-100 rounded-lg period-after-evaluation" id="period_id" name="period_id" required>
+        <select class="border-primary-300 border-1 px-5 py-4 w-auto rounded-lg period-after-evaluation" id="period_id" name="period_id" required>
           @foreach ($periods as $period)
             <option value="{{ $period->year }}"{{ $period->year == $selectedYear ? 'selected' : '' }}>
               {{ $period->year }} - {{ $period->year + 1 }}

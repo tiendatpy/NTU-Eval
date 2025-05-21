@@ -29,15 +29,16 @@
     
     <!-- Overview Stats Cards -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <!-- Tổng viên chức -->
       <div class="stat-card bg-gradient-to-br from-blue-500 to-blue-700 rounded-xl custom-box-shadow p-6 text-white">
-        <div class="flex items-center justify-between h-full">
-          <div>
-            <h3 class="text-lg text-primary-800">Tổng viên chức</h3>
-            <p class="text-3xl font-bold mt-2">{{ $qualityStats['total'] }}</p>
+        <div class="flex flex-col h-full">
+          <div class="flex justify-between items-start mb-4">
+            <h3 class="text-lg text-white font-medium">Tổng viên chức</h3>
+            <div class="text-white">
+              <span class="icomoon icon-users text-2xl"></span>
+            </div>
           </div>
-          <div class="text-white text-opacity-80">
-            <span class="icomoon icon-users text-2xl"></span>
-          </div>
+          <p class="text-3xl font-bold mt-auto">{{ $qualityStats['total'] }}</p>
         </div>
       </div>
 
@@ -47,42 +48,45 @@
         $htnvCount = $qualityStats['items']['Hoàn thành']['count'] ?? 0;
       @endphp
       
+      <!-- HTXSNV -->
       <div class="stat-card bg-gradient-to-br from-green-500 to-green-700 rounded-xl custom-box-shadow p-6 text-white">
-        <div class="flex items-center justify-between h-full">
-          <div>
-            <h3 class="text-lg text-primary-800">HTXSNV</h3>
-            <p class="text-3xl font-bold mt-2">{{ $htxsnvCount }}</p>
-            <p class="text-sm mt-1">{{ $qualityStats['items']['Hoàn thành xuất sắc']['percentage'] ?? 0 }}% tổng số</p>
+        <div class="flex flex-col h-full">
+          <div class="flex justify-between items-start mb-4">
+            <h3 class="text-lg text-white font-medium">HTXSNV</h3>
+            <div class="text-white">
+              <span class="icomoon icon-check-circle text-2xl"></span>
+            </div>
           </div>
-          <div class="text-white text-opacity-80">
-            <span class="icomoon icon-check-circle text-2xl"></span>
-          </div>
+          <p class="text-3xl font-bold mb-1">{{ $htxsnvCount }}</p>
+          <p class="text-sm">{{ $qualityStats['items']['Hoàn thành xuất sắc']['percentage'] ?? 0 }}% tổng số</p>
         </div>
       </div>
       
+      <!-- HTTNV -->
       <div class="stat-card bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-xl custom-box-shadow p-6 text-white">
-        <div class="flex items-center justify-between h-full">
-          <div>
-            <h3 class="text-lg text-primary-800">HTTNV</h3>
-            <p class="text-3xl font-bold mt-2">{{ $httnvCount }}</p>
-            <p class="text-sm mt-1">{{ $qualityStats['items']['Hoàn thành tốt']['percentage'] ?? 0 }}% tổng số</p>
+        <div class="flex flex-col h-full">
+          <div class="flex justify-between items-start mb-4">
+            <h3 class="text-lg text-white font-medium">HTTNV</h3>
+            <div class="text-white">
+              <span class="icomoon icon-star text-2xl"></span>
+            </div>
           </div>
-          <div class="text-white text-opacity-80">
-            <span class="icomoon icon-star text-2xl"></span>
-          </div>
+          <p class="text-3xl font-bold mb-1">{{ $httnvCount }}</p>
+          <p class="text-sm">{{ $qualityStats['items']['Hoàn thành tốt']['percentage'] ?? 0 }}% tổng số</p>
         </div>
       </div>
       
+      <!-- HTNV -->
       <div class="stat-card bg-gradient-to-br from-indigo-500 to-indigo-700 rounded-xl custom-box-shadow p-6 text-white">
-        <div class="flex items-center justify-between h-full">
-          <div>
-            <h3 class="text-lg text-primary-800">HTNV</h3>
-            <p class="text-3xl font-bold mt-2">{{ $htnvCount }}</p>
-            <p class="text-sm mt-1">{{ $qualityStats['items']['Hoàn thành']['percentage'] ?? 0 }}% tổng số</p>
+        <div class="flex flex-col h-full">
+          <div class="flex justify-between items-start mb-4">
+            <h3 class="text-lg text-white font-medium">HTNV</h3>
+            <div class="text-white">
+              <span class="icomoon icon-chart-bar text-2xl"></span>
+            </div>
           </div>
-          <div class="text-white text-opacity-80">
-            <span class="icomoon icon-chart-bar text-2xl"></span>
-          </div>
+          <p class="text-3xl font-bold mb-1">{{ $htnvCount }}</p>
+          <p class="text-sm">{{ $qualityStats['items']['Hoàn thành']['percentage'] ?? 0 }}% tổng số</p>
         </div>
       </div>
     </div>

@@ -119,7 +119,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
               <div>
                 <label for="approved_quality_id" class="block mb-2 font-medium">Xếp loại chất lượng:</label>
-                <select id="approved_quality_id" name="approved_quality_id" class="border-primary-500 border-1 p-2 w-full rounded-lg" required>
+                <select id="approved_quality_id" name="approved_quality_id" class="border-primary-300 border-1 px-5 py-4 w-full rounded-lg" required>
                   <option value="">-- Chọn xếp loại --</option>
                   @foreach($qualities as $quality)
                     <option value="{{ $quality->id }}" {{ $evaluation->approved_quality_id == $quality->id ? 'selected' : '' }}>
@@ -131,7 +131,7 @@
               
               <div>
                 <label for="approved_title_id" class="block mb-2 font-medium">Danh hiệu thi đua:</label>
-                <select id="approved_title_id" name="approved_title_id" class="border-primary-500 border-1 p-2 w-full rounded-lg" required>
+                <select id="approved_title_id" name="approved_title_id" class="border-primary-300 border-1 px-5 py-4 w-full rounded-lg" required>
                   <option value="">-- Chọn danh hiệu --</option>
                   @foreach($titles as $title)
                     <option value="{{ $title->id }}" {{ $evaluation->approved_title_id == $title->id ? 'selected' : '' }}>

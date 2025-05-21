@@ -35,7 +35,7 @@
                   </textarea>
                 </td>
                 <td>
-                  <select name="details[{{ $loop->index }}][rating]" class="border-primary-500 border-1 p-2 rounded-lg w-50 rating" required>
+                  <select name="details[{{ $loop->index }}][rating]" class="border-primary-300 border-1 px-5 py-4 w-auto rounded-lg w-50 rating" required>
                     <option value="4" {{ $rating == 4 ? 'selected' : '' }}>Xuất sắc</option>
                     <option value="3" {{ $rating == 3 ? 'selected' : '' }}>Tốt</option>
                     <option value="2" {{ $rating == 2 ? 'selected' : '' }}>Trung bình</option>
@@ -56,9 +56,9 @@
               <td colspan="2"></td>
               <td colspan="2">
                 <div class="flex justify-between">
-                  <span class="inline-block w-2/3 font-bold">Tự xếp loại chất lượng:</span>
-                  <div class="w-1/3">
-                    <select name="quality_id" class="border-primary-500 border-1 p-2 w-full rounded-lg" required>
+                  <span class="w-2/3 font-bold flex justify-end">Tự xếp loại chất lượng:</span>
+                  <div class="w-1/3 flex justify-end">
+                    <select name="quality_id" class="border-primary-300 border-1 px-5 py-4 w-auto rounded-lg" required>
                       @foreach ($quality as $qual)
                         <option value="{{ $qual->id }}" {{ ($evaluation && $evaluation->quality_id == $qual->id) ? 'selected' : '' }}>{{ $qual->name }}</option>
                       @endforeach
