@@ -1,0 +1,15 @@
+.stats-dashboard {
+  .stat-card {
+    @apply custom-transition;
+  }
+  .stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  }
+  .chart-container {
+    @apply relative h-[150px] w-full mx-auto;
+  }
+  canvas {
+    @apply block h-full w-full;
+  }
+}

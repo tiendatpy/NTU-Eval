@@ -7,6 +7,7 @@ use App\Http\Controllers\EvaluationController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\UnitEvaluationController;
+use App\Http\Controllers\DashboardController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -35,7 +36,10 @@ Route::middleware(['auth'])->group(function () {
 
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    if (auth()->check() && auth()->user()->role->name === 'Trưởng đơn vị') {
+        return redirect()->route('dashboard.stats');
+    }
+    return redirect()->route('evaluations.index');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -43,16 +47,6 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
-
-
-// Route::middleware(['auth'])->group(function () {
-//     Route::put('/title-nominations/{id}', [TitleNominationController::class, 'update'])->name('title-nominations.update');
-// });
-
-// Route::middleware(['auth'])->group(function () {
-//     Route::post('/approve-quality', [EvaluationController::class, 'approveQuality'])->name('evaluations.approve-quality');
-//     Route::post('/approve-titles', [EvaluationController::class, 'approveTitles'])->name('evaluations.approve-titles');
-// });
 
 
 
@@ -74,5 +68,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/unit-evaluation', [UnitEvaluationController::class, 'index'])->name('unit.evaluations.index');
     Route::post('/unit-evaluation', [UnitEvaluationController::class, 'store'])->name('unit.evaluations.store');
 });
+
+//dashboard
+Route::get('/dashboard/stats', [DashboardController::class, 'index'])
+    ->name('dashboard.stats')
+    ->middleware(['auth']);
 
 require __DIR__ . '/auth.php';

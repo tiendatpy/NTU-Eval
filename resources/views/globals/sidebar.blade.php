@@ -6,13 +6,13 @@
         @if($isUnitLeader)
         <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer flex items-center gap-8 ">
             <span class="icomoon icon-chart-pie text-2xl"></span>
-            <a class="block w-full" href="">
+            <a class="block w-full" href="{{ route('dashboard.stats') }}">
                 <span>Tổng quan</span>
             </a>
         </li>
         @endif
-        <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer {{ request()->routeIs('evaluations.index') && !$isUnitLeader ? 'active-menu text-states-600' : '' }} {{ $isUnitLeader ? 'has-menu-item' : 'active-menu active-parent' }}">
-            @if ($isUnitLeader)
+        @if ($isUnitLeader)
+        <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer has-menu-item">
             <span class="flex items-center gap-8 ">
                 <span class="icomoon icon-pencil text-2xl"></span>
                 <span>Tự đánh giá</span>
@@ -29,13 +29,16 @@
                     </a>
                 </li>
             </ul>
-            @else
-            <span class="icomoon icon-pencil text-2xl"></span>
-            <a class="block w-full" href="{{ route('evaluations.index')}}">
-                <span>Tự đánh giá</span>
-            </a>
-            @endif
         </li>
+    
+        @else
+            <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer flex items-center gap-8 {{ request()->routeIs('evaluations.index') ? 'active-menu text-states-600' : '' }}">
+                <span class="icomoon icon-pencil text-2xl"></span>
+                <a class="block w-full" href="{{ route('dashboard.stats') }}">
+                    <span>Tự đánh giá</span>
+                </a>
+            </li>
+        @endif
         <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer flex items-center gap-8 {{ request()->routeIs('evaluations.list') ? 'active-menu text-states-600' : '' }}">
             @if($isUnitLeader)
                 <span class="icomoon icon-clipboard-check text-2xl"></span>
