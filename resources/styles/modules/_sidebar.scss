@@ -31,7 +31,7 @@
     .has-menu-item {
         @apply relative;
         &::before {
-            @apply content-["\e90c"] absolute right-0 text-[22px];
+            @apply content-["\e90c"] absolute right-0 top-0 text-[22px];
             font-family: 'icomoon', sans-serif;
             transition: transform 0.3s ease;
         }
