@@ -509,7 +509,7 @@ class EvaluationController extends Controller
         
         // Validate dữ liệu
         $request->validate([
-            'review' => 'required|string|max:2000',
+            'review' => 'string',
         ]);
         
         
@@ -693,11 +693,12 @@ class EvaluationController extends Controller
         }
 
         // Validate dữ liệu đầu vào
-        $validatedData = $request->validate([
+        $request->validate([
             'approved_quality_id' => 'required|exists:quality,id',
             'approved_title_id' => 'required|exists:titles,id',
-            'feedback' => 'required|string',
+            'feedback' => 'nullable|string',
         ]);
+
 
 
         try {
@@ -712,9 +713,10 @@ class EvaluationController extends Controller
             $evaluation->update([
                 'approved_quality_id' => $request->approved_quality_id,
                 'approved_title_id' => $request->approved_title_id,
-                'feedback' => $request->feedback,
+                'feedback' => $request->feedback ,
                 'status_id' => $approvedStatus->id,
             ]);
+
 
             DB::commit();
 
