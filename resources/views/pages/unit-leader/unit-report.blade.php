@@ -62,7 +62,7 @@
           </tr>
         </tbody>
       </table>
-      <div>
+      <div class="flex justify-end">
         {{ $evaluations->appends(request()->except('page'))->onEachSide(1)->links() }}
       </div>
     </div>
