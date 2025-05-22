@@ -53,7 +53,7 @@ class ReportController extends Controller
       ->with(['quality', 'title', 'reward'])
       ->first();
 
-    $evaluations = $query->orderBy('created_at', 'asc')->paginate(5);
+    $evaluations = $query->orderBy('created_at', 'asc')->paginate(3);
 
     return view('pages.unit-leader.unit-report', compact(
       'evaluations',
