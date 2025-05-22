@@ -30,7 +30,7 @@ class UnitController extends Controller
             ->where('id', '!=', $user->id) 
             ->with('role')
             ->orderBy('full_name')
-            ->paginate(15);
+            ->paginate(10);
         
         $evaluatedUserIds = [];
         if ($periodId) {

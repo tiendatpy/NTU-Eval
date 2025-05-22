@@ -131,8 +131,8 @@ class UnitEvaluationController extends Controller
                     'quality_id' => $request->quality_id,
                     'title_id' => $request->title_id,
                     'reward_id' => $request->reward_id,
-                    'evidence' => html_entity_decode(strip_tags($request->evidence)),
-                    'achievement' => html_entity_decode(strip_tags($request->achievement)),
+                    'evidence' =>$request->evidence,
+                    'achievement' =>$request->achievement,
                 ]);
                 
                 $message = 'Cập nhật đánh giá đơn vị thành công.';
@@ -144,8 +144,8 @@ class UnitEvaluationController extends Controller
                     'quality_id' => $request->quality_id,
                     'title_id' => $request->title_id,
                     'reward_id' => $request->reward_id,
-                    'evidence' => html_entity_decode(strip_tags($request->evidence)),
-                    'achievement' => html_entity_decode(strip_tags($request->achievement)),
+                    'evidence' =>$request->evidence,
+                    'achievement' =>$request->achievement,
                 ]);
                 
                 $message = 'Tự đánh giá đơn vị thành công.';

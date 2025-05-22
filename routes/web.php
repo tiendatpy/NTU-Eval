@@ -8,6 +8,8 @@ use App\Http\Controllers\ExportController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\UnitEvaluationController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ReportController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -54,17 +56,18 @@ Route::middleware('auth')->group(function () {
 Route::get('/self-evaluations/{id}/export', [ExportController::class, 'exportEvaluation'])
     ->name('evaluations.export')
     ->middleware('auth');
-Route::get('/export-quality-ratings', [ExportController::class, 'exportQualityList'])
-    ->name('evaluations.export-quality-ratings');
-Route::get('export/title-nominations', [ExportController::class, 'exportTitleNominations'])
-    ->name('evaluations.export-title-nominations');
+Route::get('export/export-unit-report', [ExportController::class, 'exportUnitReport'])
+    ->name('evaluations.export-unit-report');
+Route::get('export/export-last-report', [ExportController::class, 'exportLastReport'])
+    ->name('evaluations.export-last-report');
 
 // for member
 Route::middleware(['auth'])->group(function () {
     Route::get('/unit-members', [UnitController::class, 'members'])->name('unit.members');
 });
+
+// Tự đánh giá đơn vị (cho trưởng đơn vị)
 Route::middleware(['auth'])->group(function () {
-    // Tự đánh giá đơn vị (cho trưởng đơn vị)
     Route::get('/unit-evaluation', [UnitEvaluationController::class, 'index'])->name('unit.evaluations.index');
     Route::post('/unit-evaluation', [UnitEvaluationController::class, 'store'])->name('unit.evaluations.store');
 });
@@ -74,4 +77,9 @@ Route::get('/dashboard/stats', [DashboardController::class, 'index'])
     ->name('dashboard.stats')
     ->middleware(['auth']);
 
+// report
+Route::get('/unit-report', [ReportController::class, 'getListForUnitReport'])
+    ->name('unit-report')
+    ->middleware(['auth']);
+    
 require __DIR__ . '/auth.php';

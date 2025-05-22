@@ -101,7 +101,7 @@ class ExportController extends Controller
         return response()->download($tempFilePath, $fileName)->deleteFileAfterSend(true);
     }
 
-    public function exportQualityList(Request $request)
+    public function exportUnitReport(Request $request)
     {
         $user = auth()->user();
         if ($user->role->name !== 'Trưởng đơn vị') {
@@ -117,10 +117,9 @@ class ExportController extends Controller
         }
 
         // Lấy danh sách xếp loại của cá nhân trong đơn vị
-        $evaluations = Evaluation::with(['evaluator', 'quality', 'approvedQuality'])
+        $evaluations = Evaluation::with(['evaluator', 'quality', 'title'])
             ->where('period_id', $period->id)
             ->where('unit_id', $user->unit_id)
-            ->where('evaluator_id', '!=', $user->id) // Loại trừ trưởng đơn vị
             ->orderBy('evaluator_id')
             ->get();
 
@@ -135,7 +134,7 @@ class ExportController extends Controller
         }
 
         // Tạo file Word mới
-        $templatePath = storage_path('app/templates/quality_ratings_template.docx');
+        $templatePath = storage_path('app/templates/unit_report_template.docx');
         $templateProcessor = new TemplateProcessor($templatePath);
 
         // Điền thông tin cơ bản
@@ -146,13 +145,12 @@ class ExportController extends Controller
         // Chuẩn bị dữ liệu cho bảng đánh giá cá nhân
         $replacements = [];
         foreach ($evaluations as $index => $evaluation) {
-            $approvedQuality = $evaluation->approved_quality_id ?
-                $evaluation->approvedQuality->name : $evaluation->quality->name;
             $replacements[] = [
                 'stt' => $index + 1,
                 'ho_ten' => $evaluation->evaluator->full_name ?? '',
-                'muc_xep_loai' => $approvedQuality ?? '',
-                'dien_giai' => $this->formatEvidences($evaluation)
+                'muc_xep_loai' => $evaluation->quality->name ?? '',
+                'danh_hieu' => $evaluation->title->name ?? '',
+                'dien_giai' => html_entity_decode(strip_tags($evaluation->achievement)) ?? '',
             ];
         }
 
@@ -171,16 +169,21 @@ class ExportController extends Controller
             // Xác định danh hiệu thi đua được phê duyệt hoặc đề xuất
             $qualityName = $unitEvaluation->quality->name;
             $unitEvidences = $unitEvaluation->evidence;
+            $unitTitle = $unitEvaluation->title->name ?? '';
+
             $templateProcessor->setValue('xep_loai_don_vi', $qualityName);
-            $templateProcessor->setValue('minh_chung_don_vi', $unitEvidences);
+            $templateProcessor->setValue('danh_hieu_don_vi', $unitTitle);
+            $templateProcessor->setValue('minh_chung_don_vi', html_entity_decode(strip_tags($unitEvidences)));
         } else {
             // Nếu không có đánh giá đơn vị, đặt giá trị trống
             $templateProcessor->setValue('xep_loai_don_vi', '');
             $templateProcessor->setValue('minh_chung_don_vi', '');
+            $templateProcessor->setValue('danh_hieu_don_vi', '');
+
         }
 
         // Tạo tên file kết quả
-        $fileName = 'Danh_sach_xep_loai_chat_luong_' . $user->unit->name . '_' . $period->year . '.docx';
+        $fileName = 'Bao_cao_ket_qua_danh_gia_' . $user->unit->name . '_' . $period->year . '.docx';
         $fileName = str_replace(' ', '_', $fileName);
 
         // Lưu file tạm thời
@@ -191,31 +194,13 @@ class ExportController extends Controller
         return response()->download($tempFilePath, $fileName)->deleteFileAfterSend(true);
     }
 
-    /**
-     * Định dạng bằng chứng từ evaluation details
-     */
-    private function formatEvidences(Evaluation $evaluation)
-    {
-        $evidences = [];
 
-        // Thêm các thông tin cần thiết vào diễn giải
-        // Ví dụ: Hoàn thành vượt định mức giờ giảng và nghiên cứu
-        if ($evaluation->details) {
-            foreach ($evaluation->details as $detail) {
-                if ($detail->evidence && !empty(trim($detail->evidence))) {
-                    $evidences[] = '- ' . html_entity_decode(strip_tags($detail->evidence));
-                }
-            }
-        }
-
-        return implode("\n", $evidences);
-    }
 
 
     /**
      * Xuất danh sách đề nghị danh hiệu thi đua và khen thưởng
      */
-    public function exportTitleNominations(Request $request)
+    public function exportLastReport(Request $request)
     {
         $user = auth()->user();
         if ($user->role->name !== 'Trưởng đơn vị') {
