@@ -216,37 +216,131 @@ class ExportController extends Controller
         }
 
         // Lấy danh sách đề nghị danh hiệu của đơn vị
-        $nominations = Evaluation::with(['evaluator', 'title', 'approvedTitle', 'reward', 'quality'])
+        $evaluations = Evaluation::with(['evaluator', 'title', 'approvedTitle', 'approvedQuality', 'reward', 'quality'])
             ->where('period_id', $period->id)
             ->where('unit_id', $user->unit_id)
             ->orderBy('evaluator_id')
             ->get();
 
-        if ($nominations->isEmpty()) {
+        // Lấy thông tin đánh giá đơn vị
+        $unitEvaluation = UnitEvaluation::with(['quality', 'title', 'reward'])
+            ->where('period_id', $period->id)
+            ->where('unit_id', $user->unit_id)
+            ->first();
+        
+        if ($evaluations->isEmpty()) {
             return back()->with('error', 'Không có dữ liệu danh hiệu để xuất file.');
         }
 
+        // THỐNG KÊ DANH HIỆU
+        // Đếm số lượng các danh hiệu thi đua
+        $titleCounts = [];
+        foreach ($evaluations as $evaluation) {
+            // Ưu tiên danh hiệu đã phê duyệt, nếu không có thì lấy danh hiệu đề xuất
+            $titleName = $evaluation->approvedTitle ? $evaluation->approvedTitle->name : ($evaluation->title ? $evaluation->title->name : null);
+            if ($titleName) {
+                if (!isset($titleCounts[$titleName])) {
+                    $titleCounts[$titleName] = 0;
+                }
+                $titleCounts[$titleName]++;
+            }
+        }
+        
+        // Đếm số lượng các hình thức khen thưởng (chỉ lấy những loại khác "Không")
+        $rewardCounts = [];
+        foreach ($evaluations as $evaluation) {
+            if ($evaluation->reward && $evaluation->reward->name !== 'Không') {
+                $rewardName = $evaluation->reward->name;
+                if (!isset($rewardCounts[$rewardName])) {
+                    $rewardCounts[$rewardName] = 0;
+                }
+                $rewardCounts[$rewardName]++;
+            }
+        }
+        
+        // Đếm số lượng tập thể
+        $unitTitleName = null;
+        $unitRewardName = null;
+        $unitAchievement = null;
+
+        if ($unitEvaluation) {
+            if ($unitEvaluation->title) {
+                $unitTitleName = $unitEvaluation->title->name;
+            }
+            
+            // Chỉ lấy hình thức khen thưởng của đơn vị nếu khác "Không"
+            if ($unitEvaluation->reward && $unitEvaluation->reward->name !== 'Không') {
+                $unitRewardName = $unitEvaluation->reward->name;
+                $unitAchievement = html_entity_decode(strip_tags($unitEvaluation->achievement)) ?? '';
+            }
+        }
+        
+        // Chuẩn bị thông tin thống kê
+        $statisticsText = '';
+        
+        // Thêm thông tin thống kê danh hiệu cá nhân
+        foreach ($titleCounts as $title => $count) {
+            $statisticsText .= "- Danh hiệu \"{$title}\": " . $count . " cá nhân;\n";
+        }
+        
+        // Thêm thông tin thống kê danh hiệu tập thể
+        if ($unitTitleName) {
+            $statisticsText .= "- Danh hiệu \"{$unitTitleName}\": 01 tập thể;\n";
+        }
+        
+        // Thêm thông tin thống kê hình thức khen thưởng (đã loại trừ "Không")
+        foreach ($rewardCounts as $reward => $count) {
+            // Định dạng số có 2 chữ số (01, 02, etc.)
+            $formattedCount = sprintf("%02d", $count);
+            $statisticsText .= "- {$reward}: {$formattedCount} cá nhân;\n";
+        }
+        
+        // Thêm thông tin khen thưởng của đơn vị nếu có
+        if ($unitRewardName) {
+            $statisticsText .= "- {$unitRewardName}: 01 tập thể;\n";
+        }
+        
         // Tạo file Word mới
-        $templatePath = storage_path('app/templates/title_nominations_template.docx');
+        $templatePath = storage_path('app/templates/last_report_template.docx');
         $templateProcessor = new TemplateProcessor($templatePath);
 
         // Điền thông tin cơ bản
+        $templateProcessor->setValue('ho_ten_tdv', $user->full_name);
         $templateProcessor->setValue('don_vi', $user->unit->name ?? '');
+        $templateProcessor->setValue('ngay', date('d'));
+        $templateProcessor->setValue('thang', date('m'));
+        $templateProcessor->setValue('nam', date('Y'));
+        $templateProcessor->setValue('ngay_thang_nam', date('d') . '/' . date('m') . '/' . date('Y'));
         $templateProcessor->setValue('nam_hoc', $period->year . ' - ' . ($period->year + 1));
-        $templateProcessor->setValue('ngay_to_trinh', date('d/m/Y'));
+        
+        // Điền thông tin đánh giá đơn vị
+        if ($unitEvaluation) {
+            $templateProcessor->setValue('chat_luong_don_vi', $unitEvaluation->quality->name ?? '');
+            $templateProcessor->setValue('danh_hieu_don_vi', $unitEvaluation->title->name ?? '');
+            $templateProcessor->setValue('minh_chung_don_vi', html_entity_decode(strip_tags($unitEvaluation->evidence)) ?? '');
+            $templateProcessor->setValue('hinh_thuc_khen_thuong_dv', $unitEvaluation->reward && $unitEvaluation->reward->name !== 'Không' ? $unitEvaluation->reward->name : '');
+            $templateProcessor->setValue('thanh_tich_don_vi', $unitAchievement);
+        } else {
+            $templateProcessor->setValue('chat_luong_don_vi', '');
+            $templateProcessor->setValue('danh_hieu_don_vi', '');
+            $templateProcessor->setValue('minh_chung_don_vi', '');
+            $templateProcessor->setValue('hinh_thuc_khen_thuong_dv', '');
+            $templateProcessor->setValue('thanh_tich_don_vi', '');
+        }
+        
+        // Điền thông tin thống kê
+        $templateProcessor->setValue('thong_ke_danh_hieu', $statisticsText);
 
         // Phần 1: Danh sách đề nghị danh hiệu thi đua
         // Chuẩn bị dữ liệu cho bảng danh hiệu
         $titleReplacements = [];
-        foreach ($nominations as $index => $nomination) {
-            $approvedTitle = $nomination->approved_title_id ? $nomination->approvedTitle->name : $nomination->title->name;
-
+        foreach ($evaluations as $index => $evaluation) {
             $titleReplacements[] = [
                 'stt' => $index + 1,
-                'ho_ten' => $nomination->evaluator->full_name ?? '',
-                'xlcl' => $nomination->quality->name ?? '',
-                'danh_hieu' => $approvedTitle ?? '',
-                'trich_ngang' => $this->formatAchievements($nomination),
+                'ho_ten' => $evaluation->evaluator->full_name ?? '',
+                'xlcl' => $evaluation->approvedQuality->name ?? '',
+                'danh_hieu' => $evaluation->approvedTitle->name ?? '',
+                'trich_ngang' => html_entity_decode(strip_tags($evaluation->achievement)) ?? '',
                 'ghi_chu' => ''
             ];
         }
@@ -258,14 +352,14 @@ class ExportController extends Controller
         // Chuẩn bị dữ liệu cho bảng khen thưởng
         $rewardReplacements = [];
         $rewardCounter = 1;
-        foreach ($nominations as $nomination) {
-            // Chỉ lấy những nomination có hình thức khen thưởng
-            if (!empty($nomination->reward_id) && $nomination->reward->name != 'Không') {
+        foreach ($evaluations as $evaluation) {
+            // Chỉ lấy những evaluation có hình thức khen thưởng
+            if (!empty($evaluation->reward_id) && $evaluation->reward->name != 'Không') {
                 $rewardReplacements[] = [
                     'reward_stt' => $rewardCounter,
-                    'reward_ten' => $nomination->evaluator->full_name ?? '',
-                    'hinh_thuc_khen_thuong' => $this->formatRewardType($nomination->reward->name),
-                    'tom_tat' => $this->formatRewardAchievements($nomination)
+                    'reward_ten' => $evaluation->evaluator->full_name ?? '',
+                    'hinh_thuc_khen_thuong' => $evaluation->reward->name ?? '',
+                    'tom_tat' => html_entity_decode(strip_tags($evaluation->achievement)) ?? '',
                 ];
                 $rewardCounter++;
             }
@@ -283,7 +377,7 @@ class ExportController extends Controller
         }
 
         // Tạo tên file kết quả
-        $fileName = 'Danh_sach_danh_hieu_thi_dua_' . $user->unit->name . '_' . $period->year . '.docx';
+        $fileName = 'To_trinh_ket_qua_danh_gia_' . $user->unit->name . '_' . $period->year . '.docx';
         $fileName = str_replace(' ', '_', $fileName);
 
         // Lưu file tạm thời
@@ -294,53 +388,5 @@ class ExportController extends Controller
         return response()->download($tempFilePath, $fileName)->deleteFileAfterSend(true);
     }
 
-    /**
-     * Định dạng thành tích từ evaluation
-     */
-    private function formatAchievements(Evaluation $evaluation)
-    {
-        $achievements = [];
-        // Thêm thành tích từ field achievement
-        if (!empty(trim($evaluation->achievement))) {
-            $achievements[] = '- ' . html_entity_decode(strip_tags($evaluation->achievement));
-        }
-
-        return implode("\n", $achievements);
-    }
-
-    /**
-     * Định dạng thành tích cho phần khen thưởng
-     */
-    private function formatRewardAchievements(Evaluation $evaluation)
-    {
-        $achievements = [];
-
-        // Thêm thành tích từ field achievement với format chi tiết hơn
-        if (!empty(trim($evaluation->achievement))) {
-            $achievementText = html_entity_decode(strip_tags($evaluation->achievement));
-
-            // Có thể thêm tiền tố hoặc định dạng theo mẫu
-            $achievements[] = $achievementText;
-        }
-
-
-        return implode("\n", $achievements);
-    }
-
-    /**
-     * Định dạng loại khen thưởng
-     */
-    private function formatRewardType($rewardName)
-    {
-        $rewardTypes = [
-            'Giấy khen' => 'Giấy khen Hiệu trưởng',
-            'Bằng khen' => 'Bằng khen (BK)',
-            'Kỷ niệm chương' => 'Kỷ niệm chương (KNC)',
-            'Huân chương Lao động' => 'Huân chương Lao động (HCLĐ)',
-            // Thêm các mapping khác nếu cần
-        ];
-
-        return $rewardTypes[$rewardName] ?? $rewardName;
-    }
 
 }

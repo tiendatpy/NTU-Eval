@@ -194,15 +194,6 @@
         </div>
       </div>
     </div>
-    
-    <!-- Export Buttons -->
-    <div class="flex justify-end gap-4 mt-8">
-      <a href="{{ route('evaluations.export-unit-report', ['year' => $year]) }}" 
-        class="btn btn-primary">
-        <span class="icomoon icon-download-v2"></span>
-        <span>Xuất báo cáo tổng kết</span>
-      </a>
-    </div>
   </div>
 </div>
 

@@ -109,13 +109,24 @@
               </div>
             </form>
           </div>
+        @else
+          <div class="user-review mb-5">
+            <h3 class="mb-5">IV. GÓP Ý</h3>
+            <div class="bg-blue-50 rounded-lg p-4 border border-blue-200">
+              @if ($evaluation->review)
+                {!! $evaluation->review !!}
+              @else
+                <span class="text-gray-500">Chưa có góp ý từ người đánh giá.</span>
+              @endif
+            </div>
+          </div>
         @endif
         
         @if($isUnitLeader)
         <form action="{{ route('all-evaluations.approve-details', $evaluation->id) }}" method="post">
           @csrf
           <div class="approval-section mb-5">
-            <h3 class="mb-5">IV. ĐÁNH GIÁ CỦA TRƯỞNG ĐƠN VỊ</h3>
+            <h3 class="mb-5">V. ĐÁNH GIÁ CỦA TRƯỞNG ĐƠN VỊ</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
               <div>
                 <label for="approved_quality_id" class="block mb-2 font-medium">Xếp loại chất lượng:</label>
@@ -154,7 +165,7 @@
             </div>
           </div>
         </form>
-        @elseif($evaluation->feedback)
+        @elseif($evaluation->status->name === 'Đã phê duyệt')
         <div class="approval-results mb-5">
           <h3 class="mb-5">V. ĐÁNH GIÁ CỦA TRƯỞNG ĐƠN VỊ</h3>
           </h3>

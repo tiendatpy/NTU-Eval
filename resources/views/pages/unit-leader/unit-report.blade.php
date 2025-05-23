@@ -6,7 +6,7 @@
   <section class="mod-unit-report bg-white rounded-2xl py-8">
     <div class="container">
       <div class="flex justify-between items-center mb-7">
-        <h2 class="text-base mb-0">Danh Sách Xếp Loại Chất Lượng Của Đơn Vị</h2>
+        <h2 class="text-base mb-0">Danh Sách Tự Đánh Giá Của Đơn Vị</h2>
         <div class="flex items-center gap-3">
           <form method="get" action="{{ route('unit-report') }}" class="flex items-center gap-3">
             <label for="year" class="text-sm font-medium text-gray-700">Năm học:</label>
@@ -20,7 +20,7 @@
           </form>
           <a href="{{ route('evaluations.export-unit-report') }}?year={{ $selectedYear }}" class="btn btn-primary inline-flex items-center gap-2">
             <span class="icomoon icon-download-v2"></span>
-            <span>Xuất danh sách</span>
+            <span>Xuất báo cáo</span>
           </a>
         </div>
       </div>
@@ -30,7 +30,7 @@
           <tr>
             <th class="w-5p">STT</th>
             <th class="w-20p">Họ tên</th>
-            <th class="w-15p">Mức xếp loại</th>
+            <th class="w-15p">Mức xếp loại; DHTĐ</th>
             <th class="w-60p">Diễn giải</th>
           </tr>
         </thead>

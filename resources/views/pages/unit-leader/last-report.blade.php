@@ -40,7 +40,7 @@
             <tr class="bg-primary-300 text-left">
               <th class=" w-16 font-semibold text-primary-900 rounded-tl-none">STT</th>
               <th class=" w-1/4 font-semibold text-primary-900">Tên cá nhân</th>
-              <th class=" w-1/4 font-semibold text-primary-900">Danh hiệu</th>
+              <th class=" w-1/4 font-semibold text-primary-900">Mức xếp loại; DHTĐ</th>
               <th class=" font-semibold text-primary-900 rounded-none">Trích ngang thành tích</th>
             </tr>
           </thead>
@@ -127,7 +127,7 @@
                     <td class=" text-gray-700">{{ $counter++ }}</td>
                     <td class=" font-medium text-gray-800">{{ $evaluation->evaluator->full_name ?? 'N/A' }}</td>
                     <td class="">
-                      <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">
+                      <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full font-medium">
                         {{ $evaluation->reward->name }}
                       </span>
                     </td>
