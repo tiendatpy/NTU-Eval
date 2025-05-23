@@ -81,5 +81,8 @@ Route::get('/dashboard/stats', [DashboardController::class, 'index'])
 Route::get('/unit-report', [ReportController::class, 'getListForUnitReport'])
     ->name('unit-report')
     ->middleware(['auth']);
+Route::get('/last-report', [ReportController::class, 'getListForLastReport'])
+    ->name('last-report')
+    ->middleware(['auth']);
     
 require __DIR__ . '/auth.php';

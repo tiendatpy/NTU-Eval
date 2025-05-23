@@ -1,0 +1,8 @@
+.mod-last-report {
+  table th:first-child:first-child {
+    @apply rounded-tl-none;
+  }
+  table th:last-child:last-child {
+    @apply rounded-tr-none;
+  }
+}

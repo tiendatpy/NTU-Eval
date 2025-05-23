@@ -53,7 +53,7 @@ class ReportController extends Controller
       ->with(['quality', 'title', 'reward'])
       ->first();
 
-    $evaluations = $query->orderBy('created_at', 'asc')->paginate(3);
+    $evaluations = $query->orderBy('created_at', 'asc')->paginate(5);
 
     return view('pages.unit-leader.unit-report', compact(
       'evaluations',
@@ -86,21 +86,36 @@ class ReportController extends Controller
       return back()->with('error', 'Không tìm thấy kỳ đánh giá cho năm đã chọn.');
     }
 
-    // Lấy danh sách các title để hiển thị trong dropdown
-    $titleTypeId = Cache::remember('title_type_id', 86400, function () {
-      return MetaType::where('category', 'type_title')
-        ->where('name', 'Cá nhân')
-        ->value('id');
-    });
-    $titles = Title::where('type_id', $titleTypeId)->get();
-
-    $query = Evaluation::with(['evaluator', 'title', 'reward', 'status'])
+    // Sửa đổi query để đảm bảo lấy đúng dữ liệu
+    $query = Evaluation::with([
+        'evaluator', 
+        'title', 
+        'reward', 
+        'approvedTitle', 
+        'approvedQuality'
+      ])
       ->where('period_id', $period->id)
       ->where('unit_id', $user->unit_id);
+
+    // Thêm điều kiện để lấy những bản ghi đã được duyệt
+    $statusId = Cache::remember('approved_status_id', 86400, function () {
+      return MetaType::where('category', 'evaluation_status')
+        ->where('name', 'Đã phê duyệt')
+        ->value('id');
+    });
+
+    if ($statusId) {
+      $query->where('status_id', $statusId);
+    }
+
+    $unitEvaluation = UnitEvaluation::where('unit_id', $user->unit_id)
+      ->where('period_id', $period->id)
+      ->with(['quality', 'title', 'reward'])
+      ->first();
 
     $evaluations = $query->orderBy('created_at', 'asc')
       ->paginate(5);
 
-      return view('pages.unit-leader.last-report', compact('evaluations', 'years', 'selectedYear', 'titles'));
+    return view('pages.unit-leader.last-report', compact('evaluations', 'years', 'selectedYear', 'unitEvaluation'));
   }
 }

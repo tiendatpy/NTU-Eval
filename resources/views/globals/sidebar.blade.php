@@ -63,16 +63,16 @@
         <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer has-menu-item">
             <span class="flex items-center gap-8 ">
                 <span class="icomoon icon-document-text text-2xl"></span>
-                <span>Báo cáo tổng kết</span>
+                <span>Báo cáo</span>
             </span>
             <ul class="sub-menu-list pl-24 mt-3 last-mb-none text-black ">
                 <li class="sub-menu-item hover:text-states-400 mb-5">
                     <a class="block " href="{{ route('unit-report') }}">
-                        <span>Báo cáo tổng kết</span>
+                        <span>Báo cáo sơ kết</span>
                     </a>
                 </li>
                 <li class="sub-menu-item hover:text-states-400 mb-5">
-                    <a class="block ">
+                    <a class="block" href="{{ route('last-report') }}">
                         <span>Tờ trình</span>
                     </a>
                 </li>

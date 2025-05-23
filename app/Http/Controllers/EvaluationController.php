@@ -373,13 +373,13 @@ class EvaluationController extends Controller
                 'status',
                 'unit'
             ])->orderBy('created_at', 'asc');
-        if ($isUnitLeader) {
-            $query->where('unit_id', $user->unit_id)
-                ->where('evaluator_id', '!=', $user->id); // Loại trừ bản thân trưởng đơn vị
-        }
-        else {
-            $query->where('unit_id', $user->unit_id);
-        }
+        // if ($isUnitLeader) {
+        //     $query->where('unit_id', $user->unit_id)
+        //         ->where('evaluator_id', '!=', $user->id); // Loại trừ bản thân trưởng đơn vị
+        // }
+        // else {
+        //     $query->where('unit_id', $user->unit_id);
+        // }
 
         // Lọc theo đơn vị nếu có
         if ($request->has('unit_id') && $request->unit_id) {

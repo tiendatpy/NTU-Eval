@@ -219,7 +219,6 @@ class ExportController extends Controller
         $nominations = Evaluation::with(['evaluator', 'title', 'approvedTitle', 'reward', 'quality'])
             ->where('period_id', $period->id)
             ->where('unit_id', $user->unit_id)
-            ->where('evaluator_id', '!=', $user->id) // Loại trừ trưởng đơn vị
             ->orderBy('evaluator_id')
             ->get();
 
