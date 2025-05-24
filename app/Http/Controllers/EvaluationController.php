@@ -121,7 +121,7 @@ class EvaluationController extends Controller
             'comment' => 'nullable|string',
             'title_id' => 'required|exists:titles,id',
             'reward_id' => 'required|exists:rewards,id',
-            'achievement' => 'required|string',
+            'achievement' => 'nullable|required|string',
         ]);
 
         DB::beginTransaction();
