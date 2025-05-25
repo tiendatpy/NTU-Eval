@@ -402,7 +402,7 @@ class EvaluationController extends Controller
         }
 
         // Lấy danh sách đánh giá đã lọc
-        $evaluations = $query->orderBy('created_at', 'desc')->paginate(10);
+        $evaluations = $query->orderBy('created_at', 'desc')->paginate(5);
 
         // Lấy danh sách xếp loại chất lượng để hiện thị trong dropdown filter
         $qualities = Quality::all();

@@ -36,9 +36,9 @@
             <td>{{ $index + 1 }}</td>
             <td>{{ $evaluation->id }}</td>
             <td>{{ $evaluation->evaluator->full_name }}</td>
-            <td>{{ $evaluation->quality->name }}</td>
+            <td>{{ $evaluation->status->name == 'Đã phê duyệt' ? $evaluation->approvedQuality->name :  $evaluation->quality->name  }}</td>
             <td>
-              {{ $evaluation->title->name}}
+              {{ $evaluation->status->name == 'Đã phê duyệt' ? $evaluation->approvedTitle->name : $evaluation->title->name}}
             </td>
             <td>
               <span class="flex items-center gap-4">
@@ -64,6 +64,9 @@
         @endforelse
       </tbody>
     </table>
+    <div class="flex justify-end mt-5">
+      {{ $evaluations->links() }}
+    </div>
   </div>
 </section>
 @endsection
