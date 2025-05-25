@@ -28,7 +28,7 @@
                   <td>{{ $detail->criteria->name }}</td>
                   <td>{!! $detail->evidence !!}</td>
                   <td>
-                    {{ $detail->score == 4 ? 'Xuất sắc' : ($detail->score == 3 ? 'Tốt' : ($detail->score == 2 ? 'Trung bình' : 'Yếu')) }}
+                    {{ $detail->rating == 4 ? 'Xuất sắc' : ($detail->rating == 3 ? 'Tốt' : ($detail->rating == 2 ? 'Trung bình' : 'Yếu')) }}
                   </td>
                 </tr>
                 @endforeach
