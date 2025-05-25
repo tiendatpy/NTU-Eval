@@ -30,9 +30,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/self-evaluation/result', [EvaluationController::class, 'result'])->name('evaluations.result');
     Route::get('/all-evaluations', [EvaluationController::class, 'getListEvaluation'])->name('evaluations.list');
 
-    Route::get('all-evaluations/{evaluation}/details', [EvaluationController::class, 'viewDetails'])->name('all-evaluations.view-details');
-    Route::post('all-evaluations/{evaluation}/approve-details', [EvaluationController::class, 'approveDetails'])->name('all-evaluations.approve-details');
-    Route::post('all-evaluations/{evaluation}/add-review', [EvaluationController::class, 'addReview'])->name('all-evaluations.add-review');
+    Route::get('/all-evaluations/{evaluation}/details', [EvaluationController::class, 'viewDetails'])->name('all-evaluations.view-details');
+    Route::post('/all-evaluations/{evaluation}/approve-details', [EvaluationController::class, 'approveDetails'])->name('all-evaluations.approve-details');
+    Route::post('/all-evaluations/{evaluation}/add-review', [EvaluationController::class, 'addReview'])->name('all-evaluations.add-review');
 });
 
 

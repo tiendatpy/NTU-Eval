@@ -38,7 +38,7 @@
                 </a>
             </li>
         @endif
-        <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer flex items-center gap-8 {{ request()->routeIs('evaluations.list') ? 'active-menu text-states-600' : '' }}">
+        <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer flex items-center gap-8 {{ request()->routeIs('evaluations.list') || request()->routeIs('all-evaluations.view-details') ? 'active-menu text-states-600' : '' }}">
             @if($isUnitLeader)
                 <span class="icomoon icon-clipboard-check text-2xl"></span>
                 <a class="block w-full" href="{{ route('evaluations.list')}}">
@@ -65,14 +65,14 @@
                 <span class="icomoon icon-document-text text-2xl"></span>
                 <span>Báo cáo</span>
             </span>
-            <ul class="sub-menu-list pl-24 mt-3 last-mb-none text-black ">
+            <ul class="sub-menu-list pl-24 mt-3 last-mb-none text-black {{ request()->routeIs('unit-report') || request()->routeIs('last-report') ? 'show-submenu' : '' }}">
                 <li class="sub-menu-item hover:text-states-400 mb-5">
-                    <a class="block " href="{{ route('unit-report') }}">
+                    <a class="block {{ request()->routeIs('unit-report') ? 'text-states-600 font-medium' : '' }}" href="{{ route('unit-report') }}">
                         <span>Báo cáo sơ kết</span>
                     </a>
                 </li>
                 <li class="sub-menu-item hover:text-states-400 mb-5">
-                    <a class="block" href="{{ route('last-report') }}">
+                    <a class="block {{ request()->routeIs('last-report') ? 'text-states-600 font-medium' : '' }}" href="{{ route('last-report') }}">
                         <span>Tờ trình</span>
                     </a>
                 </li>

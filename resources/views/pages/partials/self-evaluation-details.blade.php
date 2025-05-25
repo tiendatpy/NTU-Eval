@@ -129,7 +129,7 @@
             <h3 class="mb-5">V. ĐÁNH GIÁ CỦA TRƯỞNG ĐƠN VỊ</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
               <div>
-                <label for="approved_quality_id" class="block mb-2 font-medium">Xếp loại chất lượng:</label>
+                <label for="approved_quality_id" class="block mb-2 font-bold">Xếp loại chất lượng:</label>
                 <select id="approved_quality_id" name="approved_quality_id" class="border-primary-300 border-1 px-5 py-4 w-full rounded-lg" required>
                   <option value="">-- Chọn xếp loại --</option>
                   @foreach($qualities as $quality)
@@ -141,7 +141,7 @@
               </div>
               
               <div>
-                <label for="approved_title_id" class="block mb-2 font-medium">Danh hiệu thi đua:</label>
+                <label for="approved_title_id" class="block mb-2 font-bold">Danh hiệu thi đua:</label>
                 <select id="approved_title_id" name="approved_title_id" class="border-primary-300 border-1 px-5 py-4 w-full rounded-lg" required>
                   <option value="">-- Chọn danh hiệu --</option>
                   @foreach($titles as $title)
@@ -154,7 +154,7 @@
             </div>
             
             <div class="mb-5">
-              <label for="feedback" class="block mb-2 font-medium">Nhận xét:</label>
+              <label for="feedback" class="block mb-2 font-bold">Nhận xét:</label>
               <textarea id="feedback" name="feedback" class="ckeditor border-primary-500 border-1 p-2 w-full rounded-lg">{{ $evaluation->feedback }}</textarea>
             </div>
             

@@ -10,7 +10,7 @@
       <div class="flex items-center gap-3">
         <form id="yearFilterForm" action="{{ route('evaluations.list') }}" method="GET" class="flex items-center gap-3">
           <label for="year" class="font-medium">Năm:</label>
-          <select id="year" name="year" class="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-primary-500">
+          <select id="year" name="year" class="border border-gray-300 rounded-md px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-primary-500">
             @foreach($years as $year)
               <option value="{{ $year }}" {{ $selectedYear == $year ? 'selected' : '' }}>{{ $year }} - {{ $year+1 }}</option>
             @endforeach
@@ -64,14 +64,6 @@
         @endforelse
       </tbody>
     </table>
-    @if ($isUnitLeader)
-      <div class="text-right mt-5">
-        <a href="{{ route('evaluations.export-unit-report', $evaluations->first()->id) }}" class="btn btn-primary inline-flex items-center gap-3" title="Xuất danh sách tự đánh giá">
-          <span class="icomoon icon-download-v2 text-xl"></span>
-          <span>Xuất File</span>
-        </a>
-      </div>
-    @endif
   </div>
 </section>
 @endsection
