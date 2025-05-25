@@ -92,7 +92,7 @@
             </table>
           </div>
         </div>
-        @if(!$isUnitLeader)
+        @if(!$isUnitLeader && $evaluation->status->name !== 'Đã phê duyệt')
           <div class="user-review mb-5">
             <h3 class="mb-5">IV. GÓP Ý</h3>
             <form action="{{ route('all-evaluations.add-review', $evaluation->id) }}" method="post">
