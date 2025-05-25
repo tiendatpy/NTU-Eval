@@ -16,10 +16,21 @@ return new class extends Migration
             $table->id();
             $table->string('name')->unique();
             $table->text('description')->nullable();
+            $table->boolean('isSuperAdmin')->default(false);
+            $table->boolean('canManageEvaluations')->default(false);
+            $table->boolean('canApproveEvaluations')->default(false);
+            $table->boolean('canExportReports')->default(false);
+            $table->boolean('isUnitLeader')->default(false);
+            $table->boolean('canManagePeriods')->default(false);
             $table->timestamps();
         });
     }
 
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
     public function down() {
         Schema::dropIfExists('roles');
     }

@@ -6,7 +6,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class EvaluationDetail extends Model
 {
-    protected $fillable = ['evaluation_id', 'criteria_id', 'rating', 'evidence'];
+    protected $fillable = [
+        'evaluation_id',
+        'criteria_id',
+        'evidence',
+        'rating'
+    ];
+
+    protected $casts = [
+        'evidence' => 'string',
+    ];
 
     public function evaluation()
     {
@@ -18,8 +27,4 @@ class EvaluationDetail extends Model
         return $this->belongsTo(EvaluationCriteria::class, 'criteria_id');
     }
 
-    public function documents()
-    {
-        return $this->hasMany(Document::class, 'evaluation_detail_id');
-    }
-} 
+}

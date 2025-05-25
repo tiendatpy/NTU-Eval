@@ -17,11 +17,16 @@ return new class extends Migration
             $table->id();
             $table->foreignId('unit_id')->constrained('units');
             $table->foreignId('quality_id')->constrained('quality');
+            $table->foreignId('approved_quality_id')->nullable()->constrained('quality');
             $table->foreignId('title_id')->constrained('titles');
+            $table->foreignId('approved_title_id')->nullable()->constrained('titles');
             $table->foreignId('reward_id')->constrained('rewards');
+            $table->foreignId('approved_reward_id')->nullable()->constrained('rewards');
             $table->foreignId('period_id')->constrained('periods');
             $table->longText('evidence')->nullable();
+            $table->longText('approved_evidence')->nullable();
             $table->longText('achievement')->nullable();
+            $table->longText('approved_achievement')->nullable();
             $table->timestamps();
         });
     }

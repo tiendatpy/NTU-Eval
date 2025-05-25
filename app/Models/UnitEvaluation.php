@@ -3,63 +3,68 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class UnitEvaluation extends Model
 {
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
     protected $fillable = [
         'unit_id',
+        'period_id',
         'quality_id',
         'title_id',
         'reward_id',
-        'period_id',
         'evidence',
         'achievement',
+        'approved_quality_id',
+        'approved_title_id',
+        'approved_reward_id',
+        'approved_evidence',
+        'approved_achievement'
     ];
 
-    /**
-     * Get the unit that owns the evaluation.
-     */
-    public function unit(): BelongsTo
+    protected $casts = [
+        'evidence' => 'string',
+        'achievement' => 'string',
+        'approved_evidence' => 'string',
+        'approved_achievement' => 'string',
+    ];
+
+    public function unit()
     {
         return $this->belongsTo(Unit::class);
     }
 
-    /**
-     * Get the quality associated with the evaluation.
-     */
-    public function quality(): BelongsTo
+    public function period()
+    {
+        return $this->belongsTo(Periods::class, 'period_id');
+    }
+
+    public function quality()
     {
         return $this->belongsTo(Quality::class);
     }
 
-    /**
-     * Get the title associated with the evaluation.
-     */
-    public function title(): BelongsTo
+    public function approvedQuality()
+    {
+        return $this->belongsTo(Quality::class, 'approved_quality_id');
+    }
+
+    public function title()
     {
         return $this->belongsTo(Title::class);
     }
 
-    /**
-     * Get the reward associated with the evaluation.
-     */
-    public function reward(): BelongsTo
+    public function approvedTitle()
+    {
+        return $this->belongsTo(Title::class, 'approved_title_id');
+    }
+
+    public function reward()
     {
         return $this->belongsTo(Reward::class);
     }
 
-    /**
-     * Get the period associated with the evaluation.
-     */
-    public function period(): BelongsTo
+    public function approvedReward()
     {
-        return $this->belongsTo(Periods::class);
+        return $this->belongsTo(Reward::class, 'approved_reward_id');
     }
 }

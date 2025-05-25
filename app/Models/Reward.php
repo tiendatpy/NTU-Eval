@@ -11,14 +11,23 @@ class Reward extends Model
         'description'
     ];
 
-    public function titles()
-    {
-        return $this->hasMany(Title::class);
-    }
     public function evaluations()
     {
-        return $this->hasMany(UnitEvaluation::class, 'reward_id');
+        return $this->hasMany(Evaluation::class);
     }
-    
 
+    public function approvedEvaluations()
+    {
+        return $this->hasMany(Evaluation::class, 'approved_reward_id');
+    }
+
+    public function unitEvaluations()
+    {
+        return $this->hasMany(UnitEvaluation::class);
+    }
+
+    public function approvedUnitEvaluations()
+    {
+        return $this->hasMany(UnitEvaluation::class, 'approved_reward_id');
+    }
 }

@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Quality extends Model
 {
@@ -11,16 +10,26 @@ class Quality extends Model
 
     protected $fillable = [
         'name',
-        'description',
+        'description'
     ];
 
-    public function evaluations(): HasMany
+    public function evaluations()
     {
-        return $this->hasMany(Evaluation::class, 'quality_id');
+        return $this->hasMany(Evaluation::class);
     }
 
-    public function approvedEvaluations(): HasMany
+    public function approvedEvaluations()
     {
         return $this->hasMany(Evaluation::class, 'approved_quality_id');
+    }
+
+    public function unitEvaluations()
+    {
+        return $this->hasMany(UnitEvaluation::class);
+    }
+
+    public function approvedUnitEvaluations()
+    {
+        return $this->hasMany(UnitEvaluation::class, 'approved_quality_id');
     }
 }
