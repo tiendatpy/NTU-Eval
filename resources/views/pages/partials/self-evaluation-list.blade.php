@@ -22,11 +22,12 @@
       <thead class="bg-states-300">
         <tr>
           <th class="w-5p">STT</th>
-          <th class="w-10p">Mã Phiếu</th>
+          <th class="w-5p">Mã Phiếu</th>
           <th class="w-15p">Họ tên</th>
-          <th class="w-20p">Xếp loại chất lượng</th>
+          <th class="w-15p">Xếp loại chất lượng</th>
           <th class="w-15p">Danh hiệu thi đua</th>
-          <th class="w-10p">Trạng thái</th>
+          <th class="w-15p">Người duyệt</th>
+          <th class="w-15p">Trạng thái</th>
           <th class="w-10p">Hành động</th>
         </tr>
       </thead>
@@ -40,6 +41,7 @@
             <td>
               {{ $evaluation->status->name == 'Đã phê duyệt' ? $evaluation->approvedTitle->name : $evaluation->title->name}}
             </td>
+            <td>{{ $evaluation->approver !== null ? $evaluation->approver->full_name : '' }}</td>
             <td>
               <span class="flex items-center gap-4">
                 <span class="min-w-5 h-5 rounded-full 

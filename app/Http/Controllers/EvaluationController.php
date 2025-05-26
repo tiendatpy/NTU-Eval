@@ -328,6 +328,7 @@ class EvaluationController extends Controller
                 'approvedTitle',
                 'reward',
                 'approvedReward',
+                'approver',
                 'status',
                 'unit'
             ])->orderBy('created_at', 'asc');
@@ -512,6 +513,8 @@ class EvaluationController extends Controller
                 'approved_quality_id' => $request->approved_quality_id,
                 'approved_title_id' => $request->approved_title_id,
                 'approved_reward_id' => $request->approved_reward_id,
+                'approved_by' => $user->id,
+                'approved_at' => now(),
                 'feedback' => $request->feedback,
                 'status_id' => $approvedStatus->id,
             ]);
