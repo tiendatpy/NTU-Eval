@@ -38,10 +38,11 @@ Route::middleware(['auth'])->group(function () {
 
 
 Route::get('/dashboard', function () {
-    if (auth()->check() && auth()->user()->role->name === 'Trưởng đơn vị') {
-        return redirect()->route('dashboard.stats');
-    }
-    return redirect()->route('evaluations.index');
+    // if (auth()->check() && auth()->user()->role->isUnitLeader == true) {
+    //     return redirect()->route('dashboard.stats');
+    // }
+    // return redirect()->route('evaluations.index');
+    return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {

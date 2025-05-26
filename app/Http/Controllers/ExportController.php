@@ -16,7 +16,7 @@ class ExportController extends Controller
     public function exportEvaluation($id)
     {
         $user = auth()->user();
-        $isUnitLeader = $user->role->name === 'Trưởng đơn vị';
+        $isUnitLeader = $user->role->isUnitLeader == true;
         // Lấy dữ liệu đánh giá
         $evaluation = Evaluation::with(['evaluator', 'quality', 'details.criteria', 'title', 'reward'])->findOrFail($id);
         $user = $evaluation->evaluator;

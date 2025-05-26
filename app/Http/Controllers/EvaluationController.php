@@ -24,7 +24,7 @@ class EvaluationController extends Controller
             return redirect()->route('login')->with('error', 'Bạn cần đăng nhập để thực hiện hành động này.');
         }
 
-        $isUnitLeader = $user->role->name === 'Trưởng đơn vị'; // Kiểm tra vai trò trưởng đơn vị
+        $isUnitLeader = $user->role->isUnitLeader == true; // Kiểm tra vai trò trưởng đơn vị
 
         $selectedYear = $request->input('year', now()->year - 1); // Mặc định là năm hiện tại - 1
 
@@ -97,6 +97,7 @@ class EvaluationController extends Controller
         ));
     }
 
+
     public function store(Request $request)
     {
         $user = auth()->user();
@@ -121,7 +122,7 @@ class EvaluationController extends Controller
             'comment' => 'nullable|string',
             'title_id' => 'required|exists:titles,id',
             'reward_id' => 'required|exists:rewards,id',
-            'achievement' => 'nullable|required|string',
+            'achievement' => 'required|string',
         ]);
 
         DB::beginTransaction();
@@ -158,7 +159,7 @@ class EvaluationController extends Controller
                     'reward_id' => $request->reward_id,
                     'achievement' => $request->achievement,
                     'comment' => $request->comment,
-                    'status_id' => $status->id, // Cập nhật lại trạng thái thành "Đang xét duyệt"
+                    'status_id' => $status->id,
                     'updated_at' => now(),
                 ]);
 
@@ -199,11 +200,14 @@ class EvaluationController extends Controller
                     'title_id' => $request->title_id,
                     'approved_title_id' => null,
                     'reward_id' => $request->reward_id,
+                    'approved_reward_id' => null, // Thêm trường này theo migration
                     'achievement' => $request->achievement,
                     'comment' => $request->comment,
                     'review' => null,
                     'feedback' => null,
                     'status_id' => $status->id,
+                    'approved_by' => null, // Thêm trường này theo migration
+                    'approved_at' => null, // Thêm trường này theo migration
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
@@ -256,7 +260,7 @@ class EvaluationController extends Controller
         }
 
         // Lấy tiêu chí đánh giá phù hợp với vai trò
-        $isUnitLeader = $user->role->name === 'Trưởng đơn vị';
+        $isUnitLeader = $user->role->isUnitLeader == true;
         $managerId = Cache::remember('criteria_category_manager_id', 86400, function () {
             return MetaType::where('name', 'Viên chức, NLĐ quản lý')->value('id');
         });
@@ -282,56 +286,6 @@ class EvaluationController extends Controller
     }
 
 
-    // public function getListTitleNomination(Request $request)
-    // {
-    //     $user = auth()->user();
-    //     if (!$user) {
-    //         return redirect()->route('login')->with('error', 'Bạn cần đăng nhập để thực hiện hành động này.');
-    //     }
-
-    //     $years = Periods::orderBy('year', 'desc')->pluck('year')->unique();
-
-    //     $defaultYear = now()->year - 1;
-
-    //     if (!$years->contains($defaultYear)) {
-    //         $defaultYear = $years->first(); // Nếu không có, lấy năm gần nhất
-    //     }
-
-    //     $selectedYear = $request->input('year', $defaultYear);
-
-    //     $period = Periods::where('year', $selectedYear)->first();
-
-    //     if (!$period) {
-    //         return back()->with('error', 'Không tìm thấy kỳ đánh giá cho năm đã chọn.');
-    //     }
-
-    //     // Lấy danh sách các title để hiển thị trong dropdown
-    //     $titleTypeId = Cache::remember('title_type_id', 86400, function () {
-    //         return MetaType::where('category', 'type_title')
-    //             ->where('name', 'Cá nhân')
-    //             ->value('id');
-    //     });
-    //     $titles = Title::where('type_id', $titleTypeId)->get();
-
-    //     $query = Evaluation::with(['evaluator', 'title', 'reward', 'status'])
-    //         ->where('period_id', $period->id)
-    //         ->where('unit_id', $user->unit_id);
-
-    //     // Nếu là trưởng đơn vị, lọc bỏ bản thân ra khỏi danh sách
-    //     if ($user->role->name === 'Trưởng đơn vị') {
-    //         $query->where('evaluator_id', '!=', $user->id); // Thay đổi ở đây
-    //     }
-
-    //     $nominations = $query->orderBy('created_at', 'asc')
-    //         ->paginate(5);
-
-    //     if ($user->role->name === 'Trưởng đơn vị') {
-    //         return view('pages.unit-leader.title-approvals', compact('nominations', 'years', 'selectedYear', 'titles'));
-    //     } else {
-    //         return view('pages.all-title-nominations', compact('nominations', 'years', 'selectedYear'));
-    //     }
-    // }
-
     public function getListEvaluation(Request $request)
     {
         $user = auth()->user();
@@ -339,10 +293,11 @@ class EvaluationController extends Controller
             return redirect()->route('login')->with('error', 'Bạn cần đăng nhập để thực hiện hành động này.');
         }
 
-        $isUnitLeader = $user->role->name === 'Trưởng đơn vị';
+        $isUnitLeader = $user->role->isUnitLeader == true;
 
         // Lấy danh sách các năm để lọc
         $years = Periods::orderBy('year', 'desc')->pluck('year')->unique();
+
 
         // Lấy năm được chọn, mặc định là năm hiện tại - 1
         $defaultYear = now()->year - 1;
@@ -357,6 +312,8 @@ class EvaluationController extends Controller
         // Lấy period_id từ năm được chọn
         $period = Periods::where('year', $selectedYear)->first();
 
+
+
         if (!$period) {
             return back()->with('error', 'Không tìm thấy kỳ đánh giá cho năm đã chọn.');
         }
@@ -370,15 +327,15 @@ class EvaluationController extends Controller
                 'title',
                 'approvedTitle',
                 'reward',
+                'approvedReward',
                 'status',
                 'unit'
             ])->orderBy('created_at', 'asc');
-        if (!$isUnitLeader) {
-            $query->where('unit_id', $user->unit_id)
-                ->where('evaluator_id', '!=', $user->id); // Loại trừ bản thân trưởng đơn vị
-        }
-        else {
+        if ($isUnitLeader) {
             $query->where('unit_id', $user->unit_id);
+        } else {
+            $query->where('unit_id', $user->unit_id)
+                ->where('evaluator_id', '!=', $user->id);
         }
 
         // Lọc theo đơn vị nếu có
@@ -444,31 +401,31 @@ class EvaluationController extends Controller
             return redirect()->route('login')
                 ->with('error', 'Bạn cần đăng nhập để thực hiện hành động này.');
         }
-        
+
         // Kiểm tra quyền: chỉ cho phép người dùng không phải trưởng đơn vị trong cùng đơn vị
-        if ($user->role->name === 'Trưởng đơn vị' || $user->unit_id !== $evaluation->unit_id) {
+        if ($user->role->isUnitLeader == true || $user->unit_id !== $evaluation->unit_id) {
             return back()->with('error', 'Bạn không có quyền thêm nhận xét này.');
         }
-        
+
         // Validate dữ liệu
         $request->validate([
             'review' => 'string',
         ]);
-        
-        
+
+
         try {
             // Cập nhật trường review
             $evaluation->update([
                 'review' => $request->review,
             ]);
-            
+
             return redirect()->route('all-evaluations.view-details', $evaluation->id)
                 ->with('success', 'Đã thêm góp thành công.');
         } catch (\Exception $e) {
             return back()
                 ->with('error', 'Có lỗi xảy ra: ' . $e->getMessage())
                 ->withInput();
-    }
+        }
     }
 
 
@@ -494,7 +451,7 @@ class EvaluationController extends Controller
         ]);
 
         // Xác định vai trò của người xem
-        $isUnitLeader = $user->role->name === 'Trưởng đơn vị';
+        $isUnitLeader = $user->role->isUnitLeader == true;
         $isCurrentUserEvaluation = $user->id === $evaluation->evaluator_id;
 
         // Lấy danh sách xếp loại và danh hiệu cho dropdown
@@ -506,13 +463,15 @@ class EvaluationController extends Controller
                 ->value('id');
         });
         $titles = Title::where('type_id', $titleTypeId)->get();
+        $rewards = Reward::all();
 
         return view('pages.partials.self-evaluation-details', compact(
             'evaluation',
             'isUnitLeader',
             'isCurrentUserEvaluation',
             'qualities',
-            'titles'
+            'titles',
+            'rewards'
         ));
     }
 
@@ -534,6 +493,7 @@ class EvaluationController extends Controller
         $request->validate([
             'approved_quality_id' => 'required|exists:quality,id',
             'approved_title_id' => 'required|exists:titles,id',
+            'approved_reward_id' => 'nullable|exists:rewards,id',
             'feedback' => 'nullable|string',
         ]);
 
@@ -551,7 +511,8 @@ class EvaluationController extends Controller
             $evaluation->update([
                 'approved_quality_id' => $request->approved_quality_id,
                 'approved_title_id' => $request->approved_title_id,
-                'feedback' => $request->feedback ,
+                'approved_reward_id' => $request->approved_reward_id,
+                'feedback' => $request->feedback,
                 'status_id' => $approvedStatus->id,
             ]);
 

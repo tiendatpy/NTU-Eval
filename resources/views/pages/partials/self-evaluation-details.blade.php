@@ -127,7 +127,7 @@
           @csrf
           <div class="approval-section mb-5">
             <h3 class="mb-5">V. ĐÁNH GIÁ CỦA TRƯỞNG ĐƠN VỊ</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
               <div>
                 <label for="approved_quality_id" class="block mb-2 font-bold">Xếp loại chất lượng:</label>
                 <select id="approved_quality_id" name="approved_quality_id" class="border-primary-300 border-1 px-5 py-4 w-full rounded-lg" required>
@@ -147,6 +147,18 @@
                   @foreach($titles as $title)
                     <option value="{{ $title->id }}" {{ $evaluation->approved_title_id == $title->id ? 'selected' : '' }}>
                       {{ $title->name }}
+                    </option>
+                  @endforeach
+                </select>
+              </div>
+
+              <div>
+                <label for="approved_reward_id" class="block mb-2 font-bold">Hình thức khen thưởng:</label>
+                <select id="approved_reward_id" name="approved_reward_id" class="border-primary-300 border-1 px-5 py-4 w-full rounded-lg" required>
+                  <option value="">-- Chọn hình thức khen thưởng --</option>
+                  @foreach($rewards as $reward)
+                    <option value="{{ $reward->id }}" {{ $evaluation->approved_reward_id == $reward->id ? 'selected' : '' }}>
+                      {{ $reward->name }}
                     </option>
                   @endforeach
                 </select>

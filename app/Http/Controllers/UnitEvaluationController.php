@@ -26,7 +26,7 @@ class UnitEvaluationController extends Controller
         }
 
         // Kiểm tra vai trò của người dùng - chỉ trưởng đơn vị mới được đánh giá đơn vị
-        $isUnitLeader = $user->role->name === 'Trưởng đơn vị';
+        $isUnitLeader = $user->role->isUnitLeader == true;
         if (!$isUnitLeader) {
             return redirect()->route('dashboard')->with('error', 'Bạn không có quyền truy cập chức năng này.');
         }
@@ -96,7 +96,7 @@ class UnitEvaluationController extends Controller
         }
 
         // Kiểm tra vai trò
-        $isUnitLeader = $user->role->name === 'Trưởng đơn vị';
+        $isUnitLeader = $user->role->isUnitLeader == true;
         if (!$isUnitLeader) {
             return redirect()->route('dashboard')->with('error', 'Bạn không có quyền thực hiện chức năng này.');
         }

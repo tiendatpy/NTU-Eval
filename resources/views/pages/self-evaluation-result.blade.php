@@ -78,27 +78,42 @@
           
           @if ($evaluation->feedback)
           <div class="self-review mb-5">
-            <h3 class="mb-5">IV. BÌNH XÉT CỦA TRƯỞNG ĐƠN VỊ</h3>
+            <h3 class="mb-5">IV. NHẬN XÉT CỦA TRƯỞNG ĐƠN VỊ</h3>
             <div class="bg-blue-50 rounded-lg p-4 border border-blue-200">
               {!! $evaluation->feedback !!}
             </div>
           </div>
           @endif
-
-          @if ($evaluation->approved_quality_id)
-          <div class="approved-quality mb-5">
-            <h3 class="mb-5">V. XẾP LOẠI ĐƯỢC PHÊ DUYỆT</h3>
-            <div class="bg-blue-50 rounded-lg p-4 border border-blue-200">
-              {{ $evaluation->approvedQuality->name }}
-            </div>
-          </div>
-          @endif
-
-          @if ($evaluation->approved_title_id)
-          <div class="approved-title-nomination mb-5">
-            <h3 class="mb-5">VI. DANH HIỆU ĐƯỢC PHÊ DUYỆT</h3>
-            <div class="bg-blue-50 rounded-lg p-4 border border-blue-200">
-              {{ $evaluation->approvedTitle->name }}
+          @if($evaluation->approved_quality_id || $evaluation->approved_title_id || $evaluation->approved_reward_id)
+          <div>
+            <h3 class="mb-5">V. ĐÁNH GIÁ CỦA TRƯỞNG ĐƠN VỊ</h3>
+            <div class="grid {{ $evaluation->reward->name !== 'Không' ? 'lg:grid-cols-3' : 'lg:grid-cols-2' }} gap-6">
+              @if ($evaluation->approved_quality_id)
+              <div class="approved-quality mb-5">
+                <h4 class="mb-5 text-primary-800">Xếp loại được phê duyệt</h4>
+                <div class="bg-blue-50 rounded-lg p-4 border border-blue-200">
+                  {{ $evaluation->approvedQuality->name }}
+                </div>
+              </div>
+              @endif
+    
+              @if ($evaluation->approved_title_id)
+              <div class="approved-title-nomination mb-5">
+                <h4 class="mb-5 text-primary-800">Danh hiệu được phê duyệt</h4>
+                <div class="bg-blue-50 rounded-lg p-4 border border-blue-200">
+                  {{ $evaluation->approvedTitle->name }}
+                </div>
+              </div>
+              @endif
+    
+              @if ($evaluation->approved_reward_id && $evaluation->reward->name !== 'Không')
+              <div class="approved-reward-nomination mb-5">
+                <h4 class="mb-5 text-primary-800">HTKT được phê duyệt</h4>
+                <div class="bg-blue-50 rounded-lg p-4 border border-blue-200">
+                  {{ $evaluation->approvedreward->name }}
+                </div>
+              </div>
+              @endif
             </div>
           </div>
           @endif

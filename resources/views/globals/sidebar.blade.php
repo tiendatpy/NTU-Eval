@@ -1,5 +1,5 @@
 @php
- $isUnitLeader = auth()->user()->role->name === 'Trưởng đơn vị';
+ $isUnitLeader = auth()->user()->role->isUnitLeader == true;
 @endphp
 <div class="menu px-6 py-8">
     <ul class="menu-list mb-11">
@@ -31,9 +31,9 @@
             </ul>
         </li>
         @else
-            <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer flex items-center gap-8 {{ request()->routeIs('evaluations.index') ? 'active-menu text-states-600' : '' }}">
+            <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer flex items-center gap-8 {{ request()->routeIs('evaluations.index') || request()->routeIs('evaluations.result')  ? 'active-menu text-states-600' : '' }}">
                 <span class="icomoon icon-pencil text-2xl"></span>
-                <a class="block w-full" href="{{ route('dashboard.stats') }}">
+                <a class="block w-full" href="{{ route('evaluations.index') }}">
                     <span>Tự đánh giá</span>
                 </a>
             </li>
