@@ -41,6 +41,20 @@ class UnitController extends Controller
                 ->toArray();
         }
 
-        return view('pages.unit-leader.unit-members', compact('members', 'currentYear', 'evaluatedUserIds'));
+        // Thêm thống kê
+        $totalMembers = $members->total();
+        $evaluatedCount = count($evaluatedUserIds);
+        $notEvaluatedCount = $totalMembers - $evaluatedCount;
+        $evaluationPercentage = $totalMembers > 0 ? round(($evaluatedCount / $totalMembers) * 100) : 0;
+
+        return view('pages.unit-leader.unit-members', compact(
+            'members', 
+            'currentYear', 
+            'evaluatedUserIds', 
+            'totalMembers', 
+            'evaluatedCount', 
+            'notEvaluatedCount',
+            'evaluationPercentage'
+        ));
     }
 }

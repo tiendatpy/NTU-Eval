@@ -298,7 +298,6 @@ class EvaluationController extends Controller
         // Lấy danh sách các năm để lọc
         $years = Periods::orderBy('year', 'desc')->pluck('year')->unique();
 
-
         // Lấy năm được chọn, mặc định là năm hiện tại - 1
         $defaultYear = now()->year - 1;
 
@@ -311,8 +310,6 @@ class EvaluationController extends Controller
 
         // Lấy period_id từ năm được chọn
         $period = Periods::where('year', $selectedYear)->first();
-
-
 
         if (!$period) {
             return back()->with('error', 'Không tìm thấy kỳ đánh giá cho năm đã chọn.');
@@ -332,13 +329,13 @@ class EvaluationController extends Controller
                 'status',
                 'unit'
             ])->orderBy('created_at', 'asc');
+
         if ($isUnitLeader) {
             $query->where('unit_id', $user->unit_id);
         } else {
             $query->where('unit_id', $user->unit_id)
                 ->where('evaluator_id', '!=', $user->id);
         }
-        
 
         // Lọc theo đơn vị nếu có
         if ($request->has('unit_id') && $request->unit_id) {
@@ -377,12 +374,52 @@ class EvaluationController extends Controller
         // Lấy danh sách trạng thái để hiển thị trong dropdown filter
         $statuses = MetaType::where('category', 'evaluation_status')->get();
 
-        // Return view hoặc JSON data tùy theo request type
-        // if ($request->ajax()) {
-        //     return response()->json([
-        //         'html' => view('pages.partials.evaluation-list-table', compact('evaluations'))->render(),
-        //     ]);
-        // }
+        // Thêm thống kê nếu là trưởng đơn vị
+        $statistics = null;
+        if ($isUnitLeader) {
+            // Lấy ID trạng thái "Đã phê duyệt"
+            $approvedStatusId = MetaType::where('category', 'evaluation_status')
+                ->where('name', 'Đã phê duyệt')
+                ->value('id');
+
+            // Lấy ID trạng thái "Đang xét duyệt"
+            $pendingStatusId = MetaType::where('category', 'evaluation_status')
+                ->where('name', 'Đang xét duyệt')
+                ->value('id');
+
+            // Đếm tổng số đánh giá trong đơn vị
+            $totalEvaluations = Evaluation::where('period_id', $period->id)
+                ->where('unit_id', $user->unit_id)
+                ->count();
+
+            // Đếm số đánh giá đã được phê duyệt
+            $approvedCount = Evaluation::where('period_id', $period->id)
+                ->where('unit_id', $user->unit_id)
+                ->where('status_id', $approvedStatusId)
+                ->count();
+
+            // Đếm số đánh giá đang chờ phê duyệt
+            $pendingCount = Evaluation::where('period_id', $period->id)
+                ->where('unit_id', $user->unit_id)
+                ->where('status_id', $pendingStatusId)
+                ->count();
+
+            // Tính phần trăm
+            $approvedPercentage = $totalEvaluations > 0 ? round(($approvedCount / $totalEvaluations) * 100) : 0;
+            $pendingPercentage = $totalEvaluations > 0 ? round(($pendingCount / $totalEvaluations) * 100) : 0;
+
+            $statistics = [
+                'total' => $totalEvaluations,
+                'approved' => [
+                    'count' => $approvedCount,
+                    'percentage' => $approvedPercentage
+                ],
+                'pending' => [
+                    'count' => $pendingCount,
+                    'percentage' => $pendingPercentage
+                ]
+            ];
+        }
 
         return view('pages.partials.self-evaluation-list', compact(
             'evaluations',
@@ -391,8 +428,8 @@ class EvaluationController extends Controller
             'qualities',
             'titles',
             'statuses',
-            'isUnitLeader'
-
+            'isUnitLeader',
+            'statistics'
         ));
     }
 
