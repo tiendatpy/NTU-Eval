@@ -12,26 +12,27 @@ class UnitController extends Controller
     public function members()
     {
         $user = auth()->user();
-        
-        if ($user->role->name !== 'Trưởng đơn vị') {
+        $isUnitLeader = $user->role->isUnitLeader == true;
+
+        if (!$isUnitLeader) {
             return redirect()->route('login')->with('error', 'Bạn không có quyền truy cập tính năng này.');
         }
-        
-        $currentYear = now()->year-1;
-        
+
+        $currentYear = now()->year - 1;
+
         $periodId = Periods::where('year', $currentYear)->value('id');
-        
+
         if (!$periodId) {
             $periodId = Periods::orderBy('year', 'desc')->value('id');
             $currentYear = Periods::where('id', $periodId)->value('year');
         }
-        
+
         $members = User::where('unit_id', $user->unit_id)
-            ->where('id', '!=', $user->id) 
             ->with('role')
             ->orderBy('full_name')
             ->paginate(10);
-        
+
+
         $evaluatedUserIds = [];
         if ($periodId) {
             $evaluatedUserIds = Evaluation::where('period_id', $periodId)
@@ -39,7 +40,7 @@ class UnitController extends Controller
                 ->pluck('evaluator_id')
                 ->toArray();
         }
-        
+
         return view('pages.unit-leader.unit-members', compact('members', 'currentYear', 'evaluatedUserIds'));
     }
 }
