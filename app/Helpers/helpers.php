@@ -4,16 +4,21 @@ use Carbon\Carbon;
 
 if (!function_exists('format_date')) {
     /**
-     * Định dạng ngày từ Y-m-d sang d-m-Y.
+     * Định dạng ngày từ Y-m-d sang d-m-Y, có thể bao gồm cả giờ.
      *
      * @param string|null $date
      * @param string $format
+     * @param bool $showTime Hiển thị thêm giờ hay không
      * @return string|null
      */
-    function format_date(?string $date, string $format = 'd-m-Y'): ?string
+    function format_date(?string $date, string $format = 'd-m-Y', bool $showTime = false): ?string
     {
         if (!$date) {
             return null;
+        }
+
+        if ($showTime) {
+            $format .= ' H:i';
         }
 
         return Carbon::parse($date)->format($format);

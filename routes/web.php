@@ -71,6 +71,13 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware(['auth'])->group(function () {
     Route::get('/unit-evaluation', [UnitEvaluationController::class, 'index'])->name('unit.evaluations.index');
     Route::post('/unit-evaluation', [UnitEvaluationController::class, 'store'])->name('unit.evaluations.store');
+
+        Route::get('/unit-evaluation/approve', [UnitEvaluationController::class, 'approvalList'])
+        ->name('unit-evaluations.approve');
+    
+    // Xử lý phê duyệt
+    Route::post('/unit-evaluation/approve/{id}', [UnitEvaluationController::class, 'approve'])
+        ->name('unit-evaluations.approve-submit');
 });
 
 //dashboard
@@ -85,5 +92,6 @@ Route::get('/unit-report', [ReportController::class, 'getListForUnitReport'])
 Route::get('/last-report', [ReportController::class, 'getListForLastReport'])
     ->name('last-report')
     ->middleware(['auth']);
-    
+
+
 require __DIR__ . '/auth.php';

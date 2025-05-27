@@ -10,8 +10,6 @@
                 <span>Tổng quan</span>
             </a>
         </li>
-        @endif
-        @if ($isUnitLeader)
         <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer has-menu-item">
             <span class="flex items-center gap-8 ">
                 <span class="icomoon icon-pencil text-2xl"></span>
@@ -30,36 +28,30 @@
                 </li>
             </ul>
         </li>
-        @else
-            <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer flex items-center gap-8 {{ request()->routeIs('evaluations.index') || request()->routeIs('evaluations.result')  ? 'active-menu text-states-600' : '' }}">
-                <span class="icomoon icon-pencil text-2xl"></span>
-                <a class="block w-full" href="{{ route('evaluations.index') }}">
-                    <span>Tự đánh giá</span>
-                </a>
-            </li>
-        @endif
-        <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer flex items-center gap-8 {{ request()->routeIs('evaluations.list') || request()->routeIs('all-evaluations.view-details') ? 'active-menu text-states-600' : '' }}">
-            @if($isUnitLeader)
+        <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer has-menu-item">
+            <span class="flex items-center gap-8 ">
                 <span class="icomoon icon-clipboard-check text-2xl"></span>
-                <a class="block w-full" href="{{ route('evaluations.list')}}">
-                    <span>Phê duyệt</span>
-                </a>
-            @else
-                <span class="icomoon icon-document-search text-2xl"></span>
-                <a class="block w-full" href="{{ route('evaluations.list')}}">
-                    <span>Danh sách đánh giá</span>
-                </a>
-            @endif
+                <span>Phê duyệt</span>
+            </span>
+            <ul class="sub-menu-list pl-24 mt-3 last-mb-none text-black">
+                <li class="sub-menu-item hover:text-states-400 mb-5">
+                    <a class="block {{ request()->routeIs('evaluations.list') ? 'text-states-600 font-medium' : '' }}" href="{{ route('evaluations.list')}}">
+                        <span>Cá nhân</span>
+                    </a>
+                </li>
+                <li class="sub-menu-item hover:text-states-400 mb-5">
+                    <a class="block {{ request()->routeIs('unit-evaluations.approve') ? 'text-states-600 font-medium' : '' }}" href="{{ route('unit-evaluations.approve') }}">
+                        <span>Đơn vị</span>
+                    </a>
+                </li>
+            </ul>
         </li>
-        @if($isUnitLeader)
         <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer flex items-center gap-8 {{ request()->routeIs('unit.members') ? 'active-menu text-states-600' : '' }}">
             <span class="icomoon icon-users text-2xl"></span>
             <a class="block w-full" href="{{ route('unit.members') }}">
                 <span>Thành viên đơn vị</span>
             </a>
         </li>
-        @endif
-        @if ($isUnitLeader)
         <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer has-menu-item">
             <span class="flex items-center gap-8 ">
                 <span class="icomoon icon-document-text text-2xl"></span>
@@ -78,6 +70,19 @@
                 </li>
             </ul>
         </li>
+        @else
+            <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer flex items-center gap-8 {{ request()->routeIs('evaluations.index') || request()->routeIs('evaluations.result')  ? 'active-menu text-states-600' : '' }}">
+                <span class="icomoon icon-pencil text-2xl"></span>
+                <a class="block w-full" href="{{ route('evaluations.index') }}">
+                    <span>Tự đánh giá</span>
+                </a>
+            </li>
+            <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer flex items-center gap-8 {{ request()->routeIs('evaluations.list') || request()->routeIs('all-evaluations.view-details') ? 'active-menu text-states-600' : '' }}">
+                <span class="icomoon icon-document-search text-2xl"></span>
+                <a class="block w-full" href="{{ route('evaluations.list')}}">
+                    <span>Danh sách đánh giá</span>
+                </a>
+            </li>
         @endif
     </ul>
     <ul class="menu-list mb-11">

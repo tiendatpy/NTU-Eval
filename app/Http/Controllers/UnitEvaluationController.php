@@ -53,7 +53,7 @@ class UnitEvaluationController extends Controller
                 ->where('name', 'Tập thể')
                 ->value('id');
         });
-        
+
         // Nếu không tìm thấy loại danh hiệu "Tập thể", sử dụng tất cả danh hiệu
         if ($titleTypeId) {
             $titles = Title::where('type_id', $titleTypeId)->get();
@@ -131,10 +131,10 @@ class UnitEvaluationController extends Controller
                     'quality_id' => $request->quality_id,
                     'title_id' => $request->title_id,
                     'reward_id' => $request->reward_id,
-                    'evidence' =>$request->evidence,
-                    'achievement' =>$request->achievement,
+                    'evidence' => $request->evidence,
+                    'achievement' => $request->achievement,
                 ]);
-                
+
                 $message = 'Cập nhật đánh giá đơn vị thành công.';
             } else {
                 // Tạo đánh giá mới
@@ -144,73 +144,127 @@ class UnitEvaluationController extends Controller
                     'quality_id' => $request->quality_id,
                     'title_id' => $request->title_id,
                     'reward_id' => $request->reward_id,
-                    'evidence' =>$request->evidence,
-                    'achievement' =>$request->achievement,
+                    'evidence' => $request->evidence,
+                    'achievement' => $request->achievement,
                 ]);
-                
+
                 $message = 'Tự đánh giá đơn vị thành công.';
             }
 
             DB::commit();
             return redirect()->route('unit.evaluations.index')->with('success', $message);
-
         } catch (Exception $e) {
             DB::rollBack();
             return back()->with('error', 'Lỗi: ' . $e->getMessage());
         }
     }
 
-    // public function getListUnitEvaluations(Request $request)
-    // {
-    //     $user = auth()->user();
-    //     if (!$user) {
-    //         return redirect()->route('login')->with('error', 'Bạn cần đăng nhập để thực hiện hành động này.');
-    //     }
-
-    //     // Lấy danh sách các năm để lọc
-    //     $years = Periods::orderBy('year', 'desc')->pluck('year')->unique();
-
-    //     // Lấy năm được chọn, mặc định là năm hiện tại - 1
-    //     $defaultYear = now()->year - 1;
-
-    //     // Kiểm tra xem năm mặc định có trong danh sách năm không
-    //     if (!$years->contains($defaultYear)) {
-    //         $defaultYear = $years->first();
-    //     }
-
-    //     $selectedYear = $request->input('year', $defaultYear);
-
-    //     // Lấy period_id từ năm được chọn
-    //     $period = Periods::where('year', $selectedYear)->first();
-
-    //     if (!$period) {
-    //         return back()->with('error', 'Không tìm thấy kỳ đánh giá cho năm đã chọn.');
-    //     }
-
-    //     // Xây dựng query để lấy dữ liệu
-    //     $query = UnitEvaluation::where('period_id', $period->id)
-    //         ->with(['unit', 'quality', 'title', 'reward']);
-            
-    //     // Nếu là quản trị viên hoặc manager cao cấp, có thể xem tất cả đơn vị
-    //     // Nếu là trưởng đơn vị, chỉ xem được đơn vị của mình
-    //     $isAdmin = $user->role->name === 'Quản trị viên';
-    //     $isManager = $user->role->name === 'Ban giám hiệu';
+    public function approve(Request $request, $id)
+    {
+        $user = Auth::user();
+        $unitEvaluation = UnitEvaluation::findOrFail($id);
         
-    //     if (!$isAdmin && !$isManager) {
-    //         $query->where('unit_id', $user->unit_id);
-    //     }
+        // Kiểm tra quyền phê duyệt
+        if (!$user->role->canApproveEvaluations && !$user->role->isUnitLeader && !$user->role->isSuperAdmin) {
+            return redirect()->back()->with('error', 'Bạn không có quyền phê duyệt đánh giá này.');
+        }
+        
+        // Kiểm tra xem có phải đánh giá của đơn vị mình không
+        if ($unitEvaluation->unit_id != $user->unit_id && !$user->role->isSuperAdmin) {
+            return redirect()->back()->with('error', 'Bạn không có quyền phê duyệt đánh giá đơn vị khác.');
+        }
+        
+        // Kiểm tra xem đánh giá đã được phê duyệt chưa
+        if ($unitEvaluation->approved_quality_id) {
+            return redirect()->back()->with('error', 'Đánh giá này đã được phê duyệt.');
+        }
+        
+        // Validate dữ liệu
+        $validated = $request->validate([
+            'approved_quality_id' => 'required|exists:quality,id',
+            'approved_title_id' => 'required|exists:titles,id',
+            'approved_reward_id' => 'required|exists:rewards,id',
+            'approved_achievement' => 'required|string',
+            'approved_evidence' => 'nullable|string',
+        ]);
+        
+        try {
+            DB::beginTransaction();
+            
+            // Cập nhật thông tin phê duyệt
+            $unitEvaluation->update([
+                'approved_quality_id' => $request->approved_quality_id,
+                'approved_title_id' => $request->approved_title_id,
+                'approved_reward_id' => $request->approved_reward_id,
+                'approved_achievement' => $request->approved_achievement,
+                'approved_evidence' => $request->approved_evidence,
+                'approved_at' => now(),
+                'approved_by' => $user->id
+            ]);
+            
+            DB::commit();
+            
+            return redirect()->route('unit-evaluations.approve')->with('success', 'Đánh giá đơn vị đã được phê duyệt thành công.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Đã xảy ra lỗi trong quá trình phê duyệt: ' . $e->getMessage());
+        }
+    }
 
-    //     $evaluations = $query->orderBy('unit_id', 'asc')->get();
-
-    //     return view('pages.all-unit-evaluations', compact(
-    //         'evaluations',
-    //         'years',
-    //         'selectedYear',
-    //         'isAdmin',
-    //         'isManager'
-    //     ));
-    // }
-
-
-
+    public function approvalList(Request $request)
+    {
+        $user = Auth::user();
+        
+        // Lấy năm được chọn từ request hoặc mặc định là năm hiện tại - 1
+        $selectedYear = $request->input('year', now()->year - 1);
+        
+        // Tìm kỳ đánh giá theo năm
+        $currentPeriod = Periods::where('year', $selectedYear)->first();
+        if (!$currentPeriod) {
+            return back()->with('error', 'Không tìm thấy kỳ đánh giá cho năm đã chọn.');
+        }
+        
+        // Tìm đánh giá của đơn vị cho kỳ đánh giá đó
+        $unitEvaluation = UnitEvaluation::where('unit_id', $user->unit_id)
+            ->where('period_id', $currentPeriod->id)
+            ->with(['quality', 'title', 'reward', 'approvedQuality', 'approvedTitle', 'approvedReward', 'unit'])
+            ->first();
+        
+        if (!$unitEvaluation) {
+            return view('pages.unit-leader.approved-unit-evaluation', [
+                'unitEvaluation' => null,
+                'selectedYear' => $selectedYear,
+                'years' => Periods::orderBy('year', 'desc')->pluck('year')->unique(),
+            ])->with('info', 'Không tìm thấy đánh giá đơn vị cho năm học đã chọn.');
+        }
+        
+        // Lấy danh sách xếp loại chất lượng
+        $qualities = Quality::all();
+        
+        // Lấy danh sách danh hiệu thi đua cho đơn vị
+        $titleTypeId = MetaType::where('category', 'type_title')
+            ->where('name', 'Tập thể')
+            ->value('id');
+        
+        if ($titleTypeId) {
+            $titles = Title::where('type_id', $titleTypeId)->get();
+        } else {
+            $titles = Title::all();
+        }
+        
+        // Lấy danh sách khen thưởng
+        $rewards = Reward::all();
+        
+        // Lấy danh sách các năm
+        $years = Periods::orderBy('year', 'desc')->pluck('year')->unique();
+        
+        return view('pages.unit-leader.approved-unit-evaluation', compact(
+            'unitEvaluation',
+            'qualities',
+            'titles',
+            'rewards',
+            'selectedYear',
+            'years'
+        ));
+    }
 }
