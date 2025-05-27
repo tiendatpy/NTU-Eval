@@ -61,7 +61,7 @@
           </tr>
         @empty
           <tr>
-            <td colspan="7" class="text-center">Không có đánh giá nào trong đơn vị.</td>
+            <td colspan="8" class="text-center">Không có đánh giá nào trong đơn vị.</td>
           </tr>
         @endforelse
       </tbody>
