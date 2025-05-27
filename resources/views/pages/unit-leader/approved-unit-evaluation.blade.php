@@ -48,7 +48,7 @@
             <p class="text-gray-600 text-sm">Năm học {{ $selectedYear }} - {{ $selectedYear+1 }}</p>
           </div>
           <div>
-            @if($unitEvaluation->approved_quality_id)
+            @if($unitEvaluation->is_approved)
               <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
                 <svg class="-ml-0.5 mr-1.5 h-2 w-2 text-green-500" fill="currentColor" viewBox="0 0 8 8">
                   <circle cx="4" cy="4" r="3" />
@@ -75,12 +75,12 @@
             <h4 class="font-semibold mb-3 pb-2 border-b">Thông tin chung</h4>
             <div class="space-y-3">
               <div class="flex items-center">
-                <span class="text-primary-700 font-semibold text-sm">Ngày tạo:</span>
+                <span class="text-primary-700 font-semibold text-sm">Thời gian đánh giá:</span>
                 <span class="text-sm font-medium text-primary-500 ml-4">{{ format_date($unitEvaluation->created_at, 'd/m/y', true) }}</span>
               </div>
               <div class="flex items-center">
-                <span class="text-primary-700 font-semibold text-sm">Người tạo:</span>
-                <span class="text-sm font-medium text-primary-500 ml-4">{{ $unitEvaluation->user->full_name ?? 'N/A' }}</span>
+                <span class="text-primary-700 font-semibold text-sm">Người đánh giá:</span>
+                <span class="text-sm font-medium text-primary-500 ml-4">{{ $unitEvaluation->evaluator->full_name ?? 'N/A' }}</span>
               </div>
               @if($unitEvaluation->approved_at)
               <div class="flex items-center">
@@ -121,10 +121,15 @@
           </div>
           
           <!-- Cột 3: Đã phê duyệt -->
-          <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100 {{ !$unitEvaluation->approved_quality_id ? 'opacity-60' : '' }}">
+          <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100 {{ !$unitEvaluation->is_approved ? 'opacity-60' : '' }}">
             <h4 class="font-semibold  mb-3 pb-2 border-b">Đã phê duyệt</h4>
-            @if($unitEvaluation->approved_quality_id)
+            @if($unitEvaluation->is_approved)
             <div class="space-y-3">
+              <div>
+                <span class="text-gray-500 text-sm block mb-1">Người duyệt:</span>
+                <span class="inline-flex items-center px-2.5 py-1 rounded-md text-sm font-medium">
+                  {{ $unitEvaluation->approver->full_name ?? 'N/A' }}
+                </span>
               <div>
                 <span class="text-gray-500 text-sm block mb-1">Xếp loại:</span>
                 <span class="inline-flex items-center px-2.5 py-1 rounded-md text-sm font-medium bg-green-50 text-green-700 border border-green-100">
@@ -213,10 +218,16 @@
       </div>
       
       <!-- Phần thao tác -->
-      @if(!$unitEvaluation->approved_quality_id && (auth()->user()->role->canApproveEvaluations || auth()->user()->role->isUnitLeader || auth()->user()->role->isSuperAdmin))
+      @if(!$unitEvaluation->is_approved)
       <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 flex justify-end">
         <button id="openApprovalFormBtn" type="button" class="btn btn-primary">
           Phê duyệt đánh giá
+        </button>
+      </div>
+      @else
+      <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 flex justify-end">
+        <button id="openApprovalFormBtn" type="button" class="btn btn-primary">
+          Cập nhật
         </button>
       </div>
       @endif
@@ -229,12 +240,10 @@
 @if($unitEvaluation && !$unitEvaluation->approved_quality_id)
 <div id="approvalModal" class="fixed inset-0 bg-black bg-opacity-50 hidden overflow-y-auto h-full w-full z-50 backdrop-blur-sm transition-opacity duration-300">
   <div class="relative top-20 mx-auto p-0 border-0 w-11/12 md:w-3/4 lg:w-2/3 max-w-4xl shadow-2xl rounded-lg bg-white overflow-hidden transition-transform duration-300 transform scale-95 opacity-0" id="modalContent">
-    <div class="bg-gradient-to-r from-primary-600 to-primary-700 text-white px-6 py-4 flex justify-between items-center">
-      <h3 class="text-xl font-bold">Phê duyệt đánh giá đơn vị</h3>
+    <div class="bg-states-400 text-white px-6 py-4 flex justify-between items-center">
+      <h3 class="text-base text-white mb-0">Phê duyệt đánh giá đơn vị</h3>
       <button id="closeModal" class="text-white hover:text-gray-200 focus:outline-none transition-transform duration-200 transform hover:scale-110">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-        </svg>
+        <span class="icomoon icon-close text-xl"></span>
       </button>
     </div>
     
@@ -243,14 +252,12 @@
         @csrf
         
         <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mb-6 rounded-md">
-          <div class="flex">
-            <div class="flex-shrink-0">
-              <svg class="h-5 w-5 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
-              </svg>
+          <div class="flex items-center">
+            <div class="flex">
+              <span class="icomoon icon-information-circle text-blue-800 text-lg"></span>
             </div>
             <div class="ml-3">
-              <p class="text-sm text-blue-800">
+              <p class="text-sm text-blue-800 mb-0">
                 Bạn đang phê duyệt đánh giá đơn vị <strong>{{ $unitEvaluation->unit->name }}</strong> cho năm học <strong>{{ $selectedYear }} - {{ $selectedYear+1 }}</strong>
               </p>
             </div>
@@ -317,27 +324,24 @@
         </div>
         
         <div class="mb-6">
-          <label for="approved_achievement" class="block text-sm font-medium text-gray-700 mb-1">Thành tích nổi bật (đã phê duyệt):</label>
+          <label for="approved_achievement" class="block text-sm font-medium text-gray-700 mb-1">Thành tích nổi bật (phê duyệt):</label>
           <div class="mt-1 relative rounded-md shadow-sm">
             <textarea id="approved_achievement" name="approved_achievement" class="ckeditor focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md resize-none" required>{!! $unitEvaluation->achievement !!}</textarea>
           </div>
         </div>
         
         <div class="mb-6">
-          <label for="approved_evidence" class="block text-sm font-medium text-gray-700 mb-1">Minh chứng (đã phê duyệt):</label>
+          <label for="approved_evidence" class="block text-sm font-medium text-gray-700 mb-1">Minh chứng (phê duyệt):</label>
           <div class="mt-1 relative rounded-md shadow-sm">
             <textarea id="approved_evidence" name="approved_evidence" class="ckeditor focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md resize-none">{!! $unitEvaluation->evidence !!}</textarea>
           </div>
         </div>
         
         <div class="flex justify-end gap-3 pt-4 border-t border-gray-200">
-          <button type="button" id="cancelApproval" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors duration-200">
+          <button type="button" id="cancelApproval" class="btn btn-tertiary">
             Hủy
           </button>
-          <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors duration-200">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-            </svg>
+          <button type="submit" class="btn btn-secondary">
             Phê duyệt
           </button>
         </div>

@@ -9,6 +9,8 @@ class UnitEvaluation extends Model
     protected $fillable = [
         'unit_id',
         'period_id',
+        'evaluator_id',
+        'approved_by',
         'quality_id',
         'title_id',
         'reward_id',
@@ -31,6 +33,16 @@ class UnitEvaluation extends Model
     public function unit()
     {
         return $this->belongsTo(Unit::class);
+    }
+
+    public function evaluator()
+    {
+        return $this->belongsTo(User::class, 'evaluator_id');
+    }
+
+    public function approver()
+    {
+        return $this->belongsTo(User::class, 'approved_by');
     }
 
     public function period()

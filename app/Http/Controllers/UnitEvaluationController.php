@@ -139,6 +139,7 @@ class UnitEvaluationController extends Controller
             } else {
                 // Tạo đánh giá mới
                 UnitEvaluation::create([
+                    'evaluator_id' => $user->id,
                     'unit_id' => $user->unit_id,
                     'period_id' => $periodId,
                     'quality_id' => $request->quality_id,
@@ -146,6 +147,7 @@ class UnitEvaluationController extends Controller
                     'reward_id' => $request->reward_id,
                     'evidence' => $request->evidence,
                     'achievement' => $request->achievement,
+                    
                 ]);
 
                 $message = 'Tự đánh giá đơn vị thành công.';
@@ -198,7 +200,7 @@ class UnitEvaluationController extends Controller
                 'approved_reward_id' => $request->approved_reward_id,
                 'approved_achievement' => $request->approved_achievement,
                 'approved_evidence' => $request->approved_evidence,
-                'approved_at' => now(),
+                'is_approved' => true,
                 'approved_by' => $user->id
             ]);
             
@@ -227,7 +229,7 @@ class UnitEvaluationController extends Controller
         // Tìm đánh giá của đơn vị cho kỳ đánh giá đó
         $unitEvaluation = UnitEvaluation::where('unit_id', $user->unit_id)
             ->where('period_id', $currentPeriod->id)
-            ->with(['quality', 'title', 'reward', 'approvedQuality', 'approvedTitle', 'approvedReward', 'unit'])
+            ->with(['quality', 'title', 'reward', 'approvedQuality', 'approvedTitle', 'approvedReward', 'unit', 'evaluator', 'approver'])
             ->first();
         
         if (!$unitEvaluation) {

@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('unit_evaluations', function (Blueprint $table) {
             $table->id();
             $table->foreignId('unit_id')->constrained('units');
+            $table->foreignId('evaluator_id')->constrained('users');
             $table->foreignId('quality_id')->constrained('quality');
             $table->foreignId('approved_quality_id')->nullable()->constrained('quality');
             $table->foreignId('title_id')->constrained('titles');
@@ -27,6 +28,8 @@ return new class extends Migration
             $table->longText('approved_evidence')->nullable();
             $table->longText('achievement')->nullable();
             $table->longText('approved_achievement')->nullable();
+            $table->foreignId('approved_by')->nullable()->constrained('users');
+            $table->boolean('is_approved')->default(false);
             $table->timestamps();
         });
     }
