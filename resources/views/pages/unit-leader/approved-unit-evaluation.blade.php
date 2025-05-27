@@ -236,12 +236,14 @@
   </div>
 </section>
 
-<!-- Form phê duyệt (Cải tiến) -->
-@if($unitEvaluation && !$unitEvaluation->approved_quality_id)
+<!-- Form phê duyệt (Cải tiến) - Hỗ trợ cả phê duyệt mới và cập nhật -->
+@if($unitEvaluation)
 <div id="approvalModal" class="fixed inset-0 bg-black bg-opacity-50 hidden overflow-y-auto h-full w-full z-50 backdrop-blur-sm transition-opacity duration-300">
   <div class="relative top-20 mx-auto p-0 border-0 w-11/12 md:w-3/4 lg:w-2/3 max-w-4xl shadow-2xl rounded-lg bg-white overflow-hidden transition-transform duration-300 transform scale-95 opacity-0" id="modalContent">
     <div class="bg-states-400 text-white px-6 py-4 flex justify-between items-center">
-      <h3 class="text-base text-white mb-0">Phê duyệt đánh giá đơn vị</h3>
+      <h3 class="text-base text-white mb-0">
+        {{ $unitEvaluation->is_approved ? 'Cập nhật phê duyệt đánh giá' : 'Phê duyệt đánh giá đơn vị' }}
+      </h3>
       <button id="closeModal" class="text-white hover:text-gray-200 focus:outline-none transition-transform duration-200 transform hover:scale-110">
         <span class="icomoon icon-close text-xl"></span>
       </button>
@@ -258,7 +260,7 @@
             </div>
             <div class="ml-3">
               <p class="text-sm text-blue-800 mb-0">
-                Bạn đang phê duyệt đánh giá đơn vị <strong>{{ $unitEvaluation->unit->name }}</strong> cho năm học <strong>{{ $selectedYear }} - {{ $selectedYear+1 }}</strong>
+                Bạn đang {{ $unitEvaluation->is_approved ? 'cập nhật phê duyệt' : 'phê duyệt' }} đánh giá đơn vị <strong>{{ $unitEvaluation->unit->name }}</strong> cho năm học <strong>{{ $selectedYear }} - {{ $selectedYear+1 }}</strong>
               </p>
             </div>
           </div>
@@ -271,13 +273,13 @@
               <select id="approved_quality_id" name="approved_quality_id" class="appearance-none block w-full px-3 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm" required>
                 <option value="">-- Chọn xếp loại --</option>
                 @foreach($qualities as $quality)
-                  <option value="{{ $quality->id }}" {{ $unitEvaluation->quality_id == $quality->id ? 'selected' : '' }}>
+                  <option value="{{ $quality->id }}" {{ ($unitEvaluation->approved_quality_id == $quality->id) || (!$unitEvaluation->is_approved && $unitEvaluation->quality_id == $quality->id) ? 'selected' : '' }}>
                     {{ $quality->name }}
                   </option>
                 @endforeach
               </select>
               <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                <svg class="fill-current h-8 w-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                   <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
                 </svg>
               </div>
@@ -290,13 +292,13 @@
               <select id="approved_title_id" name="approved_title_id" class="appearance-none block w-full px-3 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm" required>
                 <option value="">-- Chọn danh hiệu --</option>
                 @foreach($titles as $title)
-                  <option value="{{ $title->id }}" {{ $unitEvaluation->title_id == $title->id ? 'selected' : '' }}>
+                  <option value="{{ $title->id }}" {{ ($unitEvaluation->approved_title_id == $title->id) || (!$unitEvaluation->is_approved && $unitEvaluation->title_id == $title->id) ? 'selected' : '' }}>
                     {{ $title->name }}
                   </option>
                 @endforeach
               </select>
               <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                <svg class="fill-current h-8 w-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                   <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
                 </svg>
               </div>
@@ -309,13 +311,13 @@
               <select id="approved_reward_id" name="approved_reward_id" class="appearance-none block w-full px-3 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm" required>
                 <option value="">-- Chọn khen thưởng --</option>
                 @foreach($rewards as $reward)
-                  <option value="{{ $reward->id }}" {{ $unitEvaluation->reward_id == $reward->id ? 'selected' : '' }}>
+                  <option value="{{ $reward->id }}" {{ ($unitEvaluation->approved_reward_id == $reward->id) || (!$unitEvaluation->is_approved && $unitEvaluation->reward_id == $reward->id) ? 'selected' : '' }}>
                     {{ $reward->name }}
                   </option>
                 @endforeach
               </select>
               <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                <svg class="fill-current h-8 w-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                   <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
                 </svg>
               </div>
@@ -326,14 +328,14 @@
         <div class="mb-6">
           <label for="approved_achievement" class="block text-sm font-medium text-gray-700 mb-1">Thành tích nổi bật (phê duyệt):</label>
           <div class="mt-1 relative rounded-md shadow-sm">
-            <textarea id="approved_achievement" name="approved_achievement" class="ckeditor focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md resize-none" required>{!! $unitEvaluation->achievement !!}</textarea>
+            <textarea id="approved_achievement" name="approved_achievement" class="ckeditor focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md resize-none" required>{!! $unitEvaluation->is_approved ? $unitEvaluation->approved_achievement : $unitEvaluation->achievement !!}</textarea>
           </div>
         </div>
         
         <div class="mb-6">
           <label for="approved_evidence" class="block text-sm font-medium text-gray-700 mb-1">Minh chứng (phê duyệt):</label>
           <div class="mt-1 relative rounded-md shadow-sm">
-            <textarea id="approved_evidence" name="approved_evidence" class="ckeditor focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md resize-none">{!! $unitEvaluation->evidence !!}</textarea>
+            <textarea id="approved_evidence" name="approved_evidence" class="ckeditor focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md resize-none">{!! $unitEvaluation->is_approved ? $unitEvaluation->approved_evidence : $unitEvaluation->evidence !!}</textarea>
           </div>
         </div>
         
@@ -342,7 +344,7 @@
             Hủy
           </button>
           <button type="submit" class="btn btn-secondary">
-            Phê duyệt
+            {{ $unitEvaluation->is_approved ? 'Cập nhật' : 'Phê duyệt' }}
           </button>
         </div>
       </form>

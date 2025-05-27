@@ -171,14 +171,9 @@ class UnitEvaluationController extends Controller
             return redirect()->back()->with('error', 'Bạn không có quyền phê duyệt đánh giá này.');
         }
         
-        // Kiểm tra xem có phải đánh giá của đơn vị mình không
+        // Kiểm tra xem có phải đánh giá của đơn vị mình không (bỏ kiểm tra đã phê duyệt)
         if ($unitEvaluation->unit_id != $user->unit_id && !$user->role->isSuperAdmin) {
             return redirect()->back()->with('error', 'Bạn không có quyền phê duyệt đánh giá đơn vị khác.');
-        }
-        
-        // Kiểm tra xem đánh giá đã được phê duyệt chưa
-        if ($unitEvaluation->approved_quality_id) {
-            return redirect()->back()->with('error', 'Đánh giá này đã được phê duyệt.');
         }
         
         // Validate dữ liệu
@@ -193,6 +188,9 @@ class UnitEvaluationController extends Controller
         try {
             DB::beginTransaction();
             
+            // Kiểm tra xem đánh giá đã được phê duyệt hay chưa
+            $isUpdate = $unitEvaluation->is_approved;
+            
             // Cập nhật thông tin phê duyệt
             $unitEvaluation->update([
                 'approved_quality_id' => $request->approved_quality_id,
@@ -201,12 +199,13 @@ class UnitEvaluationController extends Controller
                 'approved_achievement' => $request->approved_achievement,
                 'approved_evidence' => $request->approved_evidence,
                 'is_approved' => true,
-                'approved_by' => $user->id
+                'approved_by' => $user->id,
             ]);
             
             DB::commit();
             
-            return redirect()->route('unit-evaluations.approve')->with('success', 'Đánh giá đơn vị đã được phê duyệt thành công.');
+            $message = $isUpdate ? 'Cập nhật phê duyệt đánh giá đơn vị thành công.' : 'Đánh giá đơn vị đã được phê duyệt thành công.';
+            return redirect()->route('unit-evaluations.approve')->with('success', $message);
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->with('error', 'Đã xảy ra lỗi trong quá trình phê duyệt: ' . $e->getMessage());

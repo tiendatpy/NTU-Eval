@@ -33,7 +33,7 @@
                 <span class="icomoon icon-clipboard-check text-2xl"></span>
                 <span>Phê duyệt</span>
             </span>
-            <ul class="sub-menu-list pl-24 mt-3 last-mb-none text-black">
+            <ul class="sub-menu-list pl-24 mt-3 last-mb-none text-black {{ request()->routeIs('evaluations.list') || request()->routeIs('unit-evaluations.approve') ? 'show-submenu' : '' }}">
                 <li class="sub-menu-item hover:text-states-400 mb-5">
                     <a class="block {{ request()->routeIs('evaluations.list') ? 'text-states-600 font-medium' : '' }}" href="{{ route('evaluations.list')}}">
                         <span>Cá nhân</span>

@@ -45,8 +45,11 @@ export default class UnitEvaluationApproval {
     this.$modalContent.removeClass('scale-100 opacity-100');
     this.$modalContent.addClass('scale-95 opacity-0');
     
-    this.$modal.addClass('hidden');
-    this.$body.removeClass('overflow-hidden'); // Re-enable scrolling
+    // Then hide the modal after animation completes
+    setTimeout(() => {
+      this.$modal.addClass('hidden');
+      this.$body.removeClass('overflow-hidden'); // Re-enable scrolling
+    }, 300);
   }
   
   handleOutsideClick(event) {
@@ -58,6 +61,4 @@ export default class UnitEvaluationApproval {
 }
 
 // Initialize when document is ready
-$(document).ready(function() {
   new UnitEvaluationApproval().init();
-});
