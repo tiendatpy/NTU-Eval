@@ -9,6 +9,7 @@ use App\Http\Controllers\UnitController;
 use App\Http\Controllers\UnitEvaluationController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\PeriodController;
 
 /*
 |--------------------------------------------------------------------------
@@ -52,7 +53,6 @@ Route::middleware('auth')->group(function () {
 });
 
 
-
 // export
 Route::get('/self-evaluations/{id}/export', [ExportController::class, 'exportEvaluation'])
     ->name('evaluations.export')
@@ -62,36 +62,54 @@ Route::get('export/export-unit-report', [ExportController::class, 'exportUnitRep
 Route::get('export/export-last-report', [ExportController::class, 'exportLastReport'])
     ->name('evaluations.export-last-report');
 
-// for member
+
+
+// crud period
 Route::middleware(['auth'])->group(function () {
-    Route::get('/unit-members', [UnitController::class, 'members'])->name('unit.members');
+    // Đợt đánh giá
+    Route::prefix('periods')->name('periods.')->group(function () {
+        Route::get('/', [PeriodController::class, 'index'])->name('index');
+        Route::get('/create', [PeriodController::class, 'create'])->name('create');
+        Route::post('/store', [PeriodController::class, 'store'])->name('store');
+        Route::get('/edit/{id}', [PeriodController::class, 'edit'])->name('edit');
+        Route::put('/update/{id}', [PeriodController::class, 'update'])->name('update');
+        Route::post('/toggle-status/{id}', [PeriodController::class, 'toggleStatus'])->name('toggle-status');
+    });
 });
 
-// Tự đánh giá đơn vị (cho trưởng đơn vị)
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'unit.leader'])->group(function () {
+    // crud period
+    Route::prefix('periods')->name('periods.')->group(function () {
+        Route::get('/', [PeriodController::class, 'index'])->name('index');
+        Route::get('/create', [PeriodController::class, 'create'])->name('create');
+        Route::post('/store', [PeriodController::class, 'store'])->name('store');
+        Route::get('/edit/{id}', [PeriodController::class, 'edit'])->name('edit');
+        Route::put('/update/{id}', [PeriodController::class, 'update'])->name('update');
+        Route::post('/toggle-status/{id}', [PeriodController::class, 'toggleStatus'])->name('toggle-status');
+    });
+    // self-evaluation for unit leader
     Route::get('/unit-evaluation', [UnitEvaluationController::class, 'index'])->name('unit.evaluations.index');
     Route::post('/unit-evaluation', [UnitEvaluationController::class, 'store'])->name('unit.evaluations.store');
 
-        Route::get('/unit-evaluation/approve', [UnitEvaluationController::class, 'approvalList'])
+    Route::get('/unit-evaluation/approve', [UnitEvaluationController::class, 'approvalList'])
         ->name('unit-evaluations.approve');
-    
+
     // Xử lý phê duyệt
     Route::post('/unit-evaluation/approve/{id}', [UnitEvaluationController::class, 'approve'])
         ->name('unit-evaluations.approve-submit');
+    //dashboard
+    Route::get('/dashboard/stats', [DashboardController::class, 'index'])
+        ->name('dashboard.stats')
+        ->middleware(['auth']);
+    // report
+    Route::get('/unit-report', [ReportController::class, 'getListForUnitReport'])
+        ->name('unit-report')
+        ->middleware(['auth']);
+    Route::get('/last-report', [ReportController::class, 'getListForLastReport'])
+        ->name('last-report')
+        ->middleware(['auth']);
+    // manage members of unit
+    Route::get('/unit-members', [UnitController::class, 'members'])->name('unit.members');
+
 });
-
-//dashboard
-Route::get('/dashboard/stats', [DashboardController::class, 'index'])
-    ->name('dashboard.stats')
-    ->middleware(['auth']);
-
-// report
-Route::get('/unit-report', [ReportController::class, 'getListForUnitReport'])
-    ->name('unit-report')
-    ->middleware(['auth']);
-Route::get('/last-report', [ReportController::class, 'getListForLastReport'])
-    ->name('last-report')
-    ->middleware(['auth']);
-
-
 require __DIR__ . '/auth.php';
