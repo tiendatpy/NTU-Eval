@@ -7,7 +7,7 @@
       </div>
     </div>
   @else
-    <form action="{{ route('unit.evaluations.store') }}" method="POST" class="unit-evaluation-form bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+    <form action="{{ route('unit.evaluations.store') }}" method="POST" class="unit-evaluation-form bg-white rounded-lg custom-box-shadow border border-gray-200 p-6">
       @csrf
       <h3 class="text-base font-semibold mb-5 text-states-600  border-b pb-3">Đánh giá đơn vị năm {{ now()->year - 1 }} - {{ now()->year }}</h3>
       

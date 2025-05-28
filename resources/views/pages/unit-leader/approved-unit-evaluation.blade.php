@@ -3,7 +3,7 @@
 @section('title', 'Duyệt Đánh Giá Đơn Vị')
 
 @section('content')
-<section class="mod-unit-eval-approval bg-white rounded-2xl shadow-sm py-8">
+<section class="mod-unit-eval-approval bg-white rounded-2xl custom-box-shadow py-8">
   <div class="container">
     <!-- Header với hiệu ứng gradient -->
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 pb-6 border-b border-gray-200">
@@ -33,7 +33,7 @@
       <h3 class="text-lg font-semibold text-primary-800 mb-2">Chưa có đánh giá nào</h3>
       <p class="text-gray-500 max-w-md mx-auto mb-6">Đơn vị chưa có đánh giá cho năm học {{ $selectedYear }} - {{ $selectedYear+1 }}</p>
       @if(auth()->user()->role->isUnitLeader || auth()->user()->role->isSuperAdmin)
-        <a href="{{ route('unit.evaluations.index', ['year' => $selectedYear]) }}" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200">
+        <a href="{{ route('unit.evaluations.index', ['year' => $selectedYear]) }}" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md custom-box-shadow text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200">
           Tạo đánh giá đơn vị
         </a>
       @endif
@@ -71,7 +71,7 @@
       <div class="p-6">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <!-- Cột 1: Thông tin cơ bản -->
-          <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
+          <div class="bg-white p-4 rounded-lg custom-box-shadow border border-gray-100">
             <h4 class="font-semibold mb-3 pb-2 border-b">Thông tin chung</h4>
             <div class="space-y-3">
               <div class="flex items-center">
@@ -96,7 +96,7 @@
           </div>
           
           <!-- Cột 2: Tự đánh giá -->
-          <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
+          <div class="bg-white p-4 rounded-lg custom-box-shadow border border-gray-100">
             <h4 class="font-semibold  mb-3 pb-2 border-b">Tự đánh giá</h4>
             <div class="space-y-3">
               <div>
@@ -121,7 +121,7 @@
           </div>
           
           <!-- Cột 3: Đã phê duyệt -->
-          <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100 {{ !$unitEvaluation->is_approved ? 'opacity-60' : '' }}">
+          <div class="bg-white p-4 rounded-lg custom-box-shadow border border-gray-100 {{ !$unitEvaluation->is_approved ? 'opacity-60' : '' }}">
             <h4 class="font-semibold  mb-3 pb-2 border-b">Đã phê duyệt</h4>
             @if($unitEvaluation->is_approved)
             <div class="space-y-3">
@@ -163,7 +163,7 @@
         </div>
         
         <!-- Thành tích -->
-        <div class="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden mb-6">
+        <div class="bg-white rounded-lg custom-box-shadow border border-gray-100 overflow-hidden mb-6">
           <div class="flex items-center bg-gray-50 px-4 py-3 border-b border-gray-200">
             <span class="icomoon icon-sparkles text-states-500 mr-3"></span>
             <h5 class="font-semibold mb-0">Thành tích nổi bật</h5>
@@ -190,7 +190,7 @@
         
         <!-- Minh chứng -->
         @if($unitEvaluation->evidence)
-        <div class="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden mb-6">
+        <div class="bg-white rounded-lg custom-box-shadow border border-gray-100 overflow-hidden mb-6">
           <div class="flex items-center bg-gray-50 px-4 py-3 border-b border-gray-200">
             <span class="icomoon icon-document-text text-states-500 mr-3"></span>
             <h5 class="font-semibold mb-0">Minh chứng</h5>
@@ -270,7 +270,7 @@
           <div>
             <label for="approved_quality_id" class="block text-sm font-medium text-gray-700 mb-1">Xếp loại chất lượng:</label>
             <div class="relative">
-              <select id="approved_quality_id" name="approved_quality_id" class="appearance-none block w-full px-3 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm" required>
+              <select id="approved_quality_id" name="approved_quality_id" class="appearance-none block w-full px-3 py-2.5 border border-gray-300 rounded-lg custom-box-shadow focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm" required>
                 <option value="">-- Chọn xếp loại --</option>
                 @foreach($qualities as $quality)
                   <option value="{{ $quality->id }}" {{ ($unitEvaluation->approved_quality_id == $quality->id) || (!$unitEvaluation->is_approved && $unitEvaluation->quality_id == $quality->id) ? 'selected' : '' }}>
@@ -289,7 +289,7 @@
           <div>
             <label for="approved_title_id" class="block text-sm font-medium text-gray-700 mb-1">Danh hiệu thi đua:</label>
             <div class="relative">
-              <select id="approved_title_id" name="approved_title_id" class="appearance-none block w-full px-3 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm" required>
+              <select id="approved_title_id" name="approved_title_id" class="appearance-none block w-full px-3 py-2.5 border border-gray-300 rounded-lg custom-box-shadow focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm" required>
                 <option value="">-- Chọn danh hiệu --</option>
                 @foreach($titles as $title)
                   <option value="{{ $title->id }}" {{ ($unitEvaluation->approved_title_id == $title->id) || (!$unitEvaluation->is_approved && $unitEvaluation->title_id == $title->id) ? 'selected' : '' }}>
@@ -308,7 +308,7 @@
           <div>
             <label for="approved_reward_id" class="block text-sm font-medium text-gray-700 mb-1">Hình thức khen thưởng:</label>
             <div class="relative">
-              <select id="approved_reward_id" name="approved_reward_id" class="appearance-none block w-full px-3 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm" required>
+              <select id="approved_reward_id" name="approved_reward_id" class="appearance-none block w-full px-3 py-2.5 border border-gray-300 rounded-lg custom-box-shadow focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm" required>
                 <option value="">-- Chọn khen thưởng --</option>
                 @foreach($rewards as $reward)
                   <option value="{{ $reward->id }}" {{ ($unitEvaluation->approved_reward_id == $reward->id) || (!$unitEvaluation->is_approved && $unitEvaluation->reward_id == $reward->id) ? 'selected' : '' }}>
@@ -327,14 +327,14 @@
         
         <div class="mb-6">
           <label for="approved_achievement" class="block text-sm font-medium text-gray-700 mb-1">Thành tích nổi bật (phê duyệt):</label>
-          <div class="mt-1 relative rounded-md shadow-sm">
+          <div class="mt-1 relative rounded-md custom-box-shadow">
             <textarea id="approved_achievement" name="approved_achievement" class="ckeditor focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md resize-none" required>{!! $unitEvaluation->is_approved ? $unitEvaluation->approved_achievement : $unitEvaluation->achievement !!}</textarea>
           </div>
         </div>
         
         <div class="mb-6">
           <label for="approved_evidence" class="block text-sm font-medium text-gray-700 mb-1">Minh chứng (phê duyệt):</label>
-          <div class="mt-1 relative rounded-md shadow-sm">
+          <div class="mt-1 relative rounded-md custom-box-shadow">
             <textarea id="approved_evidence" name="approved_evidence" class="ckeditor focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md resize-none">{!! $unitEvaluation->is_approved ? $unitEvaluation->approved_evidence : $unitEvaluation->evidence !!}</textarea>
           </div>
         </div>
