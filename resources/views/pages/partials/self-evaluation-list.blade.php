@@ -23,7 +23,7 @@
     @if($isUnitLeader && isset($statistics))
     <div class="mb-6">
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
+        <div class="bg-white p-4 rounded-lg custom-box-shadow border border-gray-100">
           <div class="flex items-center">
             <div class="p-3 rounded-full bg-blue-50 mr-4">
               <span class="icomoon icon-users flex text-states-500"></span>
@@ -35,7 +35,7 @@
           </div>
         </div>
 
-        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
+        <div class="bg-white p-4 rounded-lg custom-box-shadow border border-gray-100">
           <div class="flex items-center">
             <div class="p-3 rounded-full bg-green-50 mr-4">
               <span class="icomoon icon-check-circle text-green-500 flex"></span>
@@ -47,7 +47,7 @@
           </div>
         </div>
 
-        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
+        <div class="bg-white p-4 rounded-lg custom-box-shadow border border-gray-100">
           <div class="flex items-center">
             <div class="p-3 rounded-full bg-yellow-50 mr-4">
               <span class="icomoon icon-information-circle text-yellow-500 flex"></span>
