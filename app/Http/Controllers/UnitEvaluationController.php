@@ -266,13 +266,23 @@ class UnitEvaluationController extends Controller
         // Lấy danh sách các năm
         $years = Periods::orderBy('year', 'desc')->pluck('year')->unique();
 
+        $openStatusId = Cache::remember('period_status_open_id', 86400, function () {
+            return MetaType::where('category', 'period_status')
+                ->where('name', 'Mở')
+                ->value('id');
+        });
+
+        // Kiểm tra xem kì đánh giá có đang mở không
+        $isOpenPeriod = $currentPeriod->status_id == $openStatusId;
+
         return view('pages.unit-leader.approved-unit-evaluation', compact(
             'unitEvaluation',
             'qualities',
             'titles',
             'rewards',
             'selectedYear',
-            'years'
+            'years',
+            'isOpenPeriod'
         ));
     }
 }

@@ -67,7 +67,14 @@
       <p class="text-xs text-gray-500 text-right">{{ $statistics['approved']['percentage'] }}% đã được phê duyệt</p>
     </div>
     @endif
-    
+    @if (!$isOpenPeriod)
+      <div class="alert flex p-4 mb-5 bg-yellow-50 border-l-4 border-yellow-500 rounded">
+      <span class="icomoon icon-information-circle text-yellow-500 mr-3 text-xl"></span>
+      <div>
+        <span class="font-medium">Thông báo:</span> Năm học đã hết hạn phê duyệt.
+      </div>
+    </div>  
+    @endif
     <table class="w-full text-sm overflow-hidden">
       <thead class="bg-states-300">
         <tr>

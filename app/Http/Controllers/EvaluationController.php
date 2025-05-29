@@ -428,6 +428,14 @@ class EvaluationController extends Controller
             ];
         }
 
+        $openStatusId = Cache::remember('period_status_open_id', 86400, function () {
+            return MetaType::where('category', 'period_status')
+                ->where('name', 'Mở')
+                ->value('id');
+        });
+
+        $isOpenPeriod = $period->status_id == $openStatusId;
+
         return view('pages.partials.self-evaluation-list', compact(
             'evaluations',
             'years',
@@ -436,7 +444,8 @@ class EvaluationController extends Controller
             'titles',
             'statuses',
             'isUnitLeader',
-            'statistics'
+            'statistics',
+            'isOpenPeriod',
         ));
     }
 
@@ -483,6 +492,18 @@ class EvaluationController extends Controller
                 ->with('error', 'Bạn cần đăng nhập để thực hiện hành động này.');
         }
 
+        $period = Periods::findOrFail($evaluation->period_id);
+
+        // Lấy ID của trạng thái "Mở"
+        $openStatusId = Cache::remember('period_status_open_id', 86400, function () {
+            return MetaType::where('category', 'period_status')
+                ->where('name', 'Mở')
+                ->value('id');
+        });
+
+        // Kiểm tra xem kì đánh giá có đang mở không
+        $isOpenPeriod = $period->status_id == $openStatusId;
+
         // Load các quan hệ cần thiết
         $evaluation->load([
             'details.criteria',
@@ -517,7 +538,9 @@ class EvaluationController extends Controller
             'isCurrentUserEvaluation',
             'qualities',
             'titles',
-            'rewards'
+            'rewards',
+            'isOpenPeriod',
+
         ));
     }
 

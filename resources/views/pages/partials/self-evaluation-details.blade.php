@@ -99,11 +99,11 @@
               @csrf
               <div class="mb-4">
                 <label for="review" class="block mb-2 font-medium">Thêm góp ý của bạn:</label>
-                <textarea id="review" name="review" class="ckeditor border-primary-500 border-1 p-2 w-full rounded-lg" rows="5">{{ $evaluation->review }}</textarea>
+                <textarea @if (!$isOpenPeriod) disabled @endif id="review" name="review" class="ckeditor border-primary-500 border-1 p-2 w-full rounded-lg" rows="5">{{ $evaluation->review }}</textarea>
               </div>
               
               <div class="flex justify-end">
-                <button type="submit" class="btn btn-primary">
+                <button @if (!$isOpenPeriod) disabled @endif type="submit" class="btn btn-primary @if (!$isOpenPeriod) bg-states-500/70 hover:bg-states-500/70 cursor-not-allowed @endif">
                   {{ $evaluation->review ? 'Cập nhật góp ý' : 'Gửi góp ý' }}
                 </button>
               </div>
@@ -130,7 +130,7 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
               <div>
                 <label for="approved_quality_id" class="block mb-2 font-bold">Xếp loại chất lượng:</label>
-                <select id="approved_quality_id" name="approved_quality_id" class="border-primary-300 border-1 px-5 py-4 w-full rounded-lg" required>
+                <select @if (!$isOpenPeriod) disabled @endif id="approved_quality_id" name="approved_quality_id" class="border-primary-300 border-1 px-5 py-4 w-full rounded-lg" required>
                   <option value="">-- Chọn xếp loại --</option>
                   @foreach($qualities as $quality)
                     <option value="{{ $quality->id }}" {{ $evaluation->approved_quality_id == $quality->id ? 'selected' : '' }}>
@@ -142,7 +142,7 @@
               
               <div>
                 <label for="approved_title_id" class="block mb-2 font-bold">Danh hiệu thi đua:</label>
-                <select id="approved_title_id" name="approved_title_id" class="border-primary-300 border-1 px-5 py-4 w-full rounded-lg" required>
+                <select @if (!$isOpenPeriod) disabled @endif id="approved_title_id" name="approved_title_id" class="border-primary-300 border-1 px-5 py-4 w-full rounded-lg" required>
                   <option value="">-- Chọn danh hiệu --</option>
                   @foreach($titles as $title)
                     <option value="{{ $title->id }}" {{ $evaluation->approved_title_id == $title->id ? 'selected' : '' }}>
@@ -154,7 +154,7 @@
 
               <div>
                 <label for="approved_reward_id" class="block mb-2 font-bold">Hình thức khen thưởng:</label>
-                <select id="approved_reward_id" name="approved_reward_id" class="border-primary-300 border-1 px-5 py-4 w-full rounded-lg" required>
+                <select @if (!$isOpenPeriod) disabled @endif id="approved_reward_id" name="approved_reward_id" class="border-primary-300 border-1 px-5 py-4 w-full rounded-lg" required>
                   <option value="">-- Chọn hình thức khen thưởng --</option>
                   @foreach($rewards as $reward)
                     <option value="{{ $reward->id }}" {{ $evaluation->approved_reward_id == $reward->id ? 'selected' : '' }}>
@@ -167,11 +167,11 @@
             
             <div class="mb-5">
               <label for="feedback" class="block mb-2 font-bold">Nhận xét:</label>
-              <textarea id="feedback" name="feedback" class="ckeditor border-primary-500 border-1 p-2 w-full rounded-lg">{{ $evaluation->feedback }}</textarea>
+              <textarea @if (!$isOpenPeriod) disabled @endif id="feedback" name="feedback" class="ckeditor border-primary-500 border-1 p-2 w-full rounded-lg">{{ $evaluation->feedback }}</textarea>
             </div>
             
             <div class="flex justify-end">
-              <button type="submit" class="btn btn-primary">
+              <button @if (!$isOpenPeriod) disabled @endif type="submit" class="btn btn-primary @if (!$isOpenPeriod) bg-states-500/70 hover:bg-states-500/70 cursor-not-allowed @endif">
                 {{ $evaluation->status->name === 'Đã phê duyệt' ? 'Cập nhật' : 'Phê duyệt' }}
               </button>
             </div>
