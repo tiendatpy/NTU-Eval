@@ -23,6 +23,13 @@
         transition: all 0.3s ease;
     }
 
+    .move-left {
+        transform: translateX(100%);
+    }
+    .move-right {
+        transform: translateX(-100%);
+    }
+
     .background-overlay {
         @apply absolute inset-0;
     }

@@ -40,9 +40,10 @@
       outline-offset: 3px;
     }
   }
-  select, input:not([type='file']) {
-    @apply border-1 border-primary-500;
+  select {
+    @apply border-primary-300 border-1 px-5 py-4 rounded-lg;
   }
+
   
   table {
     th,

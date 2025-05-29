@@ -70,6 +70,12 @@
                 </li>
             </ul>
         </li>
+        <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer flex items-center gap-8 {{ request()->routeIs('periods.*') ? 'active-menu text-states-600' : '' }} ">
+            <span class="icomoon icon-cog text-2xl"></span>
+            <a class="block w-full" href="{{ route('periods.index') }}">
+                <span>Quản lý đợt đánh giá</span>
+            </a>
+        </li>
         @else
             <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer flex items-center gap-8 {{ request()->routeIs('evaluations.index') || request()->routeIs('evaluations.result')  ? 'active-menu text-states-600' : '' }}">
                 <span class="icomoon icon-pencil text-2xl"></span>
@@ -87,13 +93,10 @@
     </ul>
     <ul class="menu-list mb-11">
         <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer">
-            <span>Docs</span>
+            <span>Tài liệu</span>
         </li>
         <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer">
-            <span>Components</span>
-        </li>
-        <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer">
-            <span>Help</span>
+            <span>Trợ giúp</span>
         </li>
     </ul>
 </div>

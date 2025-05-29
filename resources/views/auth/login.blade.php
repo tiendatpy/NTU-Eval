@@ -16,7 +16,7 @@
         <div class="mt-4">
             <x-input-label for="password" :value="__('Mật khẩu')" />
 
-            <x-text-input id="password" class="block mt-1 w-full"
+            <x-text-input id="password" class="block mt-1 w-full border-primary-500 "
                             type="password"
                             name="password"
                             required autocomplete="current-password" />

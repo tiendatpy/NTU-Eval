@@ -25,6 +25,27 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
+  .icon-lock-open:before {
+    content: "\e92d";
+  }
+  .icon-lock-closed:before {
+    content: "\e92e";
+  }
+  .icon-lightning-bolt:before {
+    content: "\e92f";
+  }
+  .icon-minus:before {
+    content: "\e930";
+  }
+  .icon-plus:before {
+    content: "\e931";
+  }
+  .icon-plus-circle:before {
+    content: "\e932";
+  }
+  .icon-cog:before {
+    content: "\e933";
+  }
   .icon-gift:before {
     content: "\e928";
   }

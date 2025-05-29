@@ -6,6 +6,7 @@ import './pages/ModSelfEvaluationList';
 import './pages/ModUnitEvaluation';
 import './pages/ModStatistics';
 import './pages/ModUnitEvalApproval';
+import './pages/ModPeriodManagement';
 
 import Alpine from 'alpinejs';
 
