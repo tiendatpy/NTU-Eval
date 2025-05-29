@@ -20,7 +20,7 @@
     <div id="unit-evaluation-content">
       @include('pages.partials.unit-evaluation-form', [
         'unitEvaluation' => $unitEvaluation, 
-        'isCurrentYear' => $isCurrentYear,
+        'isOpenPeriod' => $isOpenPeriod,
         'quality' => $quality,
         'titles' => $titles,
         'rewards' => $rewards

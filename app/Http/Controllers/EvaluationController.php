@@ -67,13 +67,20 @@ class EvaluationController extends Controller
 
         $rewards = Reward::all();
 
-        $isCurrentYear = $selectedYear == now()->year - 1;
+        // $isCurrentYear = $selectedYear == now()->year - 1;
+        $openStatusId = Cache::remember('period_status_open_id', 86400, function () {
+            return MetaType::where('category', 'period_status')
+                ->where('name', 'Mở')
+                ->value('id');
+        });
+
+        $isOpenPeriod = $currentPeriod->status_id == $openStatusId;
 
         if ($request->ajax()) {
             // Trả về HTML của bảng đánh giá qua AJAX
             $html = view('pages.partials.evaluation-table', compact(
                 'evaluation',
-                'isCurrentYear',
+                'isOpenPeriod',
                 'criteria',
                 'quality',
                 'isUnitLeader',
@@ -92,7 +99,7 @@ class EvaluationController extends Controller
             'titles',
             'rewards',
             'selectedYear',
-            'isCurrentYear',
+            'isOpenPeriod',
             'isUnitLeader'
         ));
     }
@@ -274,12 +281,12 @@ class EvaluationController extends Controller
             $criteria = EvaluationCriteria::where('category_id', $staffId)->get();
         }
 
-        $isCurrentYear = true; // Luôn true vì chúng ta đang xem đánh giá năm hiện tại
+        $isOpenPeriod = true; // Luôn true vì chúng ta đang xem đánh giá năm hiện tại
 
         // Trả về view với partial evaluation-result
         return view('pages.self-evaluation-result', compact(
             'evaluation',
-            'isCurrentYear',
+            'isOpenPeriod',
             'criteria',
             'isUnitLeader'
         ));

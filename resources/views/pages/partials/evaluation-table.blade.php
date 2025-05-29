@@ -1,6 +1,4 @@
-
-@if ($isCurrentYear)
-  {{-- Hiển thị form đánh giá nếu là năm hiện tại và chưa có đánh giá --}}
+@if ($isOpenPeriod)
   <form action="{{ route('evaluations.store') }}" method="post" enctype="multipart/form-data">
     @csrf
     <div class="self-table mb-5">
@@ -122,10 +120,22 @@
     </div>
   </form>
 @else
+  @if ($evaluation)
+  <div class="alert flex p-4 mb-5 bg-yellow-50 border-l-4 border-yellow-500 rounded">
+    <span class="icomoon icon-exclamation-triangle text-yellow-500 mr-3 text-xl"></span>
+    <div>
+      <span class="font-medium">Thông báo:</span> Năm học này đã đóng đánh giá. Bạn không thể gửi đánh giá mới.
+      @if ($evaluation)
+      <a href="{{ route('evaluations.result') }}" class="text-states-500 hover:text-states-800 ml-3">Xem đánh giá</a>
+      @endif
+    </div>
+  </div>
+  @else
   <div class="alert flex p-4 mb-5 bg-blue-50 border-l-4 border-blue-500 rounded">
     <span class="icomoon icon-information-circle text-blue-500 mr-3 text-xl"></span>
     <div>
-      <span class="font-medium">Thông báo:</span> Chưa có dữ liệu đánh giá cho năm học này.
+      <span class="font-medium">Thông báo:</span> Năm học này đã đóng đánh giá.
     </div>
   </div>
+  @endif
 @endif

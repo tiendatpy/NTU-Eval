@@ -18,7 +18,7 @@
       </div>
       {{-- Hiển thị nội dung đánh giá hoặc form --}}
       <div id="evaluation-content">
-        @include('pages.partials.evaluation-table', ['evaluation' => $evaluation, 'isCurrentYear' => $isCurrentYear])
+        @include('pages.partials.evaluation-table', ['evaluation' => $evaluation, 'isOpenPeriod' => $isOpenPeriod])
       </div>
     </div>
   </section>

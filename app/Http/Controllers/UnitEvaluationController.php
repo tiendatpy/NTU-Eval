@@ -62,13 +62,20 @@ class UnitEvaluationController extends Controller
         }
 
         $rewards = Reward::all();
-        $isCurrentYear = $selectedYear == now()->year - 1;
+        // $isCurrentYear = $selectedYear == now()->year - 1;
+        $openStatusId = Cache::remember('period_status_open_id', 86400, function () {
+            return MetaType::where('category', 'period_status')
+                ->where('name', 'Mở')
+                ->value('id');
+        });
+
+        $isOpenPeriod = $currentPeriod->status_id == $openStatusId;
 
         if ($request->ajax()) {
             // Trả về HTML của form đánh giá qua AJAX
             $html = view('pages.partials.unit-evaluation-form', compact(
                 'unitEvaluation',
-                'isCurrentYear',
+                'isOpenPeriod',
                 'quality',
                 'titles',
                 'rewards'
@@ -84,7 +91,7 @@ class UnitEvaluationController extends Controller
             'titles',
             'rewards',
             'selectedYear',
-            'isCurrentYear'
+            'isOpenPeriod'
         ));
     }
 
@@ -147,7 +154,7 @@ class UnitEvaluationController extends Controller
                     'reward_id' => $request->reward_id,
                     'evidence' => $request->evidence,
                     'achievement' => $request->achievement,
-                    
+
                 ]);
 
                 $message = 'Tự đánh giá đơn vị thành công.';
@@ -165,17 +172,17 @@ class UnitEvaluationController extends Controller
     {
         $user = Auth::user();
         $unitEvaluation = UnitEvaluation::findOrFail($id);
-        
+
         // Kiểm tra quyền phê duyệt
         if (!$user->role->canApproveEvaluations && !$user->role->isUnitLeader && !$user->role->isSuperAdmin) {
             return redirect()->back()->with('error', 'Bạn không có quyền phê duyệt đánh giá này.');
         }
-        
+
         // Kiểm tra xem có phải đánh giá của đơn vị mình không (bỏ kiểm tra đã phê duyệt)
         if ($unitEvaluation->unit_id != $user->unit_id && !$user->role->isSuperAdmin) {
             return redirect()->back()->with('error', 'Bạn không có quyền phê duyệt đánh giá đơn vị khác.');
         }
-        
+
         // Validate dữ liệu
         $validated = $request->validate([
             'approved_quality_id' => 'required|exists:quality,id',
@@ -184,13 +191,13 @@ class UnitEvaluationController extends Controller
             'approved_achievement' => 'required|string',
             'approved_evidence' => 'nullable|string',
         ]);
-        
+
         try {
             DB::beginTransaction();
-            
+
             // Kiểm tra xem đánh giá đã được phê duyệt hay chưa
             $isUpdate = $unitEvaluation->is_approved;
-            
+
             // Cập nhật thông tin phê duyệt
             $unitEvaluation->update([
                 'approved_quality_id' => $request->approved_quality_id,
@@ -201,9 +208,9 @@ class UnitEvaluationController extends Controller
                 'is_approved' => true,
                 'approved_by' => $user->id,
             ]);
-            
+
             DB::commit();
-            
+
             $message = $isUpdate ? 'Cập nhật phê duyệt đánh giá đơn vị thành công.' : 'Đánh giá đơn vị đã được phê duyệt thành công.';
             return redirect()->route('unit-evaluations.approve')->with('success', $message);
         } catch (\Exception $e) {
@@ -215,22 +222,22 @@ class UnitEvaluationController extends Controller
     public function approvalList(Request $request)
     {
         $user = Auth::user();
-        
+
         // Lấy năm được chọn từ request hoặc mặc định là năm hiện tại - 1
         $selectedYear = $request->input('year', now()->year - 1);
-        
+
         // Tìm kỳ đánh giá theo năm
         $currentPeriod = Periods::where('year', $selectedYear)->first();
         if (!$currentPeriod) {
             return back()->with('error', 'Không tìm thấy kỳ đánh giá cho năm đã chọn.');
         }
-        
+
         // Tìm đánh giá của đơn vị cho kỳ đánh giá đó
         $unitEvaluation = UnitEvaluation::where('unit_id', $user->unit_id)
             ->where('period_id', $currentPeriod->id)
             ->with(['quality', 'title', 'reward', 'approvedQuality', 'approvedTitle', 'approvedReward', 'unit', 'evaluator', 'approver'])
             ->first();
-        
+
         if (!$unitEvaluation) {
             return view('pages.unit-leader.approved-unit-evaluation', [
                 'unitEvaluation' => null,
@@ -238,27 +245,27 @@ class UnitEvaluationController extends Controller
                 'years' => Periods::orderBy('year', 'desc')->pluck('year')->unique(),
             ])->with('info', 'Không tìm thấy đánh giá đơn vị cho năm học đã chọn.');
         }
-        
+
         // Lấy danh sách xếp loại chất lượng
         $qualities = Quality::all();
-        
+
         // Lấy danh sách danh hiệu thi đua cho đơn vị
         $titleTypeId = MetaType::where('category', 'type_title')
             ->where('name', 'Tập thể')
             ->value('id');
-        
+
         if ($titleTypeId) {
             $titles = Title::where('type_id', $titleTypeId)->get();
         } else {
             $titles = Title::all();
         }
-        
+
         // Lấy danh sách khen thưởng
         $rewards = Reward::all();
-        
+
         // Lấy danh sách các năm
         $years = Periods::orderBy('year', 'desc')->pluck('year')->unique();
-        
+
         return view('pages.unit-leader.approved-unit-evaluation', compact(
             'unitEvaluation',
             'qualities',
