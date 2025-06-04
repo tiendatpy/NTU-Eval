@@ -25,6 +25,12 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
+  .icon-refresh:before {
+    content: "\e936";
+  }
+  .icon-filter:before {
+    content: "\e937";
+  }
   .icon-lock-open:before {
     content: "\e92d";
   }

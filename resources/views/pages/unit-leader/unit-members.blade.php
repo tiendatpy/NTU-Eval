@@ -28,11 +28,11 @@
                     </select>
                 </div>
                 <div class="flex items-center gap-2">
-                    <button type="submit" class="btn btn-primary">
-                        <span class="icomoon icon-search mr-1"></span> Lọc
+                    <button type="submit" class="btn btn-primary flex items-center">
+                        <span class="icomoon icon-filter mr-2"></span> Lọc
                     </button>
-                    <a href="{{ route('unit.members') }}" class="btn btn-additional">
-                        <span class="icomoon icon-refresh-ccw mr-1"></span> Đặt lại
+                    <a href="{{ route('unit.members') }}" class="btn btn-additional flex items-center">
+                        <span class="icomoon icon-refresh mr-2"></span> Đặt lại
                     </a>
                 </div>
             </form>
