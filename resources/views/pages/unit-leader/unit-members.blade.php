@@ -14,7 +14,7 @@
         <!-- Form tìm kiếm và lọc -->
         <div class="mb-6">
             <form action="{{ route('unit.members') }}" method="GET" class="flex flex-col md:flex-row md:items-center md:justify-end gap-4">
-                <div class="">
+                <div>
                     <div class="header-search flex items-center">
                         <input name="search_name" value="{{ $searchName ?? '' }}" type="text" class="h-[45px] bg-primary-050 rounded-2xl border-1 w-[402px] px-7 py-6 text-sm" placeholder="Tìm kiếm theo họ tên...">
                     </div>
@@ -40,9 +40,9 @@
 
         <!-- Hiển thị thông tin lọc nếu có -->
         @if($searchName || $evaluationStatus)
-        <div class="bg-blue-50 border-l-4 border-blue-500 text-blue-700 p-4 mb-6" role="alert">
-            <div class="flex">
-                <span class="icomoon icon-filter mr-2"></span>
+        <div class="bg-blue-50 border-l-4 border-blue-500 text-blue-700 p-4 mb-6 rounded-md" role="alert">
+            <div class="flex items-center">
+                <span class="icomoon icon-filter mr-2 flex"></span>
                 <p class="mb-0">
                     Đang lọc: 
                     @if($searchName)
@@ -55,7 +55,6 @@
                     
                     @if($evaluationStatus)
                         <span class="font-medium">
-                            Trạng thái đánh giá:
                             {{ $evaluationStatus == 'evaluated' ? 'Đã đánh giá' : 'Chưa đánh giá' }}
                         </span>
                     @endif

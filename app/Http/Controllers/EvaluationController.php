@@ -293,161 +293,176 @@ class EvaluationController extends Controller
     }
 
 
-    public function getListEvaluation(Request $request)
-    {
-        $user = auth()->user();
-        if (!$user) {
-            return redirect()->route('login')->with('error', 'Bạn cần đăng nhập để thực hiện hành động này.');
-        }
-
-        $isUnitLeader = $user->role->isUnitLeader == true;
-
-        // Lấy danh sách các năm để lọc
-        $years = Periods::orderBy('year', 'desc')->pluck('year')->unique();
-
-        // Lấy năm được chọn, mặc định là năm hiện tại - 1
-        $defaultYear = now()->year - 1;
-
-        // Kiểm tra xem năm mặc định có trong danh sách năm không
-        if (!$years->contains($defaultYear)) {
-            $defaultYear = $years->first(); // Nếu không có, lấy năm gần nhất
-        }
-
-        $selectedYear = $request->input('year', $defaultYear);
-
-        // Lấy period_id từ năm được chọn
-        $period = Periods::where('year', $selectedYear)->first();
-
-        if (!$period) {
-            return back()->with('error', 'Không tìm thấy kỳ đánh giá cho năm đã chọn.');
-        }
-
-        // Xây dựng query cơ bản
-        $query = Evaluation::where('period_id', $period->id)
-            ->with([
-                'evaluator',
-                'quality',
-                'approvedQuality',
-                'title',
-                'approvedTitle',
-                'reward',
-                'approvedReward',
-                'approver',
-                'status',
-                'unit'
-            ])->orderBy('created_at', 'asc');
-
-        if ($isUnitLeader) {
-            $query->where('unit_id', $user->unit_id);
-        } else {
-            $query->where('unit_id', $user->unit_id)
-                ->where('evaluator_id', '!=', $user->id);
-        }
-
-        // Lọc theo đơn vị nếu có
-        if ($request->has('unit_id') && $request->unit_id) {
-            $query->where('unit_id', $request->unit_id);
-        }
-
-        // Lọc theo xếp loại chất lượng nếu có
-        if ($request->has('quality_id') && $request->quality_id) {
-            $query->where('quality_id', $request->quality_id);
-        }
-
-        // Lọc theo danh hiệu thi đua nếu có
-        if ($request->has('title_id') && $request->title_id) {
-            $query->where('title_id', $request->title_id);
-        }
-
-        // Lọc theo trạng thái nếu có
-        if ($request->has('status_id') && $request->status_id) {
-            $query->where('status_id', $request->status_id);
-        }
-
-        // Lấy danh sách đánh giá đã lọc
-        $evaluations = $query->orderBy('created_at', 'desc')->paginate(5);
-
-        // Lấy danh sách xếp loại chất lượng để hiện thị trong dropdown filter
-        $qualities = Quality::all();
-
-        // Lấy danh sách danh hiệu thi đua để hiển thị trong dropdown filter
-        $titleTypeId = Cache::remember('title_type_id', 86400, function () {
-            return MetaType::where('category', 'type_title')
-                ->where('name', 'Cá nhân')
-                ->value('id');
-        });
-        $titles = Title::where('type_id', $titleTypeId)->get();
-
-        // Lấy danh sách trạng thái để hiển thị trong dropdown filter
-        $statuses = MetaType::where('category', 'evaluation_status')->get();
-
-        // Thêm thống kê nếu là trưởng đơn vị
-        $statistics = null;
-        if ($isUnitLeader) {
-            // Lấy ID trạng thái "Đã phê duyệt"
-            $approvedStatusId = MetaType::where('category', 'evaluation_status')
-                ->where('name', 'Đã phê duyệt')
-                ->value('id');
-
-            // Lấy ID trạng thái "Đang xét duyệt"
-            $pendingStatusId = MetaType::where('category', 'evaluation_status')
-                ->where('name', 'Đang xét duyệt')
-                ->value('id');
-
-            // Đếm tổng số đánh giá trong đơn vị
-            $totalEvaluations = Evaluation::where('period_id', $period->id)
-                ->where('unit_id', $user->unit_id)
-                ->count();
-
-            // Đếm số đánh giá đã được phê duyệt
-            $approvedCount = Evaluation::where('period_id', $period->id)
-                ->where('unit_id', $user->unit_id)
-                ->where('status_id', $approvedStatusId)
-                ->count();
-
-            // Đếm số đánh giá đang chờ phê duyệt
-            $pendingCount = Evaluation::where('period_id', $period->id)
-                ->where('unit_id', $user->unit_id)
-                ->where('status_id', $pendingStatusId)
-                ->count();
-
-            // Tính phần trăm
-            $approvedPercentage = $totalEvaluations > 0 ? round(($approvedCount / $totalEvaluations) * 100) : 0;
-            $pendingPercentage = $totalEvaluations > 0 ? round(($pendingCount / $totalEvaluations) * 100) : 0;
-
-            $statistics = [
-                'total' => $totalEvaluations,
-                'approved' => [
-                    'count' => $approvedCount,
-                    'percentage' => $approvedPercentage
-                ],
-                'pending' => [
-                    'count' => $pendingCount,
-                    'percentage' => $pendingPercentage
-                ]
-            ];
-        }
-
-        $openStatusId = Cache::remember('period_status_open_id', 86400, function () {
-            return MetaType::where('category', 'period_status')
-                ->where('name', 'Mở')
-                ->value('id');
-        });
-
-        $isOpenPeriod = $period->status_id == $openStatusId;
-
-        return view('pages.partials.self-evaluation-list', compact(
-            'evaluations',
-            'years',
-            'selectedYear',
-            'qualities',
-            'titles',
-            'statuses',
-            'isUnitLeader',
-            'statistics',
-            'isOpenPeriod',
-        ));
+public function getListEvaluation(Request $request)
+{
+    $user = auth()->user();
+    if (!$user) {
+        return redirect()->route('login')->with('error', 'Bạn cần đăng nhập để thực hiện hành động này.');
     }
+
+    $isUnitLeader = $user->role->isUnitLeader == true;
+
+    // Lấy danh sách các năm để lọc
+    $years = Periods::orderBy('year', 'desc')->pluck('year')->unique();
+
+    // Lấy năm được chọn, mặc định là năm hiện tại - 1
+    $defaultYear = now()->year - 1;
+
+    // Kiểm tra xem năm mặc định có trong danh sách năm không
+    if (!$years->contains($defaultYear)) {
+        $defaultYear = $years->first(); // Nếu không có, lấy năm gần nhất
+    }
+
+    $selectedYear = $request->input('year', $defaultYear);
+
+    // Lấy period_id từ năm được chọn
+    $period = Periods::where('year', $selectedYear)->first();
+
+    if (!$period) {
+        return back()->with('error', 'Không tìm thấy kỳ đánh giá cho năm đã chọn.');
+    }
+
+    // Xây dựng query cơ bản
+    $query = Evaluation::where('period_id', $period->id)
+        ->with([
+            'evaluator',
+            'quality',
+            'approvedQuality',
+            'title',
+            'approvedTitle',
+            'reward',
+            'approvedReward',
+            'approver',
+            'status',
+            'unit'
+        ])->orderBy('created_at', 'asc');
+
+    if ($isUnitLeader) {
+        $query->where('unit_id', $user->unit_id);
+    } else {
+        $query->where('unit_id', $user->unit_id)
+            ->where('evaluator_id', '!=', $user->id);
+    }
+
+    // Lọc theo tên người đánh giá
+    $searchName = $request->input('search_name');
+    if ($searchName) {
+        $query->whereHas('evaluator', function($q) use ($searchName) {
+            $q->where('full_name', 'like', '%' . $searchName . '%');
+        });
+    }
+
+    // Lọc theo xếp loại chất lượng 
+    $qualityId = $request->input('quality_id');
+    if ($qualityId) {
+        $query->where(function($q) use ($qualityId) {
+            $q->where('quality_id', $qualityId)
+              ->orWhere('approved_quality_id', $qualityId);
+        });
+    }
+
+    // Lọc theo danh hiệu thi đua
+    $titleId = $request->input('title_id');
+    if ($titleId) {
+        $query->where(function($q) use ($titleId) {
+            $q->where('title_id', $titleId)
+              ->orWhere('approved_title_id', $titleId);
+        });
+    }
+
+    // Lọc theo trạng thái phê duyệt
+    $statusId = $request->input('status_id');
+    if ($statusId) {
+        $query->where('status_id', $statusId);
+    }
+
+    // Lấy tất cả đánh giá cho thống kê (không bị ảnh hưởng bởi bộ lọc)
+    $allEvaluationsQuery = Evaluation::where('period_id', $period->id);
+    if ($isUnitLeader) {
+        $allEvaluationsQuery->where('unit_id', $user->unit_id);
+    } else {
+        $allEvaluationsQuery->where('unit_id', $user->unit_id)
+            ->where('evaluator_id', '!=', $user->id);
+    }
+    
+    // Lấy danh sách đánh giá đã lọc với phân trang
+    $evaluations = $query->orderBy('created_at', 'desc')->paginate(10)->withQueryString();
+    $filteredCount = $evaluations->total(); // Số lượng kết quả sau khi lọc
+
+    // Lấy danh sách xếp loại chất lượng và danh hiệu thi đua để hiện thị trong dropdown filter
+    $qualities = Quality::all();
+    $titleTypeId = Cache::remember('title_type_id', 86400, function () {
+        return MetaType::where('category', 'type_title')
+            ->where('name', 'Cá nhân')
+            ->value('id');
+    });
+    $titles = Title::where('type_id', $titleTypeId)->get();
+    $statuses = MetaType::where('category', 'evaluation_status')->get();
+
+    // Thêm thống kê nếu là trưởng đơn vị
+    $statistics = null;
+    if ($isUnitLeader) {
+        // Lấy ID trạng thái "Đã phê duyệt"
+        $approvedStatusId = MetaType::where('category', 'evaluation_status')
+            ->where('name', 'Đã phê duyệt')
+            ->value('id');
+
+        // Lấy ID trạng thái "Đang xét duyệt"
+        $pendingStatusId = MetaType::where('category', 'evaluation_status')
+            ->where('name', 'Đang xét duyệt')
+            ->value('id');
+
+        // Đếm tổng số đánh giá trong đơn vị - sử dụng allEvaluationsQuery
+        $totalEvaluations = $allEvaluationsQuery->count();
+
+        // Đếm số đánh giá đã được phê duyệt - sử dụng allEvaluationsQuery
+        $approvedCount = (clone $allEvaluationsQuery)->where('status_id', $approvedStatusId)->count();
+
+        // Đếm số đánh giá đang chờ phê duyệt - sử dụng allEvaluationsQuery
+        $pendingCount = (clone $allEvaluationsQuery)->where('status_id', $pendingStatusId)->count();
+
+        // Tính phần trăm
+        $approvedPercentage = $totalEvaluations > 0 ? round(($approvedCount / $totalEvaluations) * 100) : 0;
+        $pendingPercentage = $totalEvaluations > 0 ? round(($pendingCount / $totalEvaluations) * 100) : 0;
+
+        $statistics = [
+            'total' => $totalEvaluations,
+            'approved' => [
+                'count' => $approvedCount,
+                'percentage' => $approvedPercentage
+            ],
+            'pending' => [
+                'count' => $pendingCount,
+                'percentage' => $pendingPercentage
+            ]
+        ];
+    }
+
+    $openStatusId = Cache::remember('period_status_open_id', 86400, function () {
+        return MetaType::where('category', 'period_status')
+            ->where('name', 'Mở')
+            ->value('id');
+    });
+
+    $isOpenPeriod = $period->status_id == $openStatusId;
+
+    return view('pages.partials.self-evaluation-list', compact(
+        'evaluations',
+        'years',
+        'selectedYear',
+        'qualities',
+        'titles',
+        'statuses',
+        'isUnitLeader',
+        'statistics',
+        'isOpenPeriod',
+        'searchName',
+        'qualityId',
+        'titleId',
+        'statusId',
+        'filteredCount'
+    ));
+}
 
     public function addReview(Request $request, Evaluation $evaluation)
     {
