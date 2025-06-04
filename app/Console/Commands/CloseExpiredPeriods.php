@@ -6,6 +6,8 @@ use App\Models\Periods;
 use App\Models\MetaType;
 use Illuminate\Console\Command;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
+
 
 class CloseExpiredPeriods extends Command
 {
@@ -65,6 +67,10 @@ class CloseExpiredPeriods extends Command
         } else {
             $this->info("Không có đợt đánh giá nào cần đóng.");
         }
+
+        Log::info('Running close expired periods command at ' . $now);
+        Log::info("Found {$expiredPeriods->count()} expired periods to close");
+        Log::info("Closed {$count} expired periods");
         
         return 0;
     }

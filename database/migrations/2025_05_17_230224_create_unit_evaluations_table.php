@@ -29,7 +29,6 @@ return new class extends Migration
             $table->longText('achievement')->nullable();
             $table->longText('approved_achievement')->nullable();
             $table->foreignId('approved_by')->nullable()->constrained('users');
-            $table->boolean('is_approved')->default(false);
             $table->timestamps();
         });
     }

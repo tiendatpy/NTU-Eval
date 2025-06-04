@@ -17,9 +17,7 @@
     <body class="font-sans text-gray-900 antialiased">
         <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100">
             <div>
-                <a class="text-5xl flex" href="">
-                    <span class="icomoon icon-logo"></span>
-                </a>
+                <img src="{{ asset('images/favicon.png') }}" class="h-40 w-40" alt="logo">
             </div>
             <div class="w-full sm:max-w-md px-10 py-8 bg-white mt-10 custom-box-shadow overflow-hidden sm:rounded-lg">
                 {{ $slot }}
