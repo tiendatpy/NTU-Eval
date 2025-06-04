@@ -11,7 +11,60 @@
             <span class="text-primary-700">Năm học: {{ $currentYear }} - {{ $currentYear + 1 }}</span>
         </div>
 
-        <!-- Thêm phần thống kê -->
+        <!-- Form tìm kiếm và lọc -->
+        <div class="mb-6">
+            <form action="{{ route('unit.members') }}" method="GET" class="flex flex-col md:flex-row md:items-center md:justify-end gap-4">
+                <div class="">
+                    <div class="header-search flex items-center">
+                        <input name="search_name" value="{{ $searchName ?? '' }}" type="text" class="h-[45px] bg-primary-050 rounded-2xl border-1 w-[402px] px-7 py-6 text-sm" placeholder="Tìm kiếm theo họ tên...">
+                    </div>
+                </div>
+                <div class="w-auto">
+                    <select id="evaluation_status" name="evaluation_status" 
+                        class="mt-1">
+                        <option value="">-- Tất cả trạng thái --</option>
+                        <option value="evaluated" {{ isset($evaluationStatus) && $evaluationStatus == 'evaluated' ? 'selected' : '' }}>Đã đánh giá</option>
+                        <option value="not_evaluated" {{ isset($evaluationStatus) && $evaluationStatus == 'not_evaluated' ? 'selected' : '' }}>Chưa đánh giá</option>
+                    </select>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button type="submit" class="btn btn-primary">
+                        <span class="icomoon icon-search mr-1"></span> Lọc
+                    </button>
+                    <a href="{{ route('unit.members') }}" class="btn btn-additional">
+                        <span class="icomoon icon-refresh-ccw mr-1"></span> Đặt lại
+                    </a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Hiển thị thông tin lọc nếu có -->
+        @if($searchName || $evaluationStatus)
+        <div class="bg-blue-50 border-l-4 border-blue-500 text-blue-700 p-4 mb-6" role="alert">
+            <div class="flex">
+                <span class="icomoon icon-filter mr-2"></span>
+                <p class="mb-0">
+                    Đang lọc: 
+                    @if($searchName)
+                        <span class="font-medium">Họ tên chứa "{{ $searchName }}"</span>
+                    @endif
+                    
+                    @if($searchName && $evaluationStatus)
+                        và Trạng thái đánh giá:
+                    @endif
+                    
+                    @if($evaluationStatus)
+                        <span class="font-medium">
+                            Trạng thái đánh giá:
+                            {{ $evaluationStatus == 'evaluated' ? 'Đã đánh giá' : 'Chưa đánh giá' }}
+                        </span>
+                    @endif
+                </p>
+            </div>
+        </div>
+        @endif
+
+        <!-- Thêm phần thống kê - giữ nguyên -->
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
             <div class="bg-white p-4 rounded-lg custom-box-shadow border border-gray-100">
                 <div class="flex items-center">
@@ -62,7 +115,7 @@
             </div>
         </div>
 
-        <!-- Thêm progress bar -->
+        <!-- Thêm progress bar - giữ nguyên -->
         <div class="w-full bg-gray-200 rounded-full h-2.5 mb-6 dark:bg-gray-700">
             <div class="bg-neutral-500 h-2.5 rounded-full" style="width: {{ $evaluationPercentage }}%"></div>
         </div>
@@ -108,7 +161,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="7" class="text-center py-4">Không có thành viên nào trong đơn vị.</td>
+                    <td colspan="7" class="text-center py-4">Không có thành viên nào phù hợp với điều kiện tìm kiếm.</td>
                 </tr>
                 @endforelse
             </tbody>
@@ -118,7 +171,7 @@
             {{ $members->links() }}
         </div>
 
-        <!-- Thêm ghi chú thống kê -->
+        <!-- Thêm ghi chú thống kê - giữ nguyên -->
         <div class="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
             <h3 class="text-sm font-semibold text-gray-700 mb-2">Ghi chú:</h3>
             <ul class="text-sm text-gray-600 space-y-1">
