@@ -78,16 +78,6 @@
     <div class="mt-4">
       {{ $periods->links() }}
     </div>
-    
-    <!-- Ghi chú -->
-    <div class="mt-8 p-4 bg-blue-50 rounded-lg">
-      <h3 class="text-sm font-semibold text-blue-800 mb-2">Hướng dẫn:</h3>
-      <ul class="list-disc pl-5 text-sm text-blue-700 space-y-1">
-        <li>Khi <strong>đóng đợt đánh giá</strong>, thành viên sẽ không thể tạo mới hoặc chỉnh sửa đánh giá trong đợt đó.</li>
-        <li>Trưởng đơn vị có thể mở hoặc đóng đợt đánh giá tùy theo tiến độ thực hiện.</li>
-        <li>Trạng thái "Đang diễn ra" cho phép thành viên đánh giá, trạng thái "Kết thúc" sẽ đóng đợt đánh giá.</li>
-      </ul>
-    </div>
   </div>
 </section>
 
