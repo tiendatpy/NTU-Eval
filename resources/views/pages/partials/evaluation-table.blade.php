@@ -115,8 +115,10 @@
     <div class="group-btn text-right mt-8">
       @if($evaluation)
         <a href="{{ route('evaluations.result') }}" class="btn btn-secondary ml-3">Xem đánh giá</a>
+        <button {{$evaluation->status->name === 'Đã phê duyệt' ? 'disabled' : ''}} type="submit" class="btn btn-primary {{$evaluation->status->name === 'Đã phê duyệt' ? 'cursor-not-allowed bg-states-500/100 hover:bg-states-500/100' : ''}} ">Cập nhật</button>
+      @else
+        <button type="submit" class="btn btn-primary">Gửi đánh giá</button>
       @endif
-      <button type="submit" class="btn btn-primary">{{ $evaluation ? 'Cập nhật' : 'Gửi đánh giá' }}</button>
     </div>
   </form>
 @else
