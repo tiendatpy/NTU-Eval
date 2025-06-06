@@ -27,10 +27,10 @@
           <tr class="bg-states-300">
             <th>STT</th>
             <th>Đợt đánh giá</th>
-            <th>Thời gian</th>
+            <th>Thời hạn đánh giá</th>
             <th>Trạng thái</th>
-            <th>Người tạo</th>
-            {{-- <th class="text-center">Mở/Đóng</th> --}}
+            <th>Người cập nhật cuối</th>
+            <th>Thời gian cập nhật</th>
             <th class="text-center">Hành động</th>
           </tr>
         </thead>
@@ -54,12 +54,9 @@
             <td>
               {{ $period->createdBy->full_name ?? 'N/A' }}
             </td>
-            {{-- <td class="p-3 text-center">
-              <label class="inline-flex items-center cursor-pointer">
-                <input type="checkbox" value="" class="sr-only peer toggle-checkbox" data-period-id="{{ $period->id }}" {{ $period->status_id == $openStatusId ? 'checked' : '' }}>
-                <div class="relative w-22 h-12 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:move-left rtl:peer-checked:after:move-right peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-10 after:w-10 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"></div>
-              </label>
-            </td> --}}
+            <td>
+              <span>{{ format_date($period->updated_at, 'd/m/Y', true) }}</span>
+            </td>
             <td class="p-3 text-center">
               <a href="{{ route('periods.edit', $period->id) }}" class="text-blue-600 hover:text-blue-800" title="Chỉnh sửa">
                 <span class="icomoon icon-pencil-alt text-xl"></span>

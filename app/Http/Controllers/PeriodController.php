@@ -113,6 +113,7 @@ class PeriodController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $user = Auth::user();
         $period = Periods::findOrFail($id);
         
         $validated = $request->validate([
@@ -141,6 +142,7 @@ class PeriodController extends Controller
                 'start_date' => $request->start_date,
                 'end_date' => $request->end_date,
                 'status_id' => $request->status_id,
+                'created_by' => $user->id,
             ]);
             
             DB::commit();
@@ -152,39 +154,5 @@ class PeriodController extends Controller
         }
     }
     
-    /**
-     * Chuyển đổi trạng thái mở/đóng đợt đánh giá
-     */
-    public function toggleStatus($id)
-    {
-        
-        $period = Periods::findOrFail($id);
-        
-        try {
-            // Lấy ID của trạng thái "Đang diễn ra" (mở) và "Kết thúc" (đóng)
-            $openStatusId = MetaType::where('category', 'period_status')
-                ->where('name', 'Mở')
-                ->value('id');
-                
-            $closedStatusId = MetaType::where('category', 'period_status')
-                ->where('name', 'Đóng')
-                ->value('id');
-            
-            // Nếu hiện tại đang mở, chuyển sang đóng và ngược lại
-            $newStatusId = ($period->status_id == $openStatusId) ? $closedStatusId : $openStatusId;
-            
-            $period->status_id = $newStatusId;
-            $period->save();
-            
-            $status = ($newStatusId == $openStatusId) ? 'mở' : 'đóng';
-            
-            return response()->json([
-                'success' => true, 
-                'message' => "Đã $status đợt đánh giá thành công.",
-                'is_open' => ($newStatusId == $openStatusId)
-            ]);
-        } catch (\Exception $e) {
-            return response()->json(['success' => false, 'message' => 'Đã xảy ra lỗi: ' . $e->getMessage()], 500);
-        }
-    }
+
 }
