@@ -1,5 +1,6 @@
 @php
  $isUnitLeader = auth()->user()->role->isUnitLeader == true;
+ $isAdmin = auth()->user()->role->isSuperAdmin == true;
 @endphp
 <div class="menu px-6 py-8">
     <ul class="menu-list mb-11">
@@ -76,6 +77,45 @@
                 <span>Quản lý đợt đánh giá</span>
             </a>
         </li>
+
+        @elseif($isAdmin)
+        <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer flex items-center gap-8 {{ request()->routeIs('periods.*') ? 'active-menu text-states-600' : '' }} ">
+            <span class="icomoon icon-clock text-2xl"></span>
+            <a class="block w-full" href="{{ route('periods.index') }}">
+                <span>Quản lý đợt đánh giá</span>
+            </a>
+        </li>
+        <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer flex items-center gap-8 {{ request()->routeIs('periods.*') ? 'active-menu text-states-600' : '' }} ">
+            <span class="icomoon icon-users text-2xl"></span>
+            <a class="block w-full" href="{{ route('periods.index') }}">
+                <span>Quản lý tài khoản</span>
+            </a>
+        </li>
+        <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer flex items-center gap-8 {{ request()->routeIs('periods.*') ? 'active-menu text-states-600' : '' }} ">
+            <span class="icomoon icon-color-swatch text-2xl"></span>
+            <a class="block w-full" href="{{ route('periods.index') }}">
+                <span>Quản lý đơn vị</span>
+            </a>
+        </li>
+        <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer flex items-center gap-8 {{ request()->routeIs('periods.*') ? 'active-menu text-states-600' : '' }} ">
+            <span class="icomoon icon-table text-2xl"></span>
+            <a class="block w-full" href="{{ route('periods.index') }}">
+                <span>Quản lý tiêu chí đánh giá</span>
+            </a>
+        </li>
+        <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer flex items-center gap-8 {{ request()->routeIs('periods.*') ? 'active-menu text-states-600' : '' }} ">
+            <span class="icomoon icon-gift text-2xl"></span>
+            <a class="block w-full" href="{{ route('periods.index') }}">
+                <span>Quản lý hình thức khen thưởng</span>
+            </a>
+        </li>
+        <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer flex items-center gap-8 {{ request()->routeIs('periods.*') ? 'active-menu text-states-600' : '' }} ">
+            <span class="icomoon icon-star text-2xl"></span>
+            <a class="block w-full" href="{{ route('periods.index') }}">
+                <span>Quản lý xếp loại chất lượng</span>
+            </a>
+        </li>
+        
         @else
             <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer flex items-center gap-8 {{ request()->routeIs('evaluations.index') || request()->routeIs('evaluations.result')  ? 'active-menu text-states-600' : '' }}">
                 <span class="icomoon icon-pencil text-2xl"></span>

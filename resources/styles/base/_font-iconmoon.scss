@@ -25,6 +25,12 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
+  .icon-clock:before {
+    content: "\e938";
+  }
+  .icon-color-swatch:before {
+    content: "\e939";
+  }
   .icon-refresh:before {
     content: "\e936";
   }
