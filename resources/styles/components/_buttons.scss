@@ -23,6 +23,13 @@
       @apply text-white bg-neutral-500;
       @apply  hover:bg-neutral-500/80;
     }
+    .btn-secondary__v2 {
+      @apply text-white bg-neutral-500;
+      @apply hover:bg-neutral-500/80;
+      &.disabled {
+        @apply text-neutral-100 opacity-50 bg-transparent;
+      }
+    }
     .btn-additional {
       @apply text-white bg-primary-600;
       @apply  hover:bg-primary-600/80;

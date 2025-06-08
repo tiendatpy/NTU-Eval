@@ -10,6 +10,10 @@ use App\Http\Controllers\UnitEvaluationController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\PeriodController;
+use App\Http\Controllers\Admin\CriteriaController;
+use App\Http\Controllers\Admin\RewardController;
+use App\Http\Controllers\Admin\QualityController;
+use App\Http\Controllers\Admin\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -85,7 +89,7 @@ Route::middleware(['auth', 'unit.leader'])->group(function () {
         Route::post('/store', [PeriodController::class, 'store'])->name('store');
         Route::get('/edit/{id}', [PeriodController::class, 'edit'])->name('edit');
         Route::put('/update/{id}', [PeriodController::class, 'update'])->name('update');
-        Route::post('/toggle-status/{id}', [PeriodController::class, 'toggleStatus'])->name('toggle-status');
+
     });
     // self-evaluation for unit leader
     Route::get('/unit-evaluation', [UnitEvaluationController::class, 'index'])->name('unit.evaluations.index');
@@ -111,5 +115,25 @@ Route::middleware(['auth', 'unit.leader'])->group(function () {
     // manage members of unit
     Route::get('/unit-members', [UnitController::class, 'members'])->name('unit.members');
 
+});
+
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    // Đợt đánh giá đã có
+    Route::resource('periods', PeriodController::class);
+    
+    // Tài khoản người dùng
+    Route::resource('users', UserController::class);
+    
+    // Đơn vị
+    Route::resource('units', UnitController::class);
+    
+    // Tiêu chí đánh giá
+    // Route::resource('criteria', CriteriaController::class);
+    
+    // // Hình thức khen thưởng
+    // Route::resource('rewards', RewardController::class);
+    
+    // // Xếp loại chất lượng
+    // Route::resource('qualities', QualityController::class);
 });
 require __DIR__ . '/auth.php';
