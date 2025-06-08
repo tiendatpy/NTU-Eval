@@ -73,7 +73,7 @@ class UserController extends Controller
             'role_id' => $request->role_id,
             'unit_id' => $request->unit_id,
             'phone' => $request->phone,
-            'education_level' => $request->education_level,
+            'education_id' => $request->education_id,
         ]);
 
         return redirect()->route('admin.users.index')
