@@ -25,6 +25,9 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
+  .icon-trash-2:before {
+    content: "\e93a";
+  }
   .icon-clock:before {
     content: "\e938";
   }

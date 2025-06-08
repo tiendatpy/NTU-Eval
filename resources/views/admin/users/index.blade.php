@@ -49,35 +49,37 @@
         <table class="w-full table-auto">
             <thead class="bg-states-300">
                 <tr>
-                    <th class=" text-left">Mã</th>
-                    <th class=" text-left">Họ tên</th>
-                    <th class=" text-left">Email</th>
-                    <th class=" text-left">Vai trò</th>
-                    <th class=" text-left">Đơn vị</th>
+                    <th>STT</th>
+                    <th>Mã</th>
+                    <th>Họ tên</th>
+                    <th>Email</th>
+                    <th>Vai trò</th>
+                    <th>Đơn vị</th>
                     <th class=" text-center">Thao tác</th>
                 </tr>
             </thead>
             <tbody>
-                @forelse($users as $user)
+                @forelse($users as $index => $user)
                 <tr class="border-b ">
+                    <td>{{$index+1}}</td>
                     <td class="">{{ $user->id }}</td>
                     <td class="">{{ $user->full_name }}</td>
                     <td class="">{{ $user->email }}</td>
                     <td class="">{{ $user->role->name }}</td>
                     <td class="">{{ $user->unit->name }}</td>
                     <td class=" text-center">
-                        <a href="{{ route('admin.users.show', $user) }}" class="text-blue-500 hover:text-blue-700 mx-1">
+                        <a href="{{ route('admin.users.show', $user) }}" class="text-blue-500 hover:text-blue-700 mx-1" title="Xem chi tiết">
                             <span class="icomoon icon-eye text-xl"></span>
                         </a>
-                        <a href="{{ route('admin.users.edit', $user) }}" class="text-yellow-500 hover:text-yellow-700 mx-1">
+                        <a href="{{ route('admin.users.edit', $user) }}" class="text-yellow-500 hover:text-yellow-700 mx-1" title="Chỉnh sửa">
                             <span class="icomoon icon-pencil-alt text-xl"></span>
                         </a>
                         <form action="{{ route('admin.users.destroy', $user) }}" method="POST" class="inline">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="text-red-500 hover:text-red-700 mx-1" 
+                            <button type="submit" class="text-red-500 hover:text-red-700 mx-1" title="Xóa tài khoản"
                                 onclick="return confirm('Bạn có chắc chắn muốn xóa tài khoản này?')">
-                                <span class="icomoon icon-trash"></span>
+                                <span class="icomoon icon-trash-2 text-xl"></span>
                             </button>
                         </form>
                     </td>
