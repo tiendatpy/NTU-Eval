@@ -90,20 +90,21 @@ class UserController extends Controller
     {
         $roles = Role::all();
         $units = Unit::all();
-        return view('admin.users.edit', compact('user', 'roles', 'units'));
+        $educationLevels = MetaType::where('category', 'education_level')->get();
+        return view('admin.users.edit', compact('user', 'roles', 'units', 'educationLevels'));
     }
 
     public function update(Request $request, User $user)
     {
         $request->validate([
             'full_name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
+            'email' => ['required', 'string', 'email', 'max:255'],
             'date_of_birth' => ['required', 'date', 'before:today'],
-            'phone' => ['required', 'string', 'regex:/^[0-9]{10}$/', 'unique:users,phone'],
+            'phone' => ['required', 'string', 'regex:/^[0-9]{10}$/'],
             'education_id' => ['required', 'exists:meta_types,id'],
             'role_id' => ['required', 'exists:roles,id'], 
             'unit_id' => ['required', 'exists:units,id'], 
-            'password' => ['required', Rules\Password::defaults()],
+            'password' => ['nullable', Rules\Password::defaults()],
         ]);
 
         $data = [
@@ -113,7 +114,7 @@ class UserController extends Controller
             'role_id' => $request->role_id,
             'unit_id' => $request->unit_id,
             'phone' => $request->phone,
-            'education_id' => ['required', 'exists:meta_types,id'],
+            'education_id' => $request->education_id,
         ];
 
         if ($request->filled('password')) {
