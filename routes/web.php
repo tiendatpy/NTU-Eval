@@ -5,7 +5,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EvaluationController;
 use App\Http\Controllers\ExportController;
-use App\Http\Controllers\UnitController;
+use App\Http\Controllers\MemberController;
 use App\Http\Controllers\UnitEvaluationController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ReportController;
@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\CriteriaController;
 use App\Http\Controllers\Admin\RewardController;
 use App\Http\Controllers\Admin\QualityController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\UnitController;
 
 /*
 |--------------------------------------------------------------------------
@@ -113,7 +114,7 @@ Route::middleware(['auth', 'unit.leader'])->group(function () {
         ->name('last-report')
         ->middleware(['auth']);
     // manage members of unit
-    Route::get('/unit-members', [UnitController::class, 'members'])->name('unit.members');
+    Route::get('/unit-members', [MemberController::class, 'members'])->name('unit.members');
 
 });
 

@@ -7,7 +7,7 @@ use App\Models\Periods;
 use App\Models\Evaluation;
 use Illuminate\Http\Request;
 
-class UnitController extends Controller
+class MemberController extends Controller
 {
     public function members(Request $request)
     {

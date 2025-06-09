@@ -1,10 +1,10 @@
 <?php
 
-
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Unit;
+use App\Models\MetaType;
 use Illuminate\Http\Request;
 
 class UnitController extends Controller
@@ -12,31 +12,35 @@ class UnitController extends Controller
     public function index(Request $request)
     {
         $search = $request->input('search');
+        $typeFilter = $request->input('type');
         
-        $unitsQuery = Unit::query();
+        $unitsQuery = Unit::with('type');
         
         if ($search) {
             $unitsQuery->where('name', 'like', "%{$search}%");
         }
         
-        $units = $unitsQuery->orderBy('name')->paginate(10)->withQueryString();
+        if ($typeFilter) {
+            $unitsQuery->where('type_id', $typeFilter);
+        }
         
-        return view('admin.units.index', compact('units', 'search'));
+        $units = $unitsQuery->orderBy('name')->paginate(10)->withQueryString();
+        $types = MetaType::where('category', 'unit_type')->get();
+        
+        return view('admin.units.index', compact('units', 'search', 'types', 'typeFilter'));
     }
 
     public function create()
     {
-        return view('admin.units.create');
+        $types = MetaType::where('category', 'unit_type')->get();
+        return view('admin.units.create', compact('types'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
             'name' => 'required|string|max:255|unique:units',
-            'description' => 'nullable|string',
-            'address' => 'nullable|string|max:255',
-            'phone' => 'nullable|string|max:20',
-            'email' => 'nullable|email|max:255',
+            'type_id' => 'required|exists:meta_types,id',
         ]);
 
         Unit::create($request->all());
@@ -47,22 +51,28 @@ class UnitController extends Controller
 
     public function show(Unit $unit)
     {
-        return view('admin.units.show', compact('unit'));
+        $unit->load('type');
+        
+        // Đếm số lượng người dùng trong đơn vị
+        $totalUsers = $unit->users()->count();
+        
+        // Lấy danh sách người dùng trong đơn vị
+        $users = $unit->users()->with('role')->paginate(5);
+        
+        return view('admin.units.show', compact('unit', 'totalUsers', 'users'));
     }
 
     public function edit(Unit $unit)
     {
-        return view('admin.units.edit', compact('unit'));
+        $types = MetaType::where('category', 'unit_type')->get();
+        return view('admin.units.edit', compact('unit', 'types'));
     }
 
     public function update(Request $request, Unit $unit)
     {
         $request->validate([
             'name' => 'required|string|max:255|unique:units,name,' . $unit->id,
-            'description' => 'nullable|string',
-            'address' => 'nullable|string|max:255',
-            'phone' => 'nullable|string|max:20',
-            'email' => 'nullable|email|max:255',
+            'type_id' => 'required|exists:meta_types,id',
         ]);
 
         $unit->update($request->all());

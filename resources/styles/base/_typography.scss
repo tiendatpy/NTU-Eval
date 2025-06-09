@@ -44,6 +44,10 @@
     @apply border-primary-300 border-1 px-5 py-4 rounded-lg;
   }
 
+  input, select {
+    @apply focus:border-primary-700 focus:outline-none;
+  }
+
   
   table {
     th,
