@@ -134,7 +134,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // // Hình thức khen thưởng
     // Route::resource('rewards', RewardController::class);
     
-    // // Xếp loại chất lượng
-    // Route::resource('qualities', QualityController::class);
+    // Xếp loại chất lượng
+    Route::resource('quality', QualityController::class);
 });
 require __DIR__ . '/auth.php';
