@@ -166,7 +166,7 @@
             </tbody>
         </table>
         
-        <div class="mt-4">
+        <div class="mt-4 flex justify-end">
             {{ $members->links() }}
         </div>
 

@@ -69,7 +69,7 @@
         </table>
     </div>
 
-    <div class="mt-4">
+    <div class="mt-4 flex justify-end">
         {{ $rewards->links() }}
     </div>
 </section>

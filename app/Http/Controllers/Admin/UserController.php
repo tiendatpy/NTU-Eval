@@ -21,11 +21,15 @@ class UserController extends Controller
 
         $usersQuery = User::with(['role', 'unit']);
 
+        $usersQuery->whereHas('role', function ($q) {
+            $q->where('name', '!=', 'admin');
+        });
+        
         if ($search) {
-            $usersQuery->where(function($q) use ($search) {
+            $usersQuery->where(function ($q) use ($search) {
                 $q->where('full_name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%")
-                  ->orWhere('id', 'like', "%{$search}%");
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('id', 'like', "%{$search}%");
             });
         }
 
@@ -60,8 +64,8 @@ class UserController extends Controller
             'date_of_birth' => ['required', 'date', 'before:today'],
             'phone' => ['required', 'string', 'regex:/^[0-9]{10}$/', 'unique:users,phone'],
             'education_id' => ['required', 'exists:meta_types,id'],
-            'role_id' => ['required', 'exists:roles,id'], 
-            'unit_id' => ['required', 'exists:units,id'], 
+            'role_id' => ['required', 'exists:roles,id'],
+            'unit_id' => ['required', 'exists:units,id'],
             'password' => ['required', Rules\Password::defaults()],
         ]);
 
@@ -102,8 +106,8 @@ class UserController extends Controller
             'date_of_birth' => ['required', 'date', 'before:today'],
             'phone' => ['required', 'string', 'regex:/^[0-9]{10}$/'],
             'education_id' => ['required', 'exists:meta_types,id'],
-            'role_id' => ['required', 'exists:roles,id'], 
-            'unit_id' => ['required', 'exists:units,id'], 
+            'role_id' => ['required', 'exists:roles,id'],
+            'unit_id' => ['required', 'exists:units,id'],
             'password' => ['nullable', Rules\Password::defaults()],
         ]);
 

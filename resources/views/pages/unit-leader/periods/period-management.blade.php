@@ -72,7 +72,7 @@
       </table>
     </div>
     
-    <div class="mt-4">
+    <div class="mt-4 flex justify-end">
       {{ $periods->links() }}
     </div>
   </div>
