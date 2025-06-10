@@ -132,8 +132,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Tiêu chí đánh giá
     // Route::resource('criteria', CriteriaController::class);
     
-    // // Hình thức khen thưởng
-    // Route::resource('rewards', RewardController::class);
+    Route::resource('rewards', RewardController::class);
+
     Route::resource('titles', TitleController::class);
     
     // Xếp loại chất lượng
