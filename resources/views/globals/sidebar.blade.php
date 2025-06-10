@@ -5,7 +5,7 @@
 <div class="menu px-6 py-8">
     <ul class="menu-list mb-11">
         @if($isUnitLeader)
-        <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer flex items-center gap-8 ">
+        <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer flex items-center gap-8 {{ request()->routeIs('dashboard.stats') ? 'active-menu text-states-600' : '' }} ">
             <span class="icomoon icon-chart-pie text-2xl"></span>
             <a class="block w-full" href="{{ route('dashboard.stats') }}">
                 <span>Tổng quan</span>

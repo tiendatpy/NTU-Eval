@@ -18,11 +18,6 @@ class DashboardController extends Controller
     {
         $user = auth()->user();
         
-        // Chỉ cho phép trưởng đơn vị truy cập
-        if ($user->role->name !== 'Trưởng đơn vị') {
-            return redirect()->route('dashboard')->with('error', 'Bạn không có quyền truy cập trang này.');
-        }
-        
         // Lấy tham số từ request
         $year = $request->input('year', now()->year - 1);
         $period = Periods::where('year', $year)->first();

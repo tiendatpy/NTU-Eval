@@ -10,7 +10,6 @@ use App\Http\Controllers\UnitEvaluationController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\PeriodController;
-use App\Http\Controllers\Admin\CriteriaController;
 use App\Http\Controllers\Admin\RewardController;
 use App\Http\Controllers\Admin\QualityController;
 use App\Http\Controllers\Admin\UserController;
@@ -31,7 +30,7 @@ use App\Http\Controllers\Admin\PeriodAdminController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth/login');
 });
 Route::middleware(['auth'])->group(function () {
     Route::get('/self-evaluation', [EvaluationController::class, 'index'])->name('evaluations.index');
@@ -47,11 +46,12 @@ Route::middleware(['auth'])->group(function () {
 
 
 Route::get('/dashboard', function () {
-    // if (auth()->check() && auth()->user()->role->isUnitLeader == true) {
-    //     return redirect()->route('dashboard.stats');
-    // }
-    // return redirect()->route('evaluations.index');
-    return view('dashboard');
+    if (auth()->user()->role->isUnitLeader) {
+        return redirect()->route('dashboard.stats');
+    }elseif (auth()->user()->role->isSuperAdmin) {
+        return redirect()->route('admin.periods.index');
+    }
+    return redirect()->route('evaluations.index');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
