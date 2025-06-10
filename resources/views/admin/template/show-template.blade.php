@@ -5,7 +5,7 @@
     <section class="bg-white py-8">
         <div class="container">
             <div class="flex justify-between items-center mb-6">
-                <h2 class="text-base mb-0">{{ $title ?? 'Chi tiết' }}</h2>
+                <h2 class="text-base mb-0">Chi tiết</h2>
                 <div>
                     <a href="{{ $editRoute }}" class="btn btn-secondary__v2">
                        Chỉnh sửa

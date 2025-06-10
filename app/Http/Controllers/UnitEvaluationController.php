@@ -49,7 +49,7 @@ class UnitEvaluationController extends Controller
         $quality = Quality::all();
 
         $titleTypeId = Cache::remember('title_type_unit_id', 86400, function () {
-            return MetaType::where('category', 'type_title')
+            return MetaType::where('category', 'title_type')
                 ->where('name', 'Tập thể')
                 ->value('id');
         });
@@ -250,7 +250,7 @@ class UnitEvaluationController extends Controller
         $qualities = Quality::all();
 
         // Lấy danh sách danh hiệu thi đua cho đơn vị
-        $titleTypeId = MetaType::where('category', 'type_title')
+        $titleTypeId = MetaType::where('category', 'title_type')
             ->where('name', 'Tập thể')
             ->value('id');
 

@@ -5,7 +5,7 @@
     <section class="bg-white py-8">
         <div class="container">
             <div class="mb-6">
-                <h2 class="text-base mb-0">{{ $title ?? 'Chỉnh sửa' }}</h2>
+                <h2 class="text-base mb-0">Chỉnh sửa</h2>
             </div>
         
             <form action="{{ $route }}" method="POST" class="space-y-6">

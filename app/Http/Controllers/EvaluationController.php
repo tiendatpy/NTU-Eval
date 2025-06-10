@@ -59,7 +59,7 @@ class EvaluationController extends Controller
         $quality = Quality::all();
 
         $titleTypeId = Cache::remember('title_type_id', 86400, function () {
-            return MetaType::where('category', 'type_title')
+            return MetaType::where('category', 'title_type')
                 ->where('name', 'Cá nhân')
                 ->value('id');
         });
@@ -392,7 +392,7 @@ public function getListEvaluation(Request $request)
     // Lấy danh sách xếp loại chất lượng và danh hiệu thi đua để hiện thị trong dropdown filter
     $qualities = Quality::all();
     $titleTypeId = Cache::remember('title_type_id', 86400, function () {
-        return MetaType::where('category', 'type_title')
+        return MetaType::where('category', 'title_type')
             ->where('name', 'Cá nhân')
             ->value('id');
     });
@@ -540,7 +540,7 @@ public function getListEvaluation(Request $request)
         $qualities = Quality::all();
 
         $titleTypeId = Cache::remember('title_type_id', 86400, function () {
-            return MetaType::where('category', 'type_title')
+            return MetaType::where('category', 'title_type')
                 ->where('name', 'Cá nhân')
                 ->value('id');
         });

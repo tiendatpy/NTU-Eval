@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\RewardController;
 use App\Http\Controllers\Admin\QualityController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\UnitController;
+use App\Http\Controllers\Admin\TitleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -133,6 +134,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     
     // // Hình thức khen thưởng
     // Route::resource('rewards', RewardController::class);
+    Route::resource('titles', TitleController::class);
     
     // Xếp loại chất lượng
     Route::resource('quality', QualityController::class);
