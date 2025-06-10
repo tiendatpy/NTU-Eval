@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\QualityController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\UnitController;
 use App\Http\Controllers\Admin\TitleController;
+use App\Http\Controllers\Admin\EvaluationCriteriaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -129,8 +130,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Đơn vị
     Route::resource('units', UnitController::class);
     
-    // Tiêu chí đánh giá
-    // Route::resource('criteria', CriteriaController::class);
+    Route::resource('criteria', EvaluationCriteriaController::class);
     
     Route::resource('rewards', RewardController::class);
 

@@ -99,7 +99,7 @@
         </li>
         <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer flex items-center gap-8 {{ request()->routeIs('periods.*') ? 'active-menu text-states-600' : '' }} ">
             <span class="icomoon icon-table text-2xl"></span>
-            <a class="block w-full" href="{{ route('periods.index') }}">
+            <a class="block w-full" href="{{ route('admin.criteria.index') }}">
                 <span>Tiêu chí đánh giá</span>
             </a>
         </li>
