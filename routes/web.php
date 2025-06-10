@@ -17,6 +17,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\UnitController;
 use App\Http\Controllers\Admin\TitleController;
 use App\Http\Controllers\Admin\EvaluationCriteriaController;
+use App\Http\Controllers\Admin\PeriodAdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -122,7 +123,7 @@ Route::middleware(['auth', 'unit.leader'])->group(function () {
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     // Đợt đánh giá đã có
-    Route::resource('periods', PeriodController::class);
+    Route::resource('periods', PeriodAdminController::class);
     
     // Tài khoản người dùng
     Route::resource('users', UserController::class);
