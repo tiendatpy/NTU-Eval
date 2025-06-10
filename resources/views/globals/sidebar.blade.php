@@ -79,43 +79,43 @@
         </li>
 
         @elseif($isAdmin)
-        <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer flex items-center gap-8 {{ request()->routeIs('periods.*') ? 'active-menu text-states-600' : '' }} ">
+        <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer flex items-center gap-8 {{ request()->routeIs('users.*') ? 'active-menu text-states-600' : '' }} ">
             <span class="icomoon icon-calendar text-2xl"></span>
             <a class="block w-full" href="{{ route('periods.index') }}">
                 <span>Đợt đánh giá</span>
             </a>
         </li>
-        <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer flex items-center gap-8 {{ request()->routeIs('periods.*') ? 'active-menu text-states-600' : '' }} ">
+        <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer flex items-center gap-8 {{ request()->routeIs('admin.users.*') ? 'active-menu text-states-600' : '' }} ">
             <span class="icomoon icon-users text-2xl"></span>
             <a class="block w-full" href="{{ route('admin.users.index') }}">
                 <span>Tài khoản</span>
             </a>
         </li>
-        <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer flex items-center gap-8 {{ request()->routeIs('periods.*') ? 'active-menu text-states-600' : '' }} ">
+        <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer flex items-center gap-8 {{ request()->routeIs('admin.units.*') ? 'active-menu text-states-600' : '' }} ">
             <span class="icomoon icon-color-swatch text-2xl"></span>
             <a class="block w-full" href="{{ route('admin.units.index') }}">
                 <span>Đơn vị</span>
             </a>
         </li>
-        <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer flex items-center gap-8 {{ request()->routeIs('periods.*') ? 'active-menu text-states-600' : '' }} ">
+        <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer flex items-center gap-8 {{ request()->routeIs('admin.criteria.*') ? 'active-menu text-states-600' : '' }} ">
             <span class="icomoon icon-table text-2xl"></span>
             <a class="block w-full" href="{{ route('admin.criteria.index') }}">
                 <span>Tiêu chí đánh giá</span>
             </a>
         </li>
-        <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer flex items-center gap-8 {{ request()->routeIs('periods.*') ? 'active-menu text-states-600' : '' }} ">
+        <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer flex items-center gap-8 {{ request()->routeIs('admin.rewards.*') ? 'active-menu text-states-600' : '' }} ">
             <span class="icomoon icon-gift text-2xl"></span>
             <a class="block w-full" href="{{ route('admin.rewards.index') }}">
                 <span>Hình thức khen thưởng</span>
             </a>
         </li>
-        <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer flex items-center gap-8 {{ request()->routeIs('periods.*') ? 'active-menu text-states-600' : '' }} ">
+        <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer flex items-center gap-8 {{ request()->routeIs('admin.quality.*') ? 'active-menu text-states-600' : '' }} ">
             <span class="icomoon icon-star text-2xl"></span>
             <a class="block w-full" href="{{ route('admin.quality.index') }}">
                 <span>Xếp loại chất lượng</span>
             </a>
         </li>
-        <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer flex items-center gap-8 {{ request()->routeIs('periods.*') ? 'active-menu text-states-600' : '' }} ">
+        <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer flex items-center gap-8 {{ request()->routeIs('admin.titles.*') ? 'active-menu text-states-600' : '' }} ">
             <span class="icomoon icon-tag text-2xl"></span>
             <a class="block w-full" href="{{ route('admin.titles.index') }}">
                 <span>Danh hiệu thi đua</span>
