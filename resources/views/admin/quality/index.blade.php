@@ -44,7 +44,6 @@
             <thead class="bg-states-300">
                 <tr>
                     <th>STT</th>
-                    <th>ID</th>
                     <th>Tên xếp loại</th>
                     <th>Mô tả</th>
                     <th class="text-center">Thao tác</th>
@@ -54,7 +53,6 @@
                 @forelse($qualities as $index => $quality)
                 <tr class="border-b">
                     <td>{{ $index + 1 }}</td>
-                    <td>{{ $quality->id }}</td>
                     <td>{{ $quality->name }}</td>
                     <td>{{ Str::limit($quality->description, 100) ?? 'Không có mô tả' }}</td>
                     <td class="text-center">

@@ -54,7 +54,6 @@
             <thead class="bg-states-300">
                 <tr>
                     <th>STT</th>
-                    <th>Mã</th>
                     <th>Tên đơn vị</th>
                     <th>Loại đơn vị</th>
                     <th>Số lượng thành viên</th>
@@ -65,7 +64,6 @@
                 @forelse($units as $index => $unit)
                 <tr class="border-b">
                     <td>{{ $index + 1 }}</td>
-                    <td>{{ $unit->id }}</td>
                     <td>{{ $unit->name }}</td>
                     <td>{{ $unit->type->name ?? 'Chưa phân loại' }}</td>
                     <td>{{ $unit->users->count() }}</td>

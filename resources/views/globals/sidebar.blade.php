@@ -79,12 +79,6 @@
         </li>
 
         @elseif($isAdmin)
-        <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer flex items-center gap-8 {{ request()->routeIs('admin.periods.*') ? 'active-menu text-states-600' : '' }} ">
-            <span class="icomoon icon-calendar text-2xl"></span>
-            <a class="block w-full" href="{{ route('admin.periods.index') }}">
-                <span>Đợt đánh giá</span>
-            </a>
-        </li>
         <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer flex items-center gap-8 {{ request()->routeIs('admin.users.*') ? 'active-menu text-states-600' : '' }} ">
             <span class="icomoon icon-users text-2xl"></span>
             <a class="block w-full" href="{{ route('admin.users.index') }}">
@@ -121,7 +115,12 @@
                 <span>Danh hiệu thi đua</span>
             </a>
         </li>
-        
+        <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer flex items-center gap-8 {{ request()->routeIs('admin.periods.*') ? 'active-menu text-states-600' : '' }} ">
+            <span class="icomoon icon-calendar text-2xl"></span>
+            <a class="block w-full" href="{{ route('admin.periods.index') }}">
+                <span>Đợt đánh giá</span>
+            </a>
+        </li>
         @else
             <li class="px-4 py-2 mb-11 font-medium hover:bg-primary-100 hover:rounded-xl cursor-pointer flex items-center gap-8 {{ request()->routeIs('evaluations.index') || request()->routeIs('evaluations.result')  ? 'active-menu text-states-600' : '' }}">
                 <span class="icomoon icon-pencil text-2xl"></span>
