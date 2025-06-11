@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Evaluation;
+use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EvaluationController;
@@ -45,15 +46,9 @@ Route::middleware(['auth'])->group(function () {
 
 
 
-Route::get('/dashboard', function () {
-    // if (auth()->user()->role->isUnitLeader) {
-    //     return redirect()->route('dashboard.stats');
-    // }elseif (auth()->user()->role->isSuperAdmin) {
-    //     return redirect()->route('admin.periods.index');
-    // }
-    // return redirect()->route('evaluations.index');
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/welcome', [WelcomeController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('welcome');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

@@ -1,74 +1,51 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laravel</title>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;600&display=swap" rel="stylesheet">
-    <style>
-        html, body {
-            background-color: #f8fafc;
-            color: #636b6f;
-            font-family: 'Nunito', sans-serif;
-            font-weight: 200;
-            height: 100vh;
-            margin: 0;
-        }
-        .full-height {
-            height: 100vh;
-        }
-        .flex-center {
-            align-items: center;
-            display: flex;
-            justify-content: center;
-        }
-        .position-ref {
-            position: relative;
-        }
-        .top-right {
-            position: absolute;
-            right: 10px;
-            top: 18px;
-        }
-        .content {
-            text-align: center;
-        }
-        .title {
-            font-size: 84px;
-        }
-        .links > a {
-            color: #636b6f;
-            padding: 0 25px;
-            font-size: 13px;
-            font-weight: 600;
-            letter-spacing: .1rem;
-            text-decoration: none;
-            text-transform: uppercase;
-        }
-        .m-b-md {
-            margin-bottom: 30px;
-        }
-    </style>
-</head>
-<body>
-    <div class="flex-center position-ref full-height">
-        @if (Route::has('login'))
-            <div class="top-right links">
-                @auth
-                    <a href="{{ url('/dashboard') }}">Dashboard</a>
-                @else
-                    <a href="{{ route('login') }}">Đăng nhập</a>
-
-                    @if (Route::has('register'))
-                        <a href="{{ route('register') }}">Đăng ký</a>
-                    @endif
-                @endauth
-            </div>
-        @endif
-
-        <div class="content">
-            <h3>Đây là trang chủ giới thiệu</h3>
-        </div>
+@extends('layouts.app')
+@section('title', 'Trang chủ')
+@section('content')
+@php
+    $isAdmin = Auth::user()->role->isSuperAdmin;
+@endphp
+<div class="bg-white p-6 min-h-80p md:p-8 rounded-xl custom-box-shadow">
+    <div class="mb-6">
+        <h1 class="text-xl font-bold text-gray-800 mb-2">Xin chào, {{ Auth::user()->full_name }}!</h1>
+        <p class="text-gray-600">Chào mừng bạn đến với Hệ thống Quản lý Đánh giá, Xếp loại của Trường Đại học Nha Trang</p>
     </div>
-</body>
-</html>
+
+    @if($activePeriod && !$isAdmin)
+        <div class="mb-8">
+            <div class="relative overflow-hidden rounded-lg shadow-md">
+                <div class="absolute top-0 left-0 w-1 h-full {{ $isOverdue ? 'bg-red-500' : ($daysRemaining <= 7 ? 'bg-orange-500' : 'bg-blue-500') }}"></div>
+                <div class="p-6 {{ $isOverdue ? 'bg-red-50' : ($daysRemaining <= 7 ? 'bg-orange-50' : 'bg-blue-50') }}">
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <h2 class="text-base font-semibold mb-1 {{ $isOverdue ? 'text-red-700' : ($daysRemaining <= 7 ? 'text-orange-700' : 'text-blue-700') }}">
+                                <span class="icomoon icon-calendar-check mr-2"></span>
+                                {{ $activePeriod->name ?? ('Đợt đánh giá năm học ' . $activePeriod->year . ' - ' . ($activePeriod->year + 1)) }}
+                            </h2>
+                            <span class="text-sm {{ $isOverdue ? 'text-red-600' : ($daysRemaining <= 7 ? 'text-orange-600' : 'text-blue-600') }}">
+                                Thời gian đánh giá: {{ format_date($activePeriod->start_date) }} - {{ format_date($activePeriod->end_date) }}
+                            </span>
+                        </div>
+                        <div class="flex items-center">
+                            @if($isOverdue)
+                                <span class="inline-flex items-center justify-center px-3 py-1 text-xs font-bold text-white bg-red-500 rounded-full">
+                                    Đã quá hạn
+                                </span>
+                            @elseif($daysRemaining <= 7)
+                                <span class="inline-flex items-center justify-center px-3 py-1 text-xs font-bold text-white bg-orange-500 rounded-full">
+                                    Còn {{ $daysRemaining }} ngày
+                                </span>
+                            @else
+                                <span class="inline-flex items-center justify-center px-3 py-1 text-xs font-bold text-white bg-blue-500 rounded-full">
+                                    Còn {{ $daysRemaining }} ngày
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    @endif
+
+</div>
+@endsection

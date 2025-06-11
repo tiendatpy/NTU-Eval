@@ -2,7 +2,7 @@
   <div class="px-10 flex h-full justify-between items-center">
     <div class="header-left md:flex md:items-center md:gap-10 xl:gap-12">
       <div class="logo down_md:hidden">
-        <a class="text-[36px] flex" href="{{ route('dashboard') }}">
+        <a class="text-[36px] flex" href="{{ route('welcome') }}">
           <img src="{{ asset('images/favicon.png') }}" class="h-25 w-25" alt="logo">
         </a>
       </div>
