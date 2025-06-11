@@ -13,6 +13,38 @@ use App\Models\UnitEvaluation;
 
 class ExportController extends Controller
 {
+    // Hàm xử lý văn bản chung để sử dụng trong tất cả các phương thức
+    private function sanitizeText($text)
+    {
+        // Đảm bảo text là string
+        if (!is_string($text)) {
+            return '';
+        }
+        
+        // Loại bỏ HTML tags
+        $text = strip_tags($text);
+        
+        // Giải mã HTML entities
+        $text = html_entity_decode($text, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        
+        // Xử lý ký tự đặc biệt XML an toàn mà không thay đổi ý nghĩa
+        $text = str_replace('&', '&amp;', $text);
+        $text = str_replace('<', '&lt;', $text);
+        $text = str_replace('>', '&gt;', $text);
+        $text = str_replace('"', '&quot;', $text);
+        $text = str_replace("'", '&apos;', $text);
+        
+        // Xử lý xuống dòng - đây là chìa khóa để giải quyết vấn đề của bạn
+        $text = str_replace("\r\n", "<w:br/>", $text); // Windows line breaks
+        $text = str_replace("\n", "<w:br/>", $text);   // Unix line breaks
+        $text = str_replace("\r", "<w:br/>", $text);   // Mac line breaks
+        
+        // Xử lý các ký tự không in được
+        $text = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/u', '', $text);
+        
+        return $text;
+    }
+
     public function exportEvaluation($id)
     {
         $user = auth()->user();
@@ -47,7 +79,7 @@ class ExportController extends Controller
         foreach ($details as $index => $detail) {
             $i = $index + 1;
             // $templateProcessor->setValue('noi_dung_' . $i, $detail->criteria->name ?? '');
-            $templateProcessor->setValue('ke_khai_' . $i, html_entity_decode(strip_tags($detail->evidence)) ?? '');
+            $templateProcessor->setValue('ke_khai_' . $i, $this->sanitizeText($detail->evidence) ?? '');
 
             // Chuyển số điểm thành text
             $rating = '';
@@ -71,15 +103,15 @@ class ExportController extends Controller
         // Điền thông tin kết quả và xếp loại
         $templateProcessor->setValue('diem_danh_gia', (string) $evaluation->rating);
         $templateProcessor->setValue('xep_loai', $evaluation->quality->name ?? '');
-        $templateProcessor->setValue('tu_nhan_xet', html_entity_decode(strip_tags($evaluation->comment)) ?? '');
+        $templateProcessor->setValue('tu_nhan_xet', $this->sanitizeText($evaluation->comment) ?? '');
 
         // Thông tin đề xuất danh hiệu
         $templateProcessor->setValue('danh_hieu', $evaluation->title->name ?? '');
         $templateProcessor->setValue('khen_thuong', $evaluation->reward->name ?? '');
-        $templateProcessor->setValue('thanh_tich', html_entity_decode(strip_tags($evaluation->achievement)) ?? '');
+        $templateProcessor->setValue('thanh_tich', $this->sanitizeText($evaluation->achievement) ?? '');
 
         // Thông tin phê duyệt (nếu có)
-        $templateProcessor->setValue('nx_uu_khuyet_diem', html_entity_decode(strip_tags($evaluation->feedback)) ?? '');
+        $templateProcessor->setValue('nx_uu_khuyet_diem', $this->sanitizeText($evaluation->feedback) ?? '');
         $templateProcessor->setValue(
             'xep_loai_duyet',
             $evaluation->approved_quality_id ? $evaluation->approvedQuality->name : ''
@@ -150,7 +182,7 @@ class ExportController extends Controller
                 'ho_ten' => $evaluation->evaluator->full_name ?? '',
                 'muc_xep_loai' => $evaluation->quality->name ?? '',
                 'danh_hieu' => $evaluation->title->name ?? '',
-                'dien_giai' => html_entity_decode(strip_tags($evaluation->achievement)) ?? '',
+                'dien_giai' => $this->sanitizeText($evaluation->achievement) ?? '',
             ];
         }
 
@@ -173,13 +205,12 @@ class ExportController extends Controller
 
             $templateProcessor->setValue('xep_loai_don_vi', $qualityName);
             $templateProcessor->setValue('danh_hieu_don_vi', $unitTitle);
-            $templateProcessor->setValue('minh_chung_don_vi', html_entity_decode(strip_tags($unitEvidences)));
+            $templateProcessor->setValue('minh_chung_don_vi', $this->sanitizeText($unitEvidences));
         } else {
             // Nếu không có đánh giá đơn vị, đặt giá trị trống
             $templateProcessor->setValue('xep_loai_don_vi', '');
             $templateProcessor->setValue('minh_chung_don_vi', '');
             $templateProcessor->setValue('danh_hieu_don_vi', '');
-
         }
 
         // Tạo tên file kết quả
@@ -193,9 +224,6 @@ class ExportController extends Controller
         // Tải file về
         return response()->download($tempFilePath, $fileName)->deleteFileAfterSend(true);
     }
-
-
-
 
     /**
      * Xuất danh sách đề nghị danh hiệu thi đua và khen thưởng
@@ -271,7 +299,7 @@ class ExportController extends Controller
             // Chỉ lấy hình thức khen thưởng của đơn vị nếu khác "Không"
             if ($unitEvaluation->reward && $unitEvaluation->reward->name !== 'Không') {
                 $unitRewardName = $unitEvaluation->reward->name;
-                $unitAchievement = html_entity_decode(strip_tags($unitEvaluation->achievement)) ?? '';
+                $unitAchievement = $this->sanitizeText($unitEvaluation->achievement) ?? '';
             }
         }
         
@@ -317,7 +345,7 @@ class ExportController extends Controller
         if ($unitEvaluation) {
             $templateProcessor->setValue('chat_luong_don_vi', $unitEvaluation->quality->name ?? '');
             $templateProcessor->setValue('danh_hieu_don_vi', $unitEvaluation->title->name ?? '');
-            $templateProcessor->setValue('minh_chung_don_vi', html_entity_decode(strip_tags($unitEvaluation->evidence)) ?? '');
+            $templateProcessor->setValue('minh_chung_don_vi', $this->sanitizeText($unitEvaluation->evidence) ?? '');
             $templateProcessor->setValue('hinh_thuc_khen_thuong_dv', $unitEvaluation->reward && $unitEvaluation->reward->name !== 'Không' ? $unitEvaluation->reward->name : '');
             $templateProcessor->setValue('thanh_tich_don_vi', $unitAchievement);
         } else {
@@ -340,7 +368,7 @@ class ExportController extends Controller
                 'ho_ten' => $evaluation->evaluator->full_name ?? '',
                 'xlcl' => $evaluation->approvedQuality->name ?? '',
                 'danh_hieu' => $evaluation->approvedTitle->name ?? '',
-                'trich_ngang' => html_entity_decode(strip_tags($evaluation->achievement)) ?? '',
+                'trich_ngang' => $this->sanitizeText($evaluation->achievement) ?? '',
                 'ghi_chu' => ''
             ];
         }
@@ -359,7 +387,7 @@ class ExportController extends Controller
                     'reward_stt' => $rewardCounter,
                     'reward_ten' => $evaluation->evaluator->full_name ?? '',
                     'hinh_thuc_khen_thuong' => $evaluation->reward->name ?? '',
-                    'tom_tat' => html_entity_decode(strip_tags($evaluation->achievement)) ?? '',
+                    'tom_tat' => $this->sanitizeText($evaluation->achievement) ?? '',
                 ];
                 $rewardCounter++;
             }
@@ -387,6 +415,4 @@ class ExportController extends Controller
         // Tải file về
         return response()->download($tempFilePath, $fileName)->deleteFileAfterSend(true);
     }
-
-
 }
