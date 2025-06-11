@@ -43,11 +43,13 @@ class EvaluationController extends Controller
 
         // Lấy tiêu chí đánh giá phù hợp với vai trò
         $managerId = Cache::remember('criteria_category_manager_id', 86400, function () {
-            return MetaType::where('name', 'Viên chức, NLĐ quản lý')->value('id');
+            return MetaType::where('name', 'Viên chức, NLĐ giữ chức vụ quản lý')->value('id');
         });
+
         $staffId = Cache::remember('criteria_category_staff_id', 86400, function () {
-            return MetaType::where('name', 'Viên chức, NLD không quản lý')->value('id');
+            return MetaType::where('name', 'Viên chức, NLĐ không giữ chức vụ quản lý')->value('id');
         });
+
         if ($isUnitLeader) {
             $criteria = EvaluationCriteria::where('category_id', $managerId)->get();
         } else {
@@ -73,6 +75,7 @@ class EvaluationController extends Controller
                 ->where('name', 'Mở')
                 ->value('id');
         });
+
 
         $isOpenPeriod = $currentPeriod->status_id == $openStatusId;
 

@@ -12,14 +12,12 @@ class Periods extends Model
         'start_date',
         'end_date',
         'status_id',
-        'is_active',
         'created_by'
     ];
 
     protected $casts = [
         'start_date' => 'date',
         'end_date' => 'date',
-        'is_active' => 'boolean',
     ];
 
     public function createdBy()

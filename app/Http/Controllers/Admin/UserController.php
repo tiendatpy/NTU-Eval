@@ -21,9 +21,6 @@ class UserController extends Controller
 
         $usersQuery = User::with(['role', 'unit']);
 
-        $usersQuery->whereHas('role', function ($q) {
-            $q->where('name', '!=', 'admin');
-        });
         
         if ($search) {
             $usersQuery->where(function ($q) use ($search) {

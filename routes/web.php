@@ -46,12 +46,13 @@ Route::middleware(['auth'])->group(function () {
 
 
 Route::get('/dashboard', function () {
-    if (auth()->user()->role->isUnitLeader) {
-        return redirect()->route('dashboard.stats');
-    }elseif (auth()->user()->role->isSuperAdmin) {
-        return redirect()->route('admin.periods.index');
-    }
-    return redirect()->route('evaluations.index');
+    // if (auth()->user()->role->isUnitLeader) {
+    //     return redirect()->route('dashboard.stats');
+    // }elseif (auth()->user()->role->isSuperAdmin) {
+    //     return redirect()->route('admin.periods.index');
+    // }
+    // return redirect()->route('evaluations.index');
+    return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
