@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Password Reset Language Lines
@@ -13,10 +12,9 @@ return [
     |
     */
 
-    'reset' => 'Your password has been reset!',
-    'sent' => 'We have emailed your password reset link!',
-    'throttled' => 'Please wait before retrying.',
-    'token' => 'This password reset token is invalid.',
-    'user' => "We can't find a user with that email address.",
-
+    'reset' => 'Mật khẩu của bạn đã được đặt lại!',
+    'sent' => 'Chúng tôi đã gửi đường dẫn đặt lại mật khẩu vào email của bạn!',
+    'throttled' => 'Vui lòng đợi trước khi thử lại.',
+    'token' => 'Mã thông báo đặt lại mật khẩu này không hợp lệ.',
+    'user' => "Chúng tôi không tìm thấy người dùng với địa chỉ email đó.",
 ];
