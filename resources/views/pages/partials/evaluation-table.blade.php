@@ -53,7 +53,7 @@
             <tr>
               <td colspan="2"></td>
               <td colspan="2">
-                <div class="flex justify-between">
+                <div class="flex justify-between items-center">
                   <span class="w-2/3 font-bold flex justify-end">Tự xếp loại chất lượng:</span>
                   <div class="w-1/3 flex justify-end">
                     <select name="quality_id" class="border-primary-300 border-1 px-5 py-4 w-auto rounded-lg" required>
