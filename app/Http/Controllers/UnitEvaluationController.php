@@ -120,7 +120,7 @@ class UnitEvaluationController extends Controller
             'quality_id' => 'required|exists:quality,id',
             'title_id' => 'required|exists:titles,id',
             'reward_id' => 'required|exists:rewards,id',
-            'achievement' => 'required|string',
+            'achievement' => 'nullable|string',
             'evidence' => 'nullable|string',
         ]);
 
